@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>至高の愛犬用晴れ着ブランド | 伝統和裁の結晶</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: 日本語（明朝体）＆ 英字（セリフ体） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500&family=Yuji+Syuku&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            light: '#1B2A4A',
+                            DEFAULT: '#0A162C', // ディープネイビー（信頼・知性）
+                            dark: '#050B16',
+                        },
+                        bordeaux: {
+                            DEFAULT: '#6B1D2F', // 深みのある茜色・ボルドー（伝統・高級感）
+                            hover: '#521422',
+                        },
+                        gold: '#C5A880', // アクセントとしての品のあるゴールド
+                        premiumGray: '#ECEFF3', // ほんの少し濃淡を強調した上品なトープグレー
+                    },
+                    fontFamily: {
+                        serifJP: ['Noto Serif JP', 'serif'],
+                        serifEN: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+<!-- 高級感ある立体浮遊・パララックス効果の追加スタイル -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        /* ベース背景色の微沈め */
+        .bg-premiumGray {
+            background-color: #EFECE6 !important;
+        }
+        /* 立体浮遊カード基本スタイル */
+        .float-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .float-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 濃紺ベースの柔らかく広い影とホバー時の浮き上がり */
+        .card-floating {
+            background-color: #FDFCF7;
+            box-shadow: 0 20px 50px rgba(10, 22, 44, 0.08);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-floating:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 60px rgba(10, 22, 44, 0.12);
+        }
+    </style>
+
+    <!-- パララックス ＆ 浮遊フェードイン制御スクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 浮遊フェードイン（Intersection Observer）
+            const floatElements = document.querySelectorAll('.float-up');
+            const floatObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        floatObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            floatElements.forEach(el => floatObserver.observe(el));
+
+            // 2. 視差効果（パララックス）スクロール制御
+            const parallaxBgs = document.querySelectorAll('.parallax-bg');
+            if (parallaxBgs.length > 0) {
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    parallaxBgs.forEach(el => {
+                        const speed = el.dataset.speed || 0.1;
+                        const rect = el.getBoundingClientRect();
+                        // 画面内に入っている時のみ計算してパフォーマンスを維持
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            const yPos = -(scrolled * speed);
+                            el.style.transform = `translate3d(0, ${yPos}px, 0)`;
+                        }
+                    });
+                }, { passive: true });
+            }
+        });
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+       .font-serif-jp { font-family: 'Noto Serif JP', serif; }
+        .font-serif-en { font-family: 'Cinzel', serif; }
+        
+        /* 「桂」専用：行書体（筆致フォント） */
+        .font-gyosho {
+            font-family: 'Yuji Syuku', serif;
+            font-size: 1.25em;
+            vertical-align: -0.08em;
+            letter-spacing: 0;
+        }
+        
+        /* アコーディオンの開閉アニメーション用 */
+        .faq-details[open] summary ~ * {
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ----------------------------------
+         * 改良版：Ken Burns スライドショーCSS
+         * ---------------------------------- */
+        .kenburns-slide {
+            opacity: 0;
+            /* フェードアウト時にも拡大（scale）がガクッと戻らないよう、非アクティブ化されても1.8秒間は最後の状態を維持します */
+            transition: opacity 1.8s ease-in-out;
+            transform: scale(1.0);
+        }
+        
+        /* アクティブなスライド：不透明度を上げてズームアニメーションを開始 */
+        .kenburns-slide.active {
+            opacity: 0.55;
+            animation: kenburnsEffect 8s ease-out forwards;
+            z-index: 2; /* 前面に出す */
+        }
+
+        /* フェードアウト中のスライド（一世代前のアクティブ） */
+        .kenburns-slide.exiting {
+            opacity: 0;
+            z-index: 1; /* 背面に回しつつフェードアウト */
+            /* exiting状態になっても、アニメーションの最後のコマ（scale(1.08)）で一時停止（freeze）させます */
+            animation: kenburnsFreeze 1.8s ease-out forwards;
+        }
+
+        @keyframes kenburnsEffect {
+            from { transform: scale(1.0); }
+            to { transform: scale(1.08); }
+        }
+
+        /* フェードアウト中にサイズが縮小しないよう、拡大しきった状態（1.08倍）を維持するためのアニメーション */
+        @keyframes kenburnsFreeze {
+            from { transform: scale(1.073); }
+            to { transform: scale(1.073); }
+        }
+
+/* ----------------------------------
+         * ロゴ用：極上のゴールド・シマー（輝き）エフェクト
+         * ---------------------------------- */
+        .shimmer-text {
+            color: #C5A880; /* ベースの上品なゴールド */
+            /* 金箔のようなグラデーションを作り、背景を文字の形に切り抜きます */
+            background: linear-gradient(
+                120deg, 
+                #C5A880 30%, 
+                #FFF8E7 45%, 
+                #FFFFFF 50%, 
+                #FFF8E7 55%, 
+                #C5A880 70%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* 4秒に1回、2秒かけてキラッと光が流れます */
+            animation: shine 4s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 200% center; }
+            50% { background-position: 0% center; }
+            100% { background-position: -200% center; }
+        }
+
+        /* 薄衣のように、0.8秒かけて美しく光に溶けていくフェードアウト効果 */
+        .loader-finish {
+            opacity: 0 !important;
+            pointer-events: none; /* 消えた後にクリックを邪魔しないための魔法の1行 */
+        }
+
+       /* 中央の極細ロード中ラインの滑らかなアニメーション */
+        @keyframes loadingLine {
+            0% { left: -50%; }
+            50% { left: 100%; }
+            100% { left: -50%; }
+        }
+
+        /* ローダー中央：蓑亀シンボルマークの静かな浮き上がりフェードイン */
+        @keyframes markFadeIn {
+            from { opacity: 0; transform: scale(0.82); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .loader-mark {
+            opacity: 0;
+            animation: markFadeIn 1.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s forwards;
+        }
+        /* 幕が上がった後に、ヘッダーを優雅にスライドダウンさせるクラス */
+        .header-reveal {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        /* スクロール後に背景プレートを「完全な単色えんじ」にするスタイル */
+        .header-bg-solid {
+            background: #6B1D2F !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+/* ==========================================
+           ラグジュアリー・スクロールフェードインCSS
+           ========================================== */
+        /* まだ見えていない状態：透明で、20px下に沈んでいる */
+        .reveal-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.2s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        
+        /* 画面に入った瞬間に発動する状態：不透明になり、元の位置へスゥッと浮き上がる */
+        .reveal-fade.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body class="bg-white text-navy font-sans antialiased selection:bg-bordeaux selection:text-white">
+    <!-- ==========================================
+         超高級ブランド仕様：オープニング・ローダー画面
+         ========================================== -->
+   <!-- ローダー：1.6秒のスローモーションのまま、背景を元の格式高い黒（漆黒）に戻しました -->
+    <div id="loader" class="fixed inset-0 bg-[#111111] z-[100] flex flex-col justify-center items-center transition-all duration-[3000ms] ease-in-out">
+        <div class="text-center">
+            <!-- 蓑亀シンボルマーク：中央に静かに浮かび上がる -->
+            <img src="assets/logo-turtle-gold.png" alt="アトリエ桂 シンボルマーク" class="loader-mark w-42 md:w-48 h-auto mx-auto mb-6">
+            <!-- 漆黒に美しく浮かび上がるゴールドシマーロゴ -->
+          <p class="font-serif-en text-6xl md:text-7xl tracking-[0.3em] font-medium shimmer-text mb-4 flex items-center justify-center gap-2 animate-pulse">
+                <span>Atelier</span>
+                <svg viewBox="0 0 426 341" class="w-auto h-[88px] md:h-[112px] inline-block" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="katsuraShimmerLoader" gradientUnits="userSpaceOnUse" x1="-426" y1="0" x2="0" y2="0">
+                            <stop offset="30%" stop-color="#C5A880"/>
+                            <stop offset="45%" stop-color="#FFF8E7"/>
+                            <stop offset="50%" stop-color="#FFFFFF"/>
+                            <stop offset="55%" stop-color="#FFF8E7"/>
+                            <stop offset="70%" stop-color="#C5A880"/>
+                            <animate attributeName="x1" values="-426;852;-426" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="linear"/>
+                            <animate attributeName="x2" values="0;1278;0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="linear"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M 123.0,22.0 L 115.0,22.0 L 109.0,26.0 L 109.0,32.0 L 114.0,40.0 L 110.0,90.0 L 107.0,99.0 L 37.0,127.0 L 10.0,127.0 L 12.0,134.0 L 18.0,141.0 L 40.0,152.0 L 66.0,155.0 L 82.0,150.0 L 85.0,151.0 L 69.0,177.0 L 29.0,229.0 L 18.0,235.0 L 14.0,248.0 L 19.0,263.0 L 25.0,269.0 L 38.0,268.0 L 50.0,259.0 L 64.0,253.0 L 95.0,319.0 L 103.0,327.0 L 110.0,330.0 L 120.0,329.0 L 134.0,312.0 L 131.0,238.0 L 132.0,203.0 L 182.0,142.0 L 181.0,141.0 L 163.0,157.0 L 135.0,177.0 L 133.0,175.0 L 137.0,136.0 L 141.0,126.0 L 145.0,122.0 L 162.0,114.0 L 178.0,111.0 L 184.0,103.0 L 183.0,98.0 L 172.0,85.0 L 161.0,82.0 L 144.0,84.0 L 142.0,82.0 L 144.0,63.0 L 149.0,46.0 L 140.0,32.0 Z M 97.0,229.0 L 99.0,231.0 L 99.0,235.0 L 98.0,236.0 L 98.0,259.0 L 97.0,260.0 L 97.0,281.0 L 96.0,282.0 L 94.0,282.0 L 93.0,281.0 L 92.0,281.0 L 82.0,271.0 L 82.0,270.0 L 78.0,266.0 L 78.0,265.0 L 75.0,262.0 L 75.0,261.0 L 73.0,259.0 L 73.0,258.0 L 72.0,257.0 L 72.0,256.0 L 71.0,255.0 L 71.0,254.0 L 69.0,252.0 L 69.0,249.0 L 73.0,245.0 L 74.0,245.0 L 75.0,244.0 L 76.0,244.0 L 78.0,242.0 L 79.0,242.0 L 81.0,240.0 L 82.0,240.0 L 85.0,237.0 L 86.0,237.0 L 88.0,235.0 L 89.0,235.0 L 91.0,233.0 L 92.0,233.0 L 94.0,231.0 L 95.0,231.0 Z M 100.0,184.0 L 101.0,185.0 L 101.0,197.0 L 98.0,200.0 L 97.0,200.0 L 96.0,201.0 L 95.0,201.0 L 93.0,203.0 L 92.0,203.0 L 91.0,204.0 L 90.0,204.0 L 89.0,205.0 L 88.0,205.0 L 86.0,207.0 L 85.0,207.0 L 84.0,208.0 L 83.0,208.0 L 81.0,210.0 L 80.0,210.0 L 79.0,209.0 L 79.0,208.0 L 81.0,206.0 L 81.0,205.0 L 85.0,201.0 L 85.0,200.0 L 90.0,195.0 L 90.0,194.0 L 95.0,189.0 L 95.0,188.0 L 99.0,184.0 Z M 252.0,13.0 L 250.0,23.0 L 258.0,29.0 L 258.0,76.0 L 202.0,99.0 L 227.0,108.0 L 256.0,109.0 L 256.0,119.0 L 230.0,136.0 L 232.0,139.0 L 191.0,154.0 L 175.0,154.0 L 174.0,159.0 L 185.0,172.0 L 204.0,176.0 L 238.0,160.0 L 289.0,147.0 L 274.0,159.0 L 259.0,159.0 L 258.0,169.0 L 241.0,182.0 L 261.0,174.0 L 261.0,192.0 L 228.0,207.0 L 226.0,198.0 L 229.0,192.0 L 213.0,215.0 L 212.0,228.0 L 219.0,237.0 L 225.0,238.0 L 230.0,232.0 L 239.0,237.0 L 244.0,245.0 L 211.0,266.0 L 248.0,256.0 L 256.0,262.0 L 182.0,280.0 L 167.0,278.0 L 162.0,288.0 L 178.0,300.0 L 203.0,310.0 L 248.0,294.0 L 315.0,286.0 L 338.0,288.0 L 305.0,309.0 L 365.0,296.0 L 406.0,300.0 L 415.0,291.0 L 408.0,276.0 L 369.0,255.0 L 350.0,259.0 L 294.0,258.0 L 295.0,227.0 L 340.0,199.0 L 335.0,189.0 L 322.0,182.0 L 307.0,178.0 L 297.0,182.0 L 293.0,171.0 L 286.0,165.0 L 334.0,146.0 L 362.0,146.0 L 365.0,137.0 L 358.0,129.0 L 335.0,119.0 L 290.0,127.0 L 283.0,125.0 L 289.0,99.0 L 336.0,82.0 L 337.0,70.0 L 333.0,64.0 L 311.0,58.0 L 293.0,65.0 L 292.0,46.0 L 296.0,38.0 L 293.0,27.0 L 266.0,11.0 Z M 263.0,214.0 L 264.0,215.0 L 264.0,228.0 L 262.0,230.0 L 262.0,231.0 L 261.0,232.0 L 260.0,232.0 L 257.0,235.0 L 256.0,235.0 L 255.0,234.0 L 254.0,234.0 L 252.0,232.0 L 251.0,232.0 L 250.0,231.0 L 249.0,231.0 L 246.0,228.0 L 245.0,228.0 L 243.0,226.0 L 243.0,225.0 L 248.0,220.0 L 249.0,220.0 L 250.0,219.0 L 251.0,219.0 L 252.0,218.0 L 253.0,218.0 L 255.0,216.0 L 257.0,216.0 L 258.0,215.0 L 259.0,215.0 L 260.0,214.0 Z" fill="url(#katsuraShimmerLoader)" fill-rule="evenodd"/>
+                </svg>
+            </p>
+            <div class="w-16 h-[1px] bg-gold/40 mx-auto mt-6 relative overflow-hidden">
+                <div class="absolute inset-y-0 left-0 w-1/2 bg-gold animate-[loadingLine_2s_infinite_ease-in-out]"></div>
+            </div>
+        </div>
+    </div>
+
+<!-- Global Navigation（静的スリム固定ヘッダー） -->
+    <header id="global-header" class="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-3.5 lg:py-4 flex justify-between items-center bg-[#6B1D2F] shadow-[0_2px_20px_rgba(0,0,0,0.25)] border-b border-white/10" style="background-color: #6B1D2F !important;">
+        <!-- ロゴ -->
+        <div class="flex items-center gap-3 font-serif-en text-lg md:text-2xl lg:text-3xl tracking-[0.15em] md:tracking-[0.2em] font-medium text-white select-none">
+            <img src="assets/logo-turtle-white.png" alt="アトリエ桂 シンボルマーク" class="h-10 md:h-12 w-auto flex-shrink-0">
+            Atelier
+            <svg viewBox="0 0 426 341" class="w-auto h-7 md:h-9 lg:h-11 inline-block align-[-0.2em]" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="katsuraShimmerHeader" gradientUnits="userSpaceOnUse" x1="-426" y1="0" x2="0" y2="0">
+                        <stop offset="30%" stop-color="#C5A880"/>
+                        <stop offset="45%" stop-color="#FFF8E7"/>
+                        <stop offset="50%" stop-color="#FFFFFF"/>
+                        <stop offset="55%" stop-color="#FFF8E7"/>
+                        <stop offset="70%" stop-color="#C5A880"/>
+                        <animate attributeName="x1" values="-426;852;-426" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="linear"/>
+                        <animate attributeName="x2" values="0;1278;0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="linear"/>
+                    </linearGradient>
+                </defs>
+                <path d="M 123.0,22.0 L 115.0,22.0 L 109.0,26.0 L 109.0,32.0 L 114.0,40.0 L 110.0,90.0 L 107.0,99.0 L 37.0,127.0 L 10.0,127.0 L 12.0,134.0 L 18.0,141.0 L 40.0,152.0 L 66.0,155.0 L 82.0,150.0 L 85.0,151.0 L 69.0,177.0 L 29.0,229.0 L 18.0,235.0 L 14.0,248.0 L 19.0,263.0 L 25.0,269.0 L 38.0,268.0 L 50.0,259.0 L 64.0,253.0 L 95.0,319.0 L 103.0,327.0 L 110.0,330.0 L 120.0,329.0 L 134.0,312.0 L 131.0,238.0 L 132.0,203.0 L 182.0,142.0 L 181.0,141.0 L 163.0,157.0 L 135.0,177.0 L 133.0,175.0 L 137.0,136.0 L 141.0,126.0 L 145.0,122.0 L 162.0,114.0 L 178.0,111.0 L 184.0,103.0 L 183.0,98.0 L 172.0,85.0 L 161.0,82.0 L 144.0,84.0 L 142.0,82.0 L 144.0,63.0 L 149.0,46.0 L 140.0,32.0 Z M 97.0,229.0 L 99.0,231.0 L 99.0,235.0 L 98.0,236.0 L 98.0,259.0 L 97.0,260.0 L 97.0,281.0 L 96.0,282.0 L 94.0,282.0 L 93.0,281.0 L 92.0,281.0 L 82.0,271.0 L 82.0,270.0 L 78.0,266.0 L 78.0,265.0 L 75.0,262.0 L 75.0,261.0 L 73.0,259.0 L 73.0,258.0 L 72.0,257.0 L 72.0,256.0 L 71.0,255.0 L 71.0,254.0 L 69.0,252.0 L 69.0,249.0 L 73.0,245.0 L 74.0,245.0 L 75.0,244.0 L 76.0,244.0 L 78.0,242.0 L 79.0,242.0 L 81.0,240.0 L 82.0,240.0 L 85.0,237.0 L 86.0,237.0 L 88.0,235.0 L 89.0,235.0 L 91.0,233.0 L 92.0,233.0 L 94.0,231.0 L 95.0,231.0 Z M 100.0,184.0 L 101.0,185.0 L 101.0,197.0 L 98.0,200.0 L 97.0,200.0 L 96.0,201.0 L 95.0,201.0 L 93.0,203.0 L 92.0,203.0 L 91.0,204.0 L 90.0,204.0 L 89.0,205.0 L 88.0,205.0 L 86.0,207.0 L 85.0,207.0 L 84.0,208.0 L 83.0,208.0 L 81.0,210.0 L 80.0,210.0 L 79.0,209.0 L 79.0,208.0 L 81.0,206.0 L 81.0,205.0 L 85.0,201.0 L 85.0,200.0 L 90.0,195.0 L 90.0,194.0 L 95.0,189.0 L 95.0,188.0 L 99.0,184.0 Z M 252.0,13.0 L 250.0,23.0 L 258.0,29.0 L 258.0,76.0 L 202.0,99.0 L 227.0,108.0 L 256.0,109.0 L 256.0,119.0 L 230.0,136.0 L 232.0,139.0 L 191.0,154.0 L 175.0,154.0 L 174.0,159.0 L 185.0,172.0 L 204.0,176.0 L 238.0,160.0 L 289.0,147.0 L 274.0,159.0 L 259.0,159.0 L 258.0,169.0 L 241.0,182.0 L 261.0,174.0 L 261.0,192.0 L 228.0,207.0 L 226.0,198.0 L 229.0,192.0 L 213.0,215.0 L 212.0,228.0 L 219.0,237.0 L 225.0,238.0 L 230.0,232.0 L 239.0,237.0 L 244.0,245.0 L 211.0,266.0 L 248.0,256.0 L 256.0,262.0 L 182.0,280.0 L 167.0,278.0 L 162.0,288.0 L 178.0,300.0 L 203.0,310.0 L 248.0,294.0 L 315.0,286.0 L 338.0,288.0 L 305.0,309.0 L 365.0,296.0 L 406.0,300.0 L 415.0,291.0 L 408.0,276.0 L 369.0,255.0 L 350.0,259.0 L 294.0,258.0 L 295.0,227.0 L 340.0,199.0 L 335.0,189.0 L 322.0,182.0 L 307.0,178.0 L 297.0,182.0 L 293.0,171.0 L 286.0,165.0 L 334.0,146.0 L 362.0,146.0 L 365.0,137.0 L 358.0,129.0 L 335.0,119.0 L 290.0,127.0 L 283.0,125.0 L 289.0,99.0 L 336.0,82.0 L 337.0,70.0 L 333.0,64.0 L 311.0,58.0 L 293.0,65.0 L 292.0,46.0 L 296.0,38.0 L 293.0,27.0 L 266.0,11.0 Z M 263.0,214.0 L 264.0,215.0 L 264.0,228.0 L 262.0,230.0 L 262.0,231.0 L 261.0,232.0 L 260.0,232.0 L 257.0,235.0 L 256.0,235.0 L 255.0,234.0 L 254.0,234.0 L 252.0,232.0 L 251.0,232.0 L 250.0,231.0 L 249.0,231.0 L 246.0,228.0 L 245.0,228.0 L 243.0,226.0 L 243.0,225.0 L 248.0,220.0 L 249.0,220.0 L 250.0,219.0 L 251.0,219.0 L 252.0,218.0 L 253.0,218.0 L 255.0,216.0 L 257.0,216.0 L 258.0,215.0 L 259.0,215.0 L 260.0,214.0 Z" fill="url(#katsuraShimmerHeader)" fill-rule="evenodd"/>
+            </svg>
+        </div>
+        
+        <!-- ナビゲーション（PCサイズ「lg」でのみ表示） -->
+        <nav class="hidden lg:flex items-center space-x-8 lg:space-x-10 text-[12px] md:text-[13px] font-serif-en">
+            <a href="#collection" class="nav-link relative py-1.5 text-white/60 hover:text-white font-medium tracking-[0.25em] transition-all duration-300">COLLECTION</a>
+            <a href="#story" class="nav-link relative py-1.5 text-white/60 hover:text-white font-medium tracking-[0.25em] transition-all duration-300">STORY</a>
+            <a href="#quality" class="nav-link relative py-1.5 text-white/60 hover:text-white font-medium tracking-[0.25em] transition-all duration-300">CRAFT</a>
+            <a href="#plan" class="nav-link relative py-1.5 text-white/60 hover:text-white font-medium tracking-[0.25em] transition-all duration-300">PLAN</a>
+            <a href="#flow" class="nav-link relative py-1.5 text-white/60 hover:text-white font-medium tracking-[0.25em] transition-all duration-300">FAQ</a>
+            <div class="flex items-center gap-1.5 text-[11px] tracking-[0.2em] pl-2 ml-2 border-l border-white/20">
+                <span class="text-white font-bold">JA</span>
+                <span class="text-white/40">/</span>
+                <a href="MainHP_en.html" class="text-white/60 hover:text-white transition-all duration-300">EN</a>
+            </div>
+        </nav>
+        
+        <!-- 右側のCTAボタン -->
+        <div>
+            <a href="https://line.me" target="_blank" rel="noopener noreferrer" class="inline-block border border-white/60 text-white text-xs md:text-sm tracking-[0.2em] px-4 md:px-6 py-2.5 hover:bg-white hover:text-bordeaux hover:border-white transition-all duration-300 font-serif-jp font-medium whitespace-nowrap">
+                ご相談はこちら
+            </a>
+        </div>
+    </header>
+
+    <!-- ■ Block 1: ヒーロー・ブロック（ファーストビュー ＆ シネマティック・スライドショー） -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden bg-navy-dark">
+        <!-- スライドコンテナ（白黒エフェクトを完全に解除） -->
+        <div class="absolute inset-0 z-0">
+            <!-- シーン1: 格式高く高貴な晴れ着を纏う愛犬 -->
+            <div class="kenburns-slide active absolute inset-0 bg-cover bg-center" 
+                 style="background-image: url('https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQjgEg2Orb3PMgmpcVpf121HrOOn69nnrEq990OnPdWM25nA5jqibbD6wj2kGvDDNYrcqhd7OhYc9LsDbM');"></div>
+            <!-- シーン2: 漆黒とゴールドのコントラストが極めてエレガントな伝統仕立て -->
+            <div class="kenburns-slide absolute inset-0 bg-cover bg-center" 
+                 style="background-image: url('https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/sZIAAOSwkL9hZDnI/$_57.JPG?set_id=8800005007');"></div>
+            <!-- シーン3: 艶やかな茜色（ボルドー）に金糸が散りばめられた息をのむような正絹の織物 -->
+            <div class="kenburns-slide absolute inset-0 bg-cover bg-center" 
+                 style="background-image: url('https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQyYd7WvoP-DTVi5s9KKFAUiU5ncrqb6GyZi_rT24-XpfGAjToLiTRUgPpPaoUwT_zaL49SDUjIdeQj2HY');"></div>
+        </div>
+        
+       <!-- グラデーションオーバーレイ -->
+        <div class="absolute inset-0 bg-gradient-to-t from-navy-dark via-transparent to-navy/30 z-10"></div>
+
+        <!-- 特大ウォーターマーク：蓑亀シンボル（ファーストビュー限定・和紙質感に溶け込む透かし） -->
+<img src="assets/logo-turtle-white.svg" alt="" aria-hidden="true"
+             class="absolute -right-40 md:-right-16 lg:right-0 top-1/2 translate-x-[15%] md:translate-x-[20%] lg:translate-x-[25%] -translate-y-1/4 w-[800px] md:w-[1000px] h-auto opacity-[0.3] pointer-events-none select-none z-[12]">
+        
+       <div class="relative z-20 text-center text-white max-w-4xl px-6 lg:px-8 mt-16 lg:-translate-x-44 xl:-translate-x-64 2xl:-translate-x-80 transition-transform duration-700 ease-out">
+            <!-- フランス語のサブキャッチ（ゴールドを濃くし、文字の輪郭に極細の黒影を仕込んで可読性を完璧に守りました） -->
+            <!-- フランス語のサブキャッチ（点滅を廃止し、凛とした格調高い静寂を演出しました） -->
+            <span class="font-serif-en text-[#DFBA8C] tracking-[0.4em] text-xs lg:text-sm block mb-6 font-medium select-none filter drop-shadow-[0_2px_3px_rgba(0,0,0,0.7)]">L'Éclat d'un Premier Chef-d'œuvre.</span>
+            <h1 class="font-serif-jp text-2xl md:text-4xl lg:text-5xl leading-[1.8] tracking-[0.25em] font-extralight mb-12">
+                一期一会の正絹、<br class="hidden md:block">唯一無二の晴れ着。
+            </h1>
+            <p class="font-serif-jp text-sm md:text-lg tracking-[0.2em] text-white/80 font-light max-w-2xl mx-auto mb-12 leading-relaxed">
+                月3着・年間36着限りの完全お誂え。
+            </p>
+            <div class="flex justify-center">
+
+     <!--軌道に乗ったら表示させよう。
+                
+    <div class="inline-flex flex-col items-center gap-2 bg-[#0A162C]/80 backdrop-blur-sm border border-[#C5A880] px-6 md:px-10 py-3.5 md:py-4 shadow-sm">
+        <span class="font-serif-en text-[10px] md:text-xs text-gold tracking-[0.25em]">ATELIER STATUS</span>
+        <span class="font-serif-jp text-xs md:text-sm text-white tracking-[0.15em] whitespace-nowrap font-light">
+            〇〇月分着物制作中 ｜ 〇〇月分受注受付中（残り僅か）
+        </span>
+    </div>
+    -->
+</div>
+        </div>
+       <!-- 下部への導線インジケータ（ゴールドを濃くして視認性を極限まで高めました） -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-gold text-xs lg:text-sm tracking-[0.3em] font-serif-en flex flex-col items-center gap-2 select-none filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+            <span class="font-medium">SCROLL</span>
+            <!-- 縦の極細ラインの背景も、より見えやすいようにゴールドの半透明に変更 -->
+            <div class="w-[1px] h-14 bg-gold/40 relative overflow-hidden">
+                <!-- 滑らかに下に落ちていくアニメーションインジケータ -->
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-white animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         Block 1.5: コレクション (COLLECTION)
+         四季島風アシンメトリー・ギャラリー（4枚目ぼかし仕様）
+         ========================================== -->
+   <section id="collection" class="py-20 md:py-28 bg-[#ECEFF3] overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- セクションタイトル（贅沢な余白と凛とした佇まい） -->
+            <div class="mb-16 md:mb-24 text-center reveal-fade">
+                <h2 class="font-sans text-xs tracking-[0.4em] text-[#AA7C11] font-bold uppercase mb-3">
+                    Archived Masterpieces
+                </h2>
+                <p class="font-serif-jp text-2xl md:text-3xl tracking-[0.2em] text-navy font-light">
+                    過去の作品
+                </p>
+                <div class="w-8 h-[1px] bg-bordeaux mx-auto mt-6"></div>
+            </div>
+
+            <!-- 4連アシンメトリーグリッド（1〜3枚目はクリア、4枚目はぼかし） -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-start">
+                
+                <!-- 1枚目：柴犬 × 伝統柄（少し上に配置） -->
+                <div class="space-y-4 reveal-fade transform lg:-translate-y-4">
+                    <div class="overflow-hidden bg-premiumGray aspect-[3/4] shadow-sm border border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=600" 
+                             alt="柴犬の御祝い着物仕立て" 
+                             class="w-full h-full object-cover transition-transform duration-700 hover:scale-103">
+                    </div>
+                    <div class="px-2">
+                        <h4 class="font-serif-jp text-xs text-navy font-medium tracking-widest">柴犬 / 琥珀丸様</h4>
+                        <p class="font-serif-jp text-[11px] text-stone-500 tracking-wider mt-1">令月に映える総絞りの祝い着</p>
+                    </div>
+                </div>
+
+                <!-- 2枚目：トイプードル × 正絹（標準位置） -->
+                <div class="space-y-4 reveal-fade delay-100 lg:translate-y-4">
+                    <div class="overflow-hidden bg-premiumGray aspect-[3/4] shadow-sm border border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=80&w=600" 
+                             alt="トイプードルの正絹振袖仕立て" 
+                             class="w-full h-full object-cover transition-transform duration-700 hover:scale-103">
+                    </div>
+                    <div class="px-2">
+                        <h4 class="font-serif-jp text-xs text-navy font-medium tracking-widest">トイプードル / 凛姫様</h4>
+                        <p class="font-serif-jp text-[11px] text-stone-500 tracking-wider mt-1">最高級正絹で紡ぐ可憐な振袖</p>
+                    </div>
+                </div>
+
+                <!-- 3枚目：チワワ × 本金糸紋様（少し上に配置） -->
+                <div class="space-y-4 reveal-fade delay-200 transform lg:-translate-y-2">
+                    <div class="overflow-hidden bg-premiumGray aspect-[3/4] shadow-sm border border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" 
+                             alt="チワワの紋付袴仕立て" 
+                             class="w-full h-full object-cover transition-transform duration-700 hover:scale-103">
+                    </div>
+                    <div class="px-2">
+                        <h4 class="font-serif-jp text-xs text-navy font-medium tracking-widest">チワワ / 大和様</h4>
+                        <p class="font-serif-jp text-[11px] text-stone-500 tracking-wider mt-1">本金糸をあしらった格調高い紋付袴</p>
+                    </div>
+                </div>
+
+                
+                
+                <!-- 4枚目：チワワ × 本金糸紋様（少し上に配置） -->
+                <div class="space-y-4 reveal-fade delay-200 transform lg:-translate-y-2">
+                    <div class="overflow-hidden bg-premiumGray aspect-[3/4] shadow-sm border border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" 
+                             alt="チワワの紋付袴仕立て" 
+                             class="parallax-bg absolute w-full h-full object-cover transition-transform duration-700 hover:scale-103">
+                    </div>
+                    <div class="px-2">
+                        <h4 class="font-serif-jp text-xs text-navy font-medium tracking-widest">チワワ / 大和様</h4>
+                        <p class="font-serif-jp text-[11px] text-stone-500 tracking-wider mt-1">本金糸をあしらった格調高い紋付袴</p>
+                    </div>
+                </div>
+
+            </div> <!-- グリッド終了 -->
+
+        </div>
+    </section>
+
+
+
+<!-- ==========================================
+         Block 2: ブランド・ストーリー (STORY)
+         四季島オマージュ・アシンメトリーキャンバスレイアウト（正統派・犬用着物版）
+         ========================================== -->
+    <section id="story" class="py-24 md:py-36 bg-white overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            
+            <!-- 右側に大胆にずらし、空間に品格を与えるシルクグレー（生成り）の大きな座布団 -->
+            <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full bg-[#F6F5F2] -z-10 transform translate-x-4 lg:translate-x-12"></div>
+
+<!-- メイングリッド構造（PCは左写真・右テキストを完全維持） -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+                
+                <!-- ─── 左側：座布団の枠を大胆にはみ出す「縦2連のヴィンテージ写真」 ─── -->
+                <!-- 【ポイント】スマホの時だけ上にテキストを入れるため、上部にスマホ専用の見出しを仕込みました -->
+                <div class="lg:col-span-5 space-y-8 reveal-fade">
+                    
+                    <!-- iPhoneの時だけ写真より上に出現する、スマホ専用の見出しエリア -->
+                    <div class="block lg:hidden space-y-2 mb-6">
+                        <h2 class="font-sans text-4xl tracking-[0.25em] text-navy font-light leading-none">
+                            THE STORY
+                        </h2>
+                        <div class="flex items-center space-x-4 pt-2">
+                            <span class="w-8 h-[1px] bg-bordeaux"></span>
+                            <p class="font-serif-jp text-sm tracking-[0.3em] text-bordeaux font-medium">
+                                一針に宿る、我が子への慈しみ
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 1枚目：日本の気品を纏う、凛とした犬の佇まい -->
+                    <div class="overflow-hidden bg-premiumGray aspect-[3/4] shadow-md border border-stone-200">
+                        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800" 
+                             alt="日本の美しい和の空間で佇む愛犬" 
+                             class="w-full h-full object-cover filter contrast-[1.02] brightness-[0.98] transition-transform duration-1000 hover:scale-103">
+                    </div>
+                    <!-- 2枚目：正絹（シルク）の質感 -->
+                    <div class="overflow-hidden bg-premiumGray aspect-[4/3] shadow-md border border-stone-200 transform lg:translate-x-6">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800" 
+                             alt="職人が厳選した極上の正絹シルクと艶やかな伝統美" 
+                             class="w-full h-full object-cover filter contrast-[1.03] brightness-[0.95] transition-transform duration-1000 hover:scale-103">
+                    </div>
+                </div>
+
+                <!-- ─── 右側：贅沢な余白の中に静かに佇むテキスト ─── -->
+                <div class="lg:col-span-7 lg:pl-12 pt-6 lg:pt-16 space-y-10">
+
+                    <!-- 背景プレート対象エリア：見出し～ストーリー～READ MOREまで -->
+                    <div class="relative">
+
+                        <!-- 専用背景プレート（キャンバス）：このブロックのみに限定 -->
+                        <div class="absolute -inset-6 md:-inset-10 bg-[#e6e0d1] z-0"></div>
+
+                        <!-- コンテンツラッパー（背景より確実に手前に出す） -->
+                        <div class="relative z-10 space-y-10">
+
+                            <!-- 💻PCの時だけ表示される、本来の美しい見出し（スマホ時は非表示） -->
+                            <div class="hidden lg:block space-y-2 reveal-fade delay-100">
+                                <h2 class="font-sans text-4xl md:text-5xl tracking-[0.25em] text-navy font-light leading-none">
+                                    THE HERITAGE
+                                </h2>
+                                <div class="flex items-center space-x-4 pt-2">
+                                    <span class="w-8 h-[1px] bg-bordeaux"></span>
+                                    <p class="font-serif-jp text-sm tracking-[0.3em] text-bordeaux font-medium">
+                                        仕立てた作品に宿す思い
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 短く、美しく語るストーリー（ここは共通） -->
+                            <div class="font-serif-jp text-stone-700 text-sm md:text-base tracking-widest leading-[2.2] space-y-8 reveal-fade delay-200">
+                                <p class="font-medium text-navy text-base md:text-lg">
+                                    愛犬家へ贈る、手仕事の極致
+                                </p>
+                                <p>
+                                    限られた愛犬家のためだけに、一針一針仕立てられていた特別な晴れ着。<br>
+                                    現代の機械生産では決して再現できない、アンティーク正絹。<br>
+                                    そして、愛犬の骨格や動きを美しく見せる独自の立体仕立て。
+                                </p>
+                                <p>
+                                    数十年にわたり反物と向き合い続けてきた職人の手仕事の極致。<br>
+                                    日本の伝統美、愛犬への深い愛情が織りなす唯一無二の佇まい。<br>
+                                    その価値をご理解いただけるオーナー様だけに手にしていただきたいです。
+                                </p>
+                            </div>
+                           
+                           <!-- 蓑亀シンボルロゴ（1.5倍サイズ ＆ 斜め左上極限配置） -->
+                            <div class="-mt-8 md:-mt-12 flex justify-end reveal-fade delay-300">
+                                <img src="assets/logo-turtle-currentcolor.svg" 
+                                     alt="アトリエ桂 シンボルマーク" 
+                                     class="w-20 md:w-24 h-auto -translate-x-8 md:-translate-x-12 -translate-y-2 opacity-85 text-navy select-none pointer-events-none transition-opacity duration-300 hover:opacity-100">
+                            </div>
+
+                        </div> <!-- コンテンツラッパー終了 -->
+
+                    </div> <!-- 背景プレート対象エリア終了 -->
+
+                    <!-- ─── 右下：美しく佇む、最高級職人の工芸品カード（背景プレートの対象外） ─── -->
+                    <div class="pt-16 lg:pt-24 max-w-xl ml-auto reveal-fade delay-300">
+                        <!-- （※中身のカードは元のままなので省略せずそのままお使いください） -->
+                        <div class="bg-white p-6 md:p-8 shadow-xl border border-stone-100 relative group">
+                            <div class="overflow-hidden aspect-[16/9] bg-premiumGray mb-6 relative">
+                                <img src="https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/sZIAAOSwkL9hZDnI/$_57.JPG?set_id=8800005007" 
+                                     alt="伝統工芸の一級技能士が手がける犬用着物のディテール" 
+                                     class="w-full h-full object-cover filter brightness-[0.88] contrast-[1.03] transition-transform duration-700 group-hover:scale-102">
+                                <div class="absolute top-4 left-4 bg-white/95 px-4 py-2 shadow-md border-l-2 border-bordeaux">
+                                    <p class="font-serif-jp text-[10px] tracking-widest text-navy-light leading-tight">
+                                        職人による<br><span class="font-medium text-[11px] text-navy">完全手縫い仕立て</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="font-sans text-xs tracking-[0.3em] text-navy font-bold uppercase">
+                                    FEEL THE CRAFTSMANSHIP
+                                </h3>
+                                <p class="font-serif-jp text-xs tracking-[0.2em] text-bordeaux font-medium">
+                                    〜絹の光沢と一針のこだわり〜
+                                </p>
+                                <p class="font-serif-jp text-xs tracking-widest text-stone-600 leading-[1.8]">
+                                    糸の引き加減を指先の感覚で見極める完全手縫い仕立て。<br>
+                                    ミシンでは再現できないふっくらとしたライン、<br>
+                                    愛犬の動きを妨げず、包み込むような極上の着心地を実現します。
+                                </p>
+                            </div>
+                        </div>
+                    </div> <!-- 工芸カード終了 -->
+
+                </div> <!-- 右側カラム終了 -->
+            </div> <!-- グリッド終了 -->
+
+        </div>
+    </section>
+
+<!-- ■ Block 3: プロダクト・コア & 特典（同一幅カード・整然グリッド版） -->
+<section id="quality" class="py-10 lg:py-16 bg-premiumGray px-4 sm:px-6 lg:px-12 overflow-hidden">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- セクションタイトル -->
+            <div class="text-center mb-8 lg:mb-10 reveal-fade">
+                <span class="font-sans text-xs tracking-[0.4em] text-[#AA7C11] font-bold uppercase mb-3 block">PRODUCT CORE &amp; PRIVILEGES</span>
+                <h2 class="font-serif-jp text-xl lg:text-3xl tracking-widest font-light text-navy leading-relaxed">
+                    私たちが約束する、<br class="md:hidden">特別なおもてなし
+                </h2>
+                <div class="w-10 h-[1px] bg-bordeaux mx-auto mt-4"></div>
+            </div>
+
+        <!-- 2×2 同一幅カードグリッドエリア -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+
+            <!-- Card 01: CRAFTSMANSHIP -->
+            <div class="reveal-fade bg-white border border-stone-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden group flex flex-col justify-between">
+                <div>
+                    <!-- 写真コンテナ（カード幅に100%フィット） -->
+                    <div class="overflow-hidden aspect-[16/9] bg-neutral-100 border-b border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800"
+                             alt="人間用と寸分違わぬ本格長裾仕立てのディテール"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <!-- テキストコンテナ（写真と同じ幅で内側にパディング） -->
+                    <div class="p-5 md:p-6 space-y-2 relative">
+                         <img src="assets/logo-turtle-gold.png" alt="" aria-hidden="true" class="absolute top-4 right-4 w-12 md:w-14 h-auto opacity-90 pointer-events-none select-none">
+                        <h3 class="font-serif-jp text-base md:text-lg font-medium text-navy tracking-widest leading-snug whitespace-nowrap">
+                            本格長裾手縫い仕立て
+                        </h3>
+                        <p class="font-serif-jp text-[12px] md:text-[14px] text-stone-600 leading-relaxed tracking-wider pt-1">
+                            人用の着物と同じ仕立てを愛犬に合わせて再構築。優美に広がる長裾は、機械縫いでは不可能な「総手縫い」により引き出されます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+           <!-- Card 02: UNBOXING EXPERIENCE -->
+            <div class="reveal-fade delay-100 bg-white border border-stone-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden group flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden aspect-[16/9] bg-neutral-100 border-b border-stone-100">
+                        <img src="https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/sZIAAOSwkL9hZDnI/$_57.JPG?set_id=8800005007"
+                             alt="職人特製木箱と着物の開封の儀"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-5 md:p-6 space-y-2 relative">
+                        <img src="assets/logo-turtle-gold.png" alt="" aria-hidden="true" class="absolute top-4 right-4 w-12 md:w-14 h-auto opacity-90 pointer-events-none select-none">
+                        <h3 class="font-serif-jp text-base md:text-lg font-medium text-navy tracking-widest leading-snug whitespace-nowrap pr-14 md:pr-16">
+                            職人手作り「特製木箱 ＆ 木製えもんかけ」
+                        </h3>
+                       <p class="font-serif-jp text-[12px] md:text-[14px] text-stone-600 leading-relaxed tracking-wider pt-1">
+                            晴れ着を納めるのは、手作業で作った特製木箱と専用えもんかけ。唯一無二の証として「シリアルナンバー」を焼印します。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 03: PROCESS STORY -->
+            <div class="reveal-fade delay-200 bg-white border border-stone-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden group flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden aspect-[16/9] bg-neutral-100 border-b border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800"
+                             alt="アトリエで正絹生地を仕立てる職人の手元"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-5 md:p-6 space-y-2 relative">
+                         <img src="assets/logo-turtle-gold.png" alt="" aria-hidden="true" class="absolute top-4 right-4 w-12 md:w-14 h-auto opacity-90 pointer-events-none select-none">
+                       <h3 class="font-serif-jp text-base md:text-lg font-medium text-navy tracking-widest leading-snug whitespace-nowrap">
+                            アトリエからの「制作進捗レポート」
+                        </h3>
+                        <p class="font-serif-jp text-[12px] md:text-[14px] text-stone-600 leading-relaxed tracking-wider pt-1">
+                           愛犬のための一着が完成していく工程を、アトリエからお届けします。完成を待つ時間そのものが、かけがえのない体験となります。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 04: LIFETIME GUARANTEE -->
+            <div class="reveal-fade delay-300 bg-white border border-stone-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden group flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden aspect-[16/9] bg-neutral-100 border-b border-stone-100">
+                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=800"
+                             alt="撮影用の長裾姿とお散歩用普段着リメイクのビフォーアフター"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-5 md:p-6 space-y-2 relative">
+                         <img src="assets/logo-turtle-gold.png" alt="" aria-hidden="true" class="absolute top-4 right-4 w-12 md:w-14 h-auto opacity-90 pointer-events-none select-none">
+                        <h3 class="font-serif-jp text-base md:text-lg font-medium text-navy tracking-widest leading-snug whitespace-nowrap">
+                            メモリアル・アフターケア
+                        </h3>
+                        <p class="font-serif-jp text-[12px] md:text-[14px] text-stone-600 leading-relaxed tracking-wider pt-1">
+                            スタジオでの一枚に終わらず、七五三などの同伴に合わせて、美しく仕立て直します。一度きりの記念品ではなく、共に歩む宝物として末永くご愛用いただけます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- グリッド終了 -->
+
+        </div> <!-- グリッド終了 -->
+<!-- 標準セット補足テキスト（THE STORYと同構成） -->
+            <div class="reveal-fade delay-300 mt-8 md:mt-12 text-center">
+                <div class="inline-block relative">
+                    <div class="absolute -inset-4 md:-inset-6 bg-[#e6e0d1] z-0"></div>
+                    <p class="relative z-10 font-serif-jp text-sm md:text-base text-navy tracking-widest leading-relaxed font-medium underline decoration-bordeaux decoration-1 underline-offset-4 py-6 px-6">
+                        ※すべてのお仕立てへ、[追加料金なし]でお届けするおもてなしです。
+                    </p>
+                </div>
+            </div>
+
+      <!-- 下層ページ誘導エリア（フローティング・カード） -->
+            <div class="reveal-fade delay-300 mt-16 md:mt-24 w-full max-w-4xl mx-auto relative aspect-[21/9] overflow-hidden">
+
+                <!-- 背景写真（直接ぼかし） -->
+                <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1200"
+                     alt="正絹の美しいドレープと職人の手仕事"
+                     class="absolute inset-0 w-full h-full object-cover"
+                     style="transform: scale(1.1); filter: blur(10px);">
+
+                <!-- 中央フローティング・カード -->
+                <div class="absolute inset-0 flex items-center justify-center px-4">
+                    <div class="w-[88%] md:w-auto md:max-w-xl bg-white/85 border border-[#C5A880]/30 shadow-xl p-6 md:p-10">
+
+                       <!-- ポエム -->
+                        <p class="font-serif-jp text-sm md:text-base text-navy tracking-[0.2em] text-center mb-6">
+                            アトリエからの便り、一生涯の約束。
+                        </p>
+
+                        <!-- ③ メインボタン -->
+                        <a href="#plan-details" class="group flex items-center justify-between w-full h-12 md:h-[52px] px-6 bg-[#0A162C] border border-[#C5A880] transition-colors duration-[1200ms] ease-in-out hover:bg-[#6B1D2F]">
+                            <span class="font-serif-jp text-[13px] md:text-[14px] tracking-[0.15em] text-white whitespace-nowrap">
+                                おもてなしの詳細を見る
+                            </span>
+                            <span class="font-serif-en text-[#C5A880] text-sm leading-none flex-shrink-0 transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                                →
+                            </span>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+</section>
+
+ 
+<!-- ■ Block 4: プラン（ビジュアル主役・ファーストビュー風） -->
+    <section id="plan" class="py-20 lg:py-32 px-6 lg:px-24 bg-white overflow-hidden">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- セクションタイトル -->
+            <div class="text-center mb-12 lg:mb-16 reveal-fade">
+                <span class="font-serif-en text-gold tracking-[0.3em] text-[10px] block mb-2">EXCLUSIVE PLAN</span>
+                <h2 class="font-serif-jp text-xl lg:text-3xl tracking-widest font-light text-navy">フルオーダーメイド</h2>
+                <div class="w-10 h-[1px] bg-bordeaux mx-auto mt-4"></div>
+            </div>
+
+            <!-- メインビジュアル ＆ タイポグラフィ（文章を排したポスター的レイアウト） -->
+            <div class="space-y-12 reveal-fade">
+                
+                <!-- 【主役】特大の高級写真（ファーストビュー級インパクト） -->
+                <div class="relative overflow-hidden aspect-[16/9] bg-neutral-100 shadow-xl border border-stone-200 group">
+                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=1200" 
+                         alt="最高峰フルオーダー和服を纏う愛犬" 
+                         class="w-full h-full object-cover brightness-[0.92] contrast-[1.02] transition-transform duration-1000 group-hover:scale-103">
+                    
+                    <!-- 写真の上にうっすら重ねる、洗練された極小タグ -->
+                    <div class="absolute top-6 left-6 bg-white/70 backdrop-blur-md px-4 py-2 border-l border-gold/80">
+                        <span class="font-serif-en text-[9px] md:text-[10px] text-navy tracking-[0.25em] block">
+                            ATELIER ORDER <span class="text-gold mx-1">|</span> SUR-MESURE
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 写真下のミニマル＆特大タイポグラフィ -->
+                <div class="text-center space-y-7 max-w-2xl mx-auto pt-2">
+                    
+                    <!-- 大きく凛としたキャッチコピー -->
+                    <h3 class="font-serif-jp text-2xl md:text-3xl lg:text-4xl font-light text-navy tracking-[0.2em] leading-relaxed">
+                        世界にたった一着、<br>我が子のためだけの最高峰。
+                    </h3>
+                    
+                    <div class="w-12 h-[1px] bg-[#D4AF37] mx-auto"></div>
+
+                    <!-- 統合カード：価格〜CTA -->
+                    <div class="bg-[#FBF9F5] border border-[#E5E0D8] py-8 md:py-12 px-6 md:px-12 max-w-2xl mx-auto space-y-7">
+
+                        <!-- 価格表示エリア -->
+                        <div>
+                            <p class="font-serif-jp text-sm md:text-base text-stone-600 tracking-[0.2em] mb-2">
+                                フルオーダーお仕立て一式 ：
+                            </p>
+                            <div class="font-serif-en text-4xl md:text-5xl text-navy font-medium tracking-wide">
+                                ¥99,000<span class="text-lg md:text-xl font-serif-jp font-light text-stone-500 tracking-normal ml-2">（税込）〜</span>
+                            </div>
+                            <p class="font-serif-jp text-xs md:text-sm text-stone-600 tracking-wider mt-3 leading-relaxed">
+                                ※特注桐箱・進捗レポートなどの、すべてのおもてなしが含まれます。
+                            </p>
+                        </div>
+
+                        <!-- 受注ステータス：スリムなアクセントライン仕様 -->
+                        <div class="border-t border-b border-[#C5A880]/40 py-3">
+                            <span class="font-serif-jp text-sm md:text-base text-bordeaux tracking-[0.15em] font-medium">
+                                受注受付中
+                            </span>
+                        </div>
+
+                        <!-- CTAボタン ＆ 無料案内マイクロコピー -->
+                        <div class="pt-2">
+                            <a href="#concierge" class="inline-flex items-center justify-center space-x-4 px-10 py-4 border border-navy bg-navy hover:bg-[#6B1D2F] hover:border-[#6B1D2F] transition-all duration-300 shadow-md group w-full sm:w-auto">
+                                <span class="font-serif-jp text-xs md:text-sm tracking-[0.2em] text-white font-medium whitespace-nowrap">
+                                    職人へお仕立てを相談する（無料）
+                                </span>
+                                <span class="font-sans text-lg md:text-xl text-[#D4AF37] leading-none transform group-hover:translate-x-1.5 transition-all">
+                                    →
+                                </span>
+                            </a>
+                            <p class="font-serif-jp text-xs md:text-sm text-stone-600 tracking-wider mt-4 text-center leading-relaxed">
+                                ※ご相談・お見積もりは【完全無料】です。無理な勧誘も一切ございません。
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div> <!-- コンテンツ終了 -->
+
+        </div>
+    </section>
+
+
+    <!-- ■ Block 5: インフォメーション・動線（ご利用の流れ ＆ FAQ） -->
+    <section id="flow" class="py-24 lg:py-36 bg-premiumGray px-6 lg:px-12">
+        <div class="max-w-5xl mx-auto">
+            
+
+            <!-- FAQセクション -->
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="font-serif-en text-gold tracking-[0.3em] text-xs block mb-3">QUESTIONS</span>
+                    <h2 class="font-serif-jp text-2xl lg:text-3xl tracking-widest font-light text-navy">よくあるご質問</h2>
+                    <div class="w-12 h-[1px] bg-bordeaux mx-auto mt-4"></div>
+                </div>
+
+                <div class="space-y-4 font-serif-jp">
+                    <!-- Q1 -->
+                    <details class="faq-details group bg-white border border-navy/5 shadow-sm">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer select-none font-medium text-navy tracking-wide">
+                            <span>Q. なぜ年間の制作数が36着（月3着）に限られているのですか？</span>
+                            <span class="text-gold group-open:rotate-180 transition-transform duration-300">▼</span>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-neutral-50 text-xs lg:text-sm text-navy/80 leading-relaxed font-light">
+                            選び抜かれた正絹の解き・洗いから、職人による手縫い仕立て、桐箱の刻印まで一切妥協なく手作業で行うためです。日本の伝統美と手仕事を次の世代へ繋ぐため、仕立ての純度を極限まで保てる限界として「月3着」限定でお誂えを承っております。
+                        </div>
+                    </details>
+
+                    <!-- Q2 -->
+                    <details class="faq-details group bg-white border border-navy/5 shadow-sm">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer select-none font-medium text-navy tracking-wide">
+                            <span>Q. なぜ新品の反物ではなく、アンティーク正絹にこだわるのですか？</span>
+                            <span class="text-gold group-open:rotate-180 transition-transform duration-300">▼</span>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-neutral-50 text-xs lg:text-sm text-navy/80 leading-relaxed font-light">
+                           熟練職人による手織り・手染め・泥染めの正絹は、現代の大量生産では再現不可能な美術工芸品です。その一期一会の美しさを、愛犬の晴れ着として昇華させます。
+                        </div>
+                    </details>
+
+                    <!-- Q3 -->
+                    <details class="faq-details group bg-white border border-navy/5 shadow-sm">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer select-none font-medium text-navy tracking-wide">
+                            <span>Q. 紹介者がいなくても、初めてのオーダーは可能ですか？</span>
+                            <span class="text-gold group-open:rotate-180 transition-transform duration-300">▼</span>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-neutral-50 text-xs lg:text-sm text-navy/80 leading-relaxed font-light">
+                           従来はご紹介やプライベート制作のみで承っておりましたが、現在は初めてのオーナー様からも毎月の限定枠（月3着）に限りご相談を承っております。
+                        </div>
+                    </details>
+
+                     <!-- Q4 -->
+                    <details class="faq-details group bg-white border border-navy/5 shadow-sm">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer select-none font-medium text-navy tracking-wide">
+                            <span>Q. 職人「桂」の背景と仕立てへの想いについて教えてください。</span>
+                            <span class="text-gold group-open:rotate-180 transition-transform duration-300">▼</span>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-neutral-50 text-xs lg:text-sm text-navy/80 leading-relaxed font-light">
+                           数十年にわたり和裁と正絹に向き合ってきました。また、自身も愛犬とともに長年暮らしており、犬の骨格や動きを熟知しています。これらの知識を融合し、独自の立体仕立てと総手縫いにより最高級の作品を作り上げます。
+                        </div>
+                    </details>
+                    
+                   <!-- カード型誘導リンク（アコーディオン完全同等フォント ＆ 視認性強化矢印） -->
+                    <a href="#plan-details" class="block bg-white border border-navy/5 shadow-sm p-6 hover:border-navy hover:shadow-md transition-all duration-300 group">
+                        <div class="flex justify-between items-center select-none">
+                            <span class="font-serif-jp font-medium text-navy tracking-wide text-sm md:text-base">
+                                Q. お仕立ての詳しい流れ・商品仕様・採寸などに関するご質問
+                            </span>
+                            <span class="font-sans text-xl md:text-2xl text-gold font-light group-hover:translate-x-1.5 transition-transform duration-300 leading-none flex-shrink-0 ml-4">
+                                →
+                            </span>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ■ Block 6: フッター・ブロック（最下部） -->
+    <footer class="bg-navy-dark text-white pt-20 pb-12 px-6 lg:px-12 border-t border-white/5">
+       <div class="max-w-7xl mx-auto flex flex-col items-center">
+
+            <!-- 落款：ブランドシンボルマーク -->
+            <img src="assets/logo-turtle-gold.png" alt="アトリエ桂 シンボルマーク" class="w-24 md:w-28 h-auto mb-8 opacity-90">
+            
+            <!-- ブランドロゴ・ステートメント -->
+            <div class="text-center mb-12">
+                <p class="font-serif-en text-5xl lg:text-6xl tracking-[0.3em] font-medium text-white mb-3">
+                    Atelier
+                    <svg viewBox="0 0 426 341" class="w-auto h-14 lg:h-16 inline-block align-[-0.15em] text-gold" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 123.0,22.0 L 115.0,22.0 L 109.0,26.0 L 109.0,32.0 L 114.0,40.0 L 110.0,90.0 L 107.0,99.0 L 37.0,127.0 L 10.0,127.0 L 12.0,134.0 L 18.0,141.0 L 40.0,152.0 L 66.0,155.0 L 82.0,150.0 L 85.0,151.0 L 69.0,177.0 L 29.0,229.0 L 18.0,235.0 L 14.0,248.0 L 19.0,263.0 L 25.0,269.0 L 38.0,268.0 L 50.0,259.0 L 64.0,253.0 L 95.0,319.0 L 103.0,327.0 L 110.0,330.0 L 120.0,329.0 L 134.0,312.0 L 131.0,238.0 L 132.0,203.0 L 182.0,142.0 L 181.0,141.0 L 163.0,157.0 L 135.0,177.0 L 133.0,175.0 L 137.0,136.0 L 141.0,126.0 L 145.0,122.0 L 162.0,114.0 L 178.0,111.0 L 184.0,103.0 L 183.0,98.0 L 172.0,85.0 L 161.0,82.0 L 144.0,84.0 L 142.0,82.0 L 144.0,63.0 L 149.0,46.0 L 140.0,32.0 Z M 97.0,229.0 L 99.0,231.0 L 99.0,235.0 L 98.0,236.0 L 98.0,259.0 L 97.0,260.0 L 97.0,281.0 L 96.0,282.0 L 94.0,282.0 L 93.0,281.0 L 92.0,281.0 L 82.0,271.0 L 82.0,270.0 L 78.0,266.0 L 78.0,265.0 L 75.0,262.0 L 75.0,261.0 L 73.0,259.0 L 73.0,258.0 L 72.0,257.0 L 72.0,256.0 L 71.0,255.0 L 71.0,254.0 L 69.0,252.0 L 69.0,249.0 L 73.0,245.0 L 74.0,245.0 L 75.0,244.0 L 76.0,244.0 L 78.0,242.0 L 79.0,242.0 L 81.0,240.0 L 82.0,240.0 L 85.0,237.0 L 86.0,237.0 L 88.0,235.0 L 89.0,235.0 L 91.0,233.0 L 92.0,233.0 L 94.0,231.0 L 95.0,231.0 Z M 100.0,184.0 L 101.0,185.0 L 101.0,197.0 L 98.0,200.0 L 97.0,200.0 L 96.0,201.0 L 95.0,201.0 L 93.0,203.0 L 92.0,203.0 L 91.0,204.0 L 90.0,204.0 L 89.0,205.0 L 88.0,205.0 L 86.0,207.0 L 85.0,207.0 L 84.0,208.0 L 83.0,208.0 L 81.0,210.0 L 80.0,210.0 L 79.0,209.0 L 79.0,208.0 L 81.0,206.0 L 81.0,205.0 L 85.0,201.0 L 85.0,200.0 L 90.0,195.0 L 90.0,194.0 L 95.0,189.0 L 95.0,188.0 L 99.0,184.0 Z M 252.0,13.0 L 250.0,23.0 L 258.0,29.0 L 258.0,76.0 L 202.0,99.0 L 227.0,108.0 L 256.0,109.0 L 256.0,119.0 L 230.0,136.0 L 232.0,139.0 L 191.0,154.0 L 175.0,154.0 L 174.0,159.0 L 185.0,172.0 L 204.0,176.0 L 238.0,160.0 L 289.0,147.0 L 274.0,159.0 L 259.0,159.0 L 258.0,169.0 L 241.0,182.0 L 261.0,174.0 L 261.0,192.0 L 228.0,207.0 L 226.0,198.0 L 229.0,192.0 L 213.0,215.0 L 212.0,228.0 L 219.0,237.0 L 225.0,238.0 L 230.0,232.0 L 239.0,237.0 L 244.0,245.0 L 211.0,266.0 L 248.0,256.0 L 256.0,262.0 L 182.0,280.0 L 167.0,278.0 L 162.0,288.0 L 178.0,300.0 L 203.0,310.0 L 248.0,294.0 L 315.0,286.0 L 338.0,288.0 L 305.0,309.0 L 365.0,296.0 L 406.0,300.0 L 415.0,291.0 L 408.0,276.0 L 369.0,255.0 L 350.0,259.0 L 294.0,258.0 L 295.0,227.0 L 340.0,199.0 L 335.0,189.0 L 322.0,182.0 L 307.0,178.0 L 297.0,182.0 L 293.0,171.0 L 286.0,165.0 L 334.0,146.0 L 362.0,146.0 L 365.0,137.0 L 358.0,129.0 L 335.0,119.0 L 290.0,127.0 L 283.0,125.0 L 289.0,99.0 L 336.0,82.0 L 337.0,70.0 L 333.0,64.0 L 311.0,58.0 L 293.0,65.0 L 292.0,46.0 L 296.0,38.0 L 293.0,27.0 L 266.0,11.0 Z M 263.0,214.0 L 264.0,215.0 L 264.0,228.0 L 262.0,230.0 L 262.0,231.0 L 261.0,232.0 L 260.0,232.0 L 257.0,235.0 L 256.0,235.0 L 255.0,234.0 L 254.0,234.0 L 252.0,232.0 L 251.0,232.0 L 250.0,231.0 L 249.0,231.0 L 246.0,228.0 L 245.0,228.0 L 243.0,226.0 L 243.0,225.0 L 248.0,220.0 L 249.0,220.0 L 250.0,219.0 L 251.0,219.0 L 252.0,218.0 L 253.0,218.0 L 255.0,216.0 L 257.0,216.0 L 258.0,215.0 L 259.0,215.0 L 260.0,214.0 Z" fill="currentColor" fill-rule="evenodd"/>
+                    </svg>
+                </p>
+                <p class="font-serif-jp text-xs tracking-[0.2em] text-white/50 font-light">
+                    アンティーク正絹と熟練の手縫いが紡ぐ、年間36着の完全お誂え。
+                </p>
+            </div>
+
+            <!-- SNSリンク・公式アカウント -->
+            <div class="flex space-x-8 mb-12 font-serif-en text-xs tracking-[0.2em] text-white/70">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors flex items-center gap-2">
+                    <span>INSTAGRAM</span>
+                </a>
+                <a href="https://line.me" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors flex items-center gap-2">
+                    <span>OFFICIAL LINE</span>
+                </a>
+            </div>
+
+            <!-- リーガルリンク & コピーライト -->
+            <div class="w-full border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[11px] tracking-widest text-white/40 font-serif-jp gap-4">
+                <div class="flex space-x-6">
+                    <a href="javascript:void(0)" onclick="openTokushoModal()" class="font-serif-jp text-xs text-stone-400 hover:text-white transition-colors underline underline-offset-4">
+                        特定商取引法に基づく表記</a>
+                    <a href="#" class="hover:text-white/70 transition-colors">プライバシーポリシー</a>
+                    <a href="#" class="hover:text-white/70 transition-colors">運営会社</a>
+                </div>
+                <div>
+                    &copy; 2026 Atelier Katsura. All Rights Reserved.
+                </div>
+            </div>
+
+        </div>
+        <!-- 【追加】特定商取引法に基づく表記・モーダル画面 -->
+<div id="tokusho-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 md:p-12 shadow-2xl relative border border-stone-200">
+        
+        <!-- 閉じるボタン -->
+        <button onclick="closeTokushoModal()" class="absolute top-6 right-6 text-stone-400 hover:text-navy text-2xl font-light">✕</button>
+        
+        <h3 class="font-serif-jp text-xl text-navy mb-6 pb-2 border-b border-stone-200 tracking-widest">特定商取引法に基づく表記</h3>
+        
+        <div class="font-serif-jp text-xs text-stone-700 space-y-6 leading-relaxed">
+            <div>
+                <h4 class="font-bold text-navy mb-1">■ 完全受注生産品（フルオーダー）に関するキャンセルポリシー</h4>
+                <p>当アトリエのお仕立て品は、お客様ごとの愛犬のサイズ・ご要望に合わせて一針ずつ制作する「完全受注生産品」となります。そのため、ご決済完了後のキャンセル・返金には応じかねますのであらかじめご了承ください。</p>
+            </div>
+           <div>
+                <h4 class="font-bold text-navy mb-1">■ 返品・サイズお直しについて</h4>
+                <p>万が一、初期不良（縫製不良等）があった場合は到着後7日以内にご連絡ください。即座にお直しまたは再制作にて対応いたします。また、お届け後の愛犬の成長や体型変化につきましても、当アトリエの『一生涯サイズお直し保証』にて責任を持ってお仕立て直しを承ります。</p>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <button onclick="closeTokushoModal()" class="bg-navy text-white text-xs px-8 py-3 tracking-widest hover:bg-bordeaux transition-colors">
+                閉じる
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- モーダル開閉用Javascript -->
+<script>
+    function openTokushoModal() {
+        document.getElementById('tokusho-modal').classList.remove('hidden');
+    }
+    function closeTokushoModal() {
+        document.getElementById('tokusho-modal').classList.add('hidden');
+    }
+</script>
+    </footer>
+
+    <!-- 改良版：スライドショー制御スクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.kenburns-slide');
+            let currentIdx = 0;
+            const slideInterval = 6000; // 6秒ごとにスライドを切り替え
+
+            setInterval(() => {
+                const prevSlide = slides[currentIdx];
+                
+                // 次のインデックスを決定
+                currentIdx = (currentIdx + 1) % slides.length;
+                const nextSlide = slides[currentIdx];
+
+                // 1. 直前までアクティブだったスライドに「退場中（exiting）」クラスを付与し、
+                //    アクティブクラスを外す。これにより「ズーム倍率を1.08倍に保ったまま」フェードアウトを開始します。
+                prevSlide.classList.remove('active');
+                prevSlide.classList.add('exiting');
+
+                // 2. 次のスライドを「等倍（scale 1.0）」からゆっくりアクティブ（フェードイン＋ズーム）にする
+                nextSlide.classList.remove('exiting');
+                nextSlide.classList.add('active');
+
+                // 3. 退場中のスライドが完全に消える頃（約1.8秒後）に、exitingクラスを消去して初期状態に戻す
+                setTimeout(() => {
+                    prevSlide.classList.remove('exiting');
+                }, 1800);
+
+            }, slideInterval);
+        });
+    </script>
+
+<!-- ナビゲーションの現在地（スクロールスパイ）制御（COLLECTION対応・高精度版） -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const options = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px', 
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                // 現在見ているセクション：文字を【完全な白】にし、下線ゴールドを付与
+                                link.classList.remove('text-white/60');
+                                link.classList.add('text-white');
+                                link.style.setProperty('color', '#FFFFFF', 'important');
+                                link.style.setProperty('border-bottom', '2px solid #C5A880');
+                            } else {
+                                // 非アクティブセクション：文字を半透明に戻し、下線を削除
+                                link.classList.remove('text-white');
+                                link.classList.add('text-white/60');
+                                link.style.setProperty('color', 'rgba(255, 255, 255, 0.6)', 'important');
+                                link.style.removeProperty('border-bottom');
+                            }
+                        });
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+
+
+<!-- オープニングローダー制御スクリプト（ローダーのみフェードアウト） -->
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.classList.add('loader-finish');
+            }, 1200);
+        });
+    </script>
+
+<!-- ==========================================
+         スクロールフェードイン制御スクリプト
+         ========================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal-fade');
+
+            const revealOptions = {
+                root: null,
+                rootMargin: '-10% 0px -10% 0px', // 画面の上下10%に入ったところで発動する絶妙なタイミング
+                threshold: 0.1 // 要素が10%見えたら作動
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // 画面内に入ったら「active」クラスをつけて浮き上がらせる
+                        entry.target.classList.add('active');
+                        // 1度表示されたら監視を解除して、ブラウザのメモリを一切無駄遣いしないエコ設計
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+        });
+    </script>
+
+</body>
+</html>
