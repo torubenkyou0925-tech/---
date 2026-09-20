@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アトリエ桂 お問い合わせ</title>
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    textarea {
+      height: 120px;
+    }
+    button, .btn-line {
+      width: 100%;
+      padding: 14px;
+      background-color: #06C755;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      box-sizing: border-box;
+    }
+    button:disabled {
+      background-color: #ccc;
+    }
+    #step-line, #step-complete, #loading {
+      display: none;
+      text-align: center;
+    }
+    .status-msg {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>アトリエ桂 ご相談フォーム</h2>
+
+  <!-- 1. 入力フォーム -->
+  <div id="step-form">
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="name">お名前</label>
+        <input type="text" id="name" required placeholder="山田 太郎">
+      </div>
+      <div class="form-group">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" required placeholder="example@example.com">
+      </div>
+      <div class="form-group">
+        <label for="message">ご相談内容</label>
+        <textarea id="message" required placeholder="愛犬のお召しものについてのご相談など"></textarea>
+      </div>
+      <button type="submit" id="submitBtn">送信する</button>
+    </form>
+  </div>
+
+  <!-- ローディング表示 -->
+  <div id="loading">
+    <p>処理中です。しばらくお待ちください...</p>
+  </div>
+
+  <!-- 2. LINE連携案内画面 -->
+  <div id="step-line">
+    <div class="status-msg">
+      フォームの送信が完了しました！
+    </div>
+    <p>続いて、公式LINEと連携してご相談をスムーズに進めましょう。</p>
+    <button id="lineConnectBtn" class="btn-line">LINEで相談を続ける</button>
+  </div>
+
+  <!-- 3. 完了画面 -->
+  <div id="step-complete">
+    <div class="status-msg">
+      🎉 LINE連携が完了しました！
+    </div>
+    <p>アトリエ桂のLINE公式アカウントに確認メッセージをお送りしました。</p>
+    <p>LINEのトーク画面を開いてご確認ください。</p>
+  </div>
+
+  <script>
+    // ==========================================
+    // ⚙️ 設定情報
+    // ==========================================
+    const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxv652V3y5dZwuW0gFKuJROGk5znTFfTFK4AYdQrupWCbmmH01EpUCOimxrchE87vhq/exec"; 
+    const LIFF_ID = "2011636113-5obeXoPH";
+
+    let currentSessionId = "";
+
+    // 画面ロード時の処理（LIFFリダイレクト後の判定）
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionIdFromUrl = urlParams.get('session_id');
+
+      // URLにsession_idがある場合 ＝ LINEログインから戻ってきた状態
+      if (sessionIdFromUrl) {
+        showSection('loading');
+        await handleLiffCallback(sessionIdFromUrl);
+      }
+    });
+
+    // 1. フォーム送信処理
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showSection('loading');
+
+      const payload = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value
+      };
+
+      try {
+        const res = await fetch(GAS_WEBAPP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          currentSessionId = data.sessionId;
+          showSection('step-line');
+        } else {
+          alert('送信エラー: ' + data.message);
+          showSection('step-form');
+        }
+      } catch (err) {
+        alert('通信エラーが発生しました: ' + err.message);
+        showSection('step-form');
+      }
+    });
+
+    // 2. 「LINEで相談を続ける」ボタンタップ時
+    document.getElementById('lineConnectBtn').addEventListener('click', async () => {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+
+        if (!liff.isLoggedIn()) {
+          const redirectUri = window.location.origin + window.location.pathname + '?session_id=' + currentSessionId;
+          liff.login({ redirectUri: redirectUri });
+        } else {
+          const idToken = liff.getIDToken();
+          await sendLineConnectToGas(idToken, currentSessionId);
+        }
+      } catch (err) {
+        alert('LIFF初期化エラー: ' + err.message);
+      }
+    });
+
+    // 3. LIFFから戻ってきた後の処理
+    async function handleLiffCallback(sessionId) {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        if (liff.isLoggedIn()) {
+          const idToken = liff.getIDToken();
+          await sendLineConnectToGas(idToken, sessionId);
+        } else {
+          alert('LINE認証が行われませんでした。');
+          showSection('step-form');
+        }
+      } catch (err) {
+        alert('認証処理エラー: ' + err.message);
+        showSection('step-form');
+      }
+    }
+
+    // 4. GASの連携API（verifyAndConnectLine）を呼び出す処理
+    async function sendLineConnectToGas(idToken, sessionId) {
+      try {
+        const payload = {
+          action: "connect_line",
+          idToken: idToken,
+          sessionId: sessionId
+        };
+
+        const res = await fetch(GAS_WEBAPP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.status === 'success') {
+          showSection('step-complete');
+        } else {
+          alert('LINE連携失敗: ' + data.message);
+          showSection('step-line');
+        }
+      } catch (err) {
+        alert('LINE連携通信エラー: ' + err.message);
+        showSection('step-line');
+      }
+    }
+
+    // 表示切り替えユーティリティ
+    function showSection(sectionId) {
+      document.getElementById('step-form').style.display = 'none';
+      document.getElementById('step-line').style.display = 'none';
+      document.getElementById('step-complete').style.display = 'none';
+      document.getElementById('loading').style.display = 'none';
+
+      document.getElementById(sectionId).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
