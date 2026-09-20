@@ -105,142 +105,88 @@
   <!-- 3. 完了画面 -->
   <div id="step-complete">
     <div class="status-msg">
-      🎉 LINE連携が完了しました！
+      🎉 LINE連携が完了しました!
     </div>
     <p>アトリエ桂のLINE公式アカウントに確認メッセージをお送りしました。</p>
     <p>LINEのトーク画面を開いてご確認ください。</p>
   </div>
 
-  <script>
-    // ==========================================
-    // ⚙️ 設定情報
-    // ==========================================
-    const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxv652V3y5dZwuW0gFKuJROGk5znTFfTFK4AYdQrupWCbmmH01EpUCOimxrchE87vhq/exec"; 
-    const LIFF_ID = "2011636113-5obeXoPH";
 
-    let currentSessionId = "";
+<script>
+  // LINE公式アカウントのBasic ID（@から始まるIDを設定してください）
+  const LINE_BASIC_ID = "@031qggrt"; // ← ★ご自身のLINE IDに変更（例: @atelier_katsura）
 
-    // 画面ロード時の処理（LIFFリダイレクト後の判定）
-    window.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const sessionIdFromUrl = urlParams.get('session_id');
+  // GASのWebアプリURL
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyi08pD8_zyrQaZWLYj1AA0FOMjbtjr1JPBr-_cICgXNUo-72GSg632neJXvlXx8UzV/exec"; // ← ★GASのURLを入れる
 
-      // URLにsession_idがある場合 ＝ LINEログインから戻ってきた状態
-      if (sessionIdFromUrl) {
-        showSection('loading');
-        await handleLiffCallback(sessionIdFromUrl);
+  let currentSessionId = "";
+
+  // 1. フォーム送信処理
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "送信中...";
+
+    const formData = {
+      name: document.getElementById('name').value,
+      dogName: document.getElementById('dogName').value,
+      email: document.getElementById('email').value,
+      message: document.getElementById('message').value
+    };
+
+    try {
+      const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        // 発行されたセッションIDを保持
+        currentSessionId = result.sessionId;
+
+        // フォームを非表示にし、LINE案内画面を表示
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('lineNoticeArea').style.display = 'block';
+      } else {
+        alert('送信に失敗しました。時間をおいて再度お試しください。');
+        submitBtn.disabled = false;
+        submitBtn.textContent = "送信する";
       }
-    });
+    } catch (err) {
+      console.error(err);
+      alert('通信エラーが発生しました。');
+      submitBtn.disabled = false;
+      submitBtn.textContent = "送信する";
+    }
+  });
 
-    // 1. フォーム送信処理
-    document.getElementById('contactForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      showSection('loading');
-
-      const payload = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        message: document.getElementById('message').value
-      };
-
-      try {
-        const res = await fetch(GAS_WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (data.status === 'success') {
-          currentSessionId = data.sessionId;
-          showSection('step-line');
-        } else {
-          alert('送信エラー: ' + data.message);
-          showSection('step-form');
-        }
-      } catch (err) {
-        alert('通信エラーが発生しました: ' + err.message);
-        showSection('step-form');
-      }
-    });
-
-   // 2. 「LINEで相談を続ける」ボタンタップ時
-    document.getElementById('lineConnectBtn').addEventListener('click', async () => {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-
-        // リダイレクト先のURLに必ず session_id をパラメータとして付与する
-        const currentUrl = window.location.href.split('?')[0]; // パラメータを一度リセット
-        const redirectUrl = currentUrl + '?session_id=' + encodeURIComponent(currentSessionId);
-
-        if (!liff.isLoggedIn()) {
-          // ログインしていない場合は、セッションID付きのURLを戻り先にしてLINEログインへ
-          liff.login({ redirectUri: redirectUrl });
-        } else {
-          // 既にログイン済みの場合はそのままGASへ連携送信
-          const idToken = liff.getIDToken();
-          await sendLineConnectToGas(idToken, currentSessionId);
-        }
-      } catch (err) {
-        alert('LIFF処理エラー: ' + err.message);
-      }
-    });
-
-    // 3. LIFFから戻ってきた後の処理
-    async function handleLiffCallback(sessionId) {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        if (liff.isLoggedIn()) {
-          const idToken = liff.getIDToken();
-          await sendLineConnectToGas(idToken, sessionId);
-        } else {
-          alert('LINE認証が行われませんでした。');
-          showSection('step-form');
-        }
-      } catch (err) {
-        alert('認証処理エラー: ' + err.message);
-        showSection('step-form');
-      }
+  // 2. 「LINEで相談を続ける」ボタンタップ時の処理
+  document.getElementById('lineConnectBtn').addEventListener('click', () => {
+    if (!currentSessionId) {
+      alert('エラーが発生しました。フォームを最初からやり直してください。');
+      return;
     }
 
-    // 4. GASの連携API（verifyAndConnectLine）を呼び出す処理
-    async function sendLineConnectToGas(idToken, sessionId) {
-      try {
-        const payload = {
-          action: "connect_line",
-          idToken: idToken,
-          sessionId: sessionId
-        };
+    // LINEの送信欄に自動セットする文章（装飾付き）
+    const msgText = 
+      "ご相談コード：" + currentSessionId + "\n\n\n\n" +
+      "━━━━━━━━━━━━━━━━━\n" +
+      " 🐾 アトリエ桂 Web連携 🐾\n" +
+      "━━━━━━━━━━━━━━━━━\n" +
+      "※上のコードを消さずに\n" +
+      " このまま送信ボタンを押してください\n \n" +
+      " Send ───> [ 📤 送信 ]";
 
-        const res = await fetch(GAS_WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(payload)
-        });
+    // LINEアプリを起動してトーク画面を開くディープリンク
+    const lineUrl = "https://line.me/R/oaMessage/" + LINE_BASIC_ID + "/?" + encodeURIComponent(msgText);
 
-        const data = await res.json();
-        if (data.status === 'success') {
-          showSection('step-complete');
-        } else {
-          alert('LINE連携失敗: ' + data.message);
-          showSection('step-line');
-        }
-      } catch (err) {
-        alert('LINE連携通信エラー: ' + err.message);
-        showSection('step-line');
-      }
-    }
-
-    // 表示切り替えユーティリティ
-    function showSection(sectionId) {
-      document.getElementById('step-form').style.display = 'none';
-      document.getElementById('step-line').style.display = 'none';
-      document.getElementById('step-complete').style.display = 'none';
-      document.getElementById('loading').style.display = 'none';
-
-      document.getElementById(sectionId).style.display = 'block';
-    }
-  </script>
+    // LINEアプリを起動
+    window.location.href = lineUrl;
+  });
+</script>
 </body>
 </html>
