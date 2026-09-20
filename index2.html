@@ -165,20 +165,25 @@
       }
     });
 
-    // 2. 「LINEで相談を続ける」ボタンタップ時
+   // 2. 「LINEで相談を続ける」ボタンタップ時
     document.getElementById('lineConnectBtn').addEventListener('click', async () => {
       try {
         await liff.init({ liffId: LIFF_ID });
 
+        // リダイレクト先のURLに必ず session_id をパラメータとして付与する
+        const currentUrl = window.location.href.split('?')[0]; // パラメータを一度リセット
+        const redirectUrl = currentUrl + '?session_id=' + encodeURIComponent(currentSessionId);
+
         if (!liff.isLoggedIn()) {
-          const redirectUri = window.location.origin + window.location.pathname + '?session_id=' + currentSessionId;
-          liff.login({ redirectUri: redirectUri });
+          // ログインしていない場合は、セッションID付きのURLを戻り先にしてLINEログインへ
+          liff.login({ redirectUri: redirectUrl });
         } else {
+          // 既にログイン済みの場合はそのままGASへ連携送信
           const idToken = liff.getIDToken();
           await sendLineConnectToGas(idToken, currentSessionId);
         }
       } catch (err) {
-        alert('LIFF初期化エラー: ' + err.message);
+        alert('LIFF処理エラー: ' + err.message);
       }
     });
 
