@@ -214,7 +214,27 @@
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
         }
+
+        /* 選択されたボタン（おまかせバナー ＆ カラーチップ共通）のハイライト表示 */
+        #order-form .swatch-btn.selected {
+            border-color: #7A2837 !important; /* ボルドー色 */
+            background-color: #FDFBF7 !important; /* ごく薄いアイボリー */
+            box-shadow: 0 0 0 1px #7A2837;
+        }
+        #order-form .swatch-btn.selected .selection-badge {
+            background-color: #7A2837 !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        /* 丸型カラーチップが選択されたときの外枠強調 */
+        #order-form #color-swatches .swatch-btn.selected .swatch-chip {
+            transform: scale(1.08);
+            box-shadow: 0 0 0 3px #7A2837;
+        }
     </style>
+
+    
+
 </head>
 <body class="selection:bg-bordeaux selection:text-white antialiased">
 
@@ -629,8 +649,7 @@
 
 <!-- ==========================================
      見積もり（シミュレーション）:
-     Gemini 2ベース ✕ Claude色柄スウォッチ（シマー演出付き）
-     セクション背景：#ECEFF3
+     動的インタラクティブ・オーダーフォーム
      ========================================== -->
 <section id="estimate" class="py-24 md:py-36 px-6 lg:px-12 bg-[#ECEFF3] text-navy relative overflow-hidden border-b border-stone-200/80">
     <div class="max-w-4xl mx-auto relative z-10">
@@ -647,7 +666,7 @@
             </p>
         </div>
 
-        <!-- Gemini 2仕様：価格 ＆ 受注ステータスサマリー -->
+        <!-- 価格 ＆ 受注ステータスサマリー -->
         <div class="bg-white border border-stone-200/90 p-6 md:p-8 mb-12 text-center space-y-4 shadow-sm reveal-fade">
             <div class="inline-block bg-bordeaux text-white text-[11px] font-serif-jp px-4 py-1 tracking-widest">
                 月3着限定枠 ｜ 完全予約制[cite: 4]
@@ -660,63 +679,136 @@
             </div>
         </div>
 
-        <!-- Gemini 2仕様：2つの窓口選択カード（LINE / Web Form） -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-            <!-- LINE Card -->
-            <div class="bg-[#06C755]/10 border border-[#06C755]/30 p-8 flex flex-col justify-between text-center space-y-6 group hover:bg-[#06C755]/15 transition-all shadow-sm rounded-sm">
-                <div class="space-y-3">
-                    <span class="inline-block bg-[#06C755] text-white text-[10px] font-bold px-3 py-1 tracking-wider uppercase">Recommended</span>
-                    <h3 class="font-serif-jp text-lg text-navy font-medium tracking-widest">公式LINEで職人に相談</h3>
-                    <p class="font-serif-jp text-xs text-stone-600 leading-relaxed tracking-wider">
-                        愛犬の写真を送るだけで、似合う反物候補を写真ですぐにご案内[cite: 4]。一番スムーズな窓口です[cite: 4]。
-                    </p>
-                </div>
-                <a href="https://line.me" target="_blank" rel="noopener noreferrer" class="block w-full py-4 bg-[#06C755] hover:bg-[#05a847] text-white text-xs md:text-sm font-serif-jp font-medium tracking-widest transition-colors shadow-md">
-                    LINEでお仕立てを相談する[cite: 4]
-                </a>
-            </div>
-
-            <!-- Web Form Card -->
-            <div class="bg-white border border-stone-200/90 p-8 flex flex-col justify-between text-center space-y-6 group hover:bg-stone-50 transition-all shadow-sm rounded-sm">
-                <div class="space-y-3">
-                    <span class="inline-block bg-stone-700 text-white text-[10px] font-bold px-3 py-1 tracking-wider uppercase">Web Form</span>
-                    <h3 class="font-serif-jp text-lg text-navy font-medium tracking-widest">Webフォームから相談</h3>
-                    <p class="font-serif-jp text-xs text-stone-600 leading-relaxed tracking-wider">
-                        メールでのやり取りをご希望の方、事前にご希望条件を整理して送りたい方向けのフォームです[cite: 4]。
-                    </p>
-                </div>
-                <a href="#order-form" class="block w-full py-4 bg-navy hover:bg-bordeaux text-white text-xs md:text-sm font-serif-jp font-medium tracking-widest transition-colors shadow-md">
-                    フォームへ進む ↓[cite: 4]
-                </a>
-            </div>
+        <!-- 【2. フォーム直前の導入案内セクション（Form Preamble）】 -->
+        <div class="bg-white/90 border-l-4 border-gold-dark p-6 md:p-8 mb-10 shadow-sm space-y-3 font-serif-jp">
+            <h3 class="text-sm md:text-base font-medium text-navy tracking-wider flex items-center gap-2">
+                <span class="text-gold-dark">✦</span> 細かな採寸や色柄選びに迷ったら、まずはそのままお進みください
+            </h3>
+            <p class="text-xs md:text-sm text-stone-600 leading-relaxed tracking-wider">
+                ご自身での採寸が難しい場合でも、送信後にLINEまたはメールにて<strong>「物差しと愛犬が一緒に写ったお写真」</strong>を1枚お送りいただくだけでお仕立て可能です。
+            </p>
         </div>
 
-        <!-- Gemini 2仕様：お誂えシミュレーション ＆ 相談フォーム -->
+        <!-- メインフォームボックス -->
         <div id="order-form" class="bg-white text-navy p-8 md:p-12 shadow-xl border border-stone-200/90 reveal-fade">
-            <h3 class="font-serif-jp text-xl font-medium tracking-widest mb-2 text-center text-navy">お誂えシミュレーション ＆ ご相談</h3>
-            <p class="font-serif-jp text-xs text-stone-500 tracking-wider text-center mb-10">ご希望のイメージを選択いただくと、職人へスムーズに伝わります[cite: 4]</p>
+            <h3 class="font-serif-jp text-xl font-medium tracking-widest mb-2 text-center text-navy">お誂えシミュレーション ＆ ご相談フォーム</h3>
+            <p class="font-serif-jp text-xs text-stone-500 tracking-wider text-center mb-10">項目を選択・ご入力いただくと、職人へスムーズに伝わります[cite: 4]</p>
 
             <form class="space-y-8 font-serif-jp">
                 
-                <!-- ① 愛犬の情報 (Gemini 2) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">愛犬のお名前 <span class="text-bordeaux">*</span></label>
-                        <input type="text" id="sim-dogname" required placeholder="例：モモ" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">犬種 ＆ 体重 <span class="text-bordeaux">*</span></label>
-                        <input type="text" id="sim-dogtype" required placeholder="例：柴犬 / 8.5kg" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                <!-- ① 連絡ツールの選択【必須】 -->
+                <div class="space-y-3 p-6 bg-[#ECEFF3]/50 border border-stone-200/80">
+                    <label class="block text-xs font-semibold tracking-wider text-navy">
+                        ご希望の連絡ツール <span class="text-bordeaux">*</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="flex items-center gap-3 p-4 bg-white border border-stone-300 cursor-pointer hover:border-bordeaux transition-all">
+                            <input type="radio" name="contact_tool" value="line" checked class="text-bordeaux focus:ring-bordeaux">
+                            <span class="text-xs font-medium text-navy">公式LINEで相談・お見積り</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-4 bg-white border border-stone-300 cursor-pointer hover:border-bordeaux transition-all">
+                            <input type="radio" name="contact_tool" value="email" class="text-bordeaux focus:ring-bordeaux">
+                            <span class="text-xs font-medium text-navy">メールで相談・お見積り</span>
+                        </label>
                     </div>
                 </div>
 
-                <!-- ② ご希望の色柄（Claude仕様：光るスウォッチチップ） -->
-                <div class="space-y-3">
+                <!-- ② 飼い主様・愛犬の基本情報 -->
+                <div class="space-y-6 pt-2">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold tracking-wider text-stone-700">飼い主様のお名前 <span class="text-bordeaux">*</span></label>
+                        <input type="text" id="sim-yourname" required placeholder="例：桂木 徹" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                    </div>
+
+                    <!-- メール選択時のみふわっと表示されるメールアドレス欄 -->
+                    <div id="email-field-container" class="space-y-2 hidden transition-all duration-300">
+                        <label class="block text-xs font-semibold tracking-wider text-stone-700">メールアドレス <span class="text-bordeaux">*</span></label>
+                        <input type="email" id="sim-email" placeholder="example@domain.com" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold tracking-wider text-stone-700">愛犬のお名前 <span class="text-bordeaux">*</span></label>
+                            <input type="text" id="sim-dogname" required placeholder="例：モモ" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-semibold tracking-wider text-stone-700">犬種 <span class="text-bordeaux">*</span></label>
+                                <input type="text" id="sim-dogtype" required placeholder="例：柴犬" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-semibold tracking-wider text-stone-700">体重 (kg) <span class="text-bordeaux">*</span></label>
+                                <input type="number" step="0.1" id="sim-dogweight" required placeholder="8.5" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ③ 採寸・サイズのご希望【必須】 -->
+                <div class="space-y-4 pt-4 border-t border-stone-200">
+                    <label class="block text-xs font-semibold tracking-wider text-stone-700">
+                        採寸・サイズのご希望 <span class="text-bordeaux">*</span>
+                    </label>
+                    <div class="space-y-3">
+                        <label class="flex items-start gap-3 p-4 bg-stone-50 border border-stone-300 cursor-pointer hover:border-bordeaux transition-all">
+                            <input type="radio" name="sizing_method" value="photo" checked class="mt-0.5 text-bordeaux focus:ring-bordeaux">
+                            <div class="text-xs">
+                                <span class="font-medium text-navy block mb-1">あとから写真で採寸する（おすすめ）</span>
+                                <span class="text-stone-500 leading-relaxed block">移行後、物差しと愛犬が並んだお写真を1枚お送りいただくだけで、職人が採寸を代行いたします。</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-4 bg-stone-50 border border-stone-300 cursor-pointer hover:border-bordeaux transition-all">
+                            <input type="radio" name="sizing_method" value="manual" class="mt-0.5 text-bordeaux focus:ring-bordeaux">
+                            <div class="text-xs">
+                                <span class="font-medium text-navy block mb-1">自分で採寸して入力する</span>
+                                <span class="text-stone-500 leading-relaxed block">ご自身で各部位の寸法を測ってご入力いただきます。</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- 手動採寸詳細エリア（「自分で採寸」選択時のみ展開） -->
+                    <div id="manual-sizing-fields" class="hidden space-y-4 p-6 bg-stone-50 border border-stone-200 transition-all duration-300">
+                        <p class="text-[11px] text-stone-500 leading-relaxed">
+                            ※長裾（ながすそ）仕立てのため、多少のゆとりを持たせた美しいシルエットでお作りいたします。神経質に細かく測らなくても大丈夫ですのでご安心ください。
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-stone-600">首周り (cm)</label>
+                                <input type="text" id="measure-neck" placeholder="例：25" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-stone-600">胴回り (cm)</label>
+                                <input type="text" id="measure-chest" placeholder="例：42" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-stone-600">背丈・体長 (cm)</label>
+                                <input type="text" id="measure-length" placeholder="例：35" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- ④ デザイン・色柄のご希望【選択式】 -->
+                <div class="space-y-3 pt-4 border-t border-stone-200">
                     <label class="block text-xs font-semibold tracking-wider text-bordeaux">
                         ご希望の色柄（反物の雰囲気）
                     </label>
+                    
+                    <!-- 職人におまかせチップ（選択時に枠線と背景が変化して分かりやすい仕様） -->
+                    <div class="mb-3">
+                        <button type="button" class="swatch-btn selected w-full p-4 bg-white hover:bg-stone-50 border-2 border-stone-300 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm" data-value="職人におまかせ（毛色や雰囲気に合わせて提案）">
+                            <span class="text-xs font-medium text-navy flex items-center gap-2">
+                                <span class="text-gold-dark font-bold text-sm">✦</span> <span>職人におまかせ（愛犬の毛色や雰囲気に合わせて最適な反物をご提案）</span>
+                            </span>
+                            <span class="selection-badge text-[10px] bg-stone-200 text-stone-700 px-2 py-1 tracking-wider transition-colors">選択中</span>
+                        </button>
+                    </div>
+
+                    <!-- カラーチップ一覧 -->
                     <div class="flex flex-wrap gap-4 pt-1" id="color-swatches">
-                        <button type="button" class="swatch-btn selected flex flex-col items-center gap-2 cursor-pointer" data-value="紅系（あか）">
+                        <button type="button" class="swatch-btn flex flex-col items-center gap-2 cursor-pointer" data-value="紅系（あか）">
                             <span class="swatch-chip chip-red"></span>
                             <span class="text-xs text-stone-600">紅系[cite: 2]</span>
                         </button>
@@ -739,59 +831,82 @@
                     </div>
                 </div>
 
-                <!-- ③ イベント・時期 (Gemini 2) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">着用予定のイベント</label>
-                        <select id="sim-event" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
-                            <option>七五三・初詣</option>
-                            <option>愛犬のお誕生日・長寿祝い</option>
-                            <option>記念写真撮影会</option>
-                            <option>特に決まっていない（記念に）</option>
-                        </select>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">ご希望の納期・時期</label>
-                        <input type="text" id="sim-wishdate" placeholder="例：〇月頃までに希望" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
-                    </div>
-                </div>
-
-                <!-- ④ 飼い主様情報 (Gemini 2) -->
+                <!-- ⑤ ご着用予定日（納期）【任意】 -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-stone-200">
                     <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">飼い主様のお名前 <span class="text-bordeaux">*</span></label>
-                        <input type="text" id="sim-yourname" required placeholder="例：桂木 徹" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                        <label class="block text-xs font-semibold tracking-wider text-stone-700">ご着用予定日（納期のご希望）</label>
+                        <input type="date" id="sim-event-date" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-stone-700">メールアドレス <span class="text-bordeaux">*</span></label>
-                        <input type="email" id="sim-email" required placeholder="example@domain.com" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                        <label class="block text-xs font-semibold tracking-wider text-stone-700">着用予定のイベント用途</label>
+                        <select id="sim-event-purpose" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                            <option value="七五三・初詣">七五三・初詣</option>
+                            <option value="お誕生日・長寿祝い">お誕生日・長寿祝い</option>
+                            <option value="記念撮影会">記念撮影会</option>
+                            <option value="その他・記念に">その他・記念に</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- ⑤ メッセージ (Gemini 2) -->
+                <!-- ⑥ その他ご質問・ご要望【任意】 -->
                 <div class="space-y-2">
-                    <label class="block text-xs font-semibold tracking-wider text-stone-700">その他・ご質問やご相談</label>
+                    <label class="block text-xs font-semibold tracking-wider text-stone-700">その他ご質問・ご要望</label>
                     <textarea id="sim-message" rows="4" placeholder="体型で気になる点や、見てみたい反物のイメージなどをご自由にご記入ください。" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50"></textarea>
                 </div>
 
-                <!-- 送信ボタン群 -->
-                <div class="pt-4 text-center space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <a href="https://line.me" target="_blank" rel="noopener noreferrer" id="sim-line-btn" 
-                           class="flex items-center justify-center gap-3 py-4 px-6 bg-[#06C755] hover:bg-[#05a847] text-white transition-colors shadow-md text-xs md:text-sm font-medium tracking-widest">
-                            公式LINEでこの内容を相談する
-                        </a>
-                        <button type="submit" id="sim-submit-btn" 
-                                class="flex items-center justify-center gap-3 py-4 px-6 bg-navy hover:bg-bordeaux text-white transition-colors shadow-md text-xs md:text-sm font-medium tracking-widest">
-                            メールでこの内容を送信する
-                        </button>
-                    </div>
+                <!-- ⑦ 送信 / アクションボタン -->
+<div class="pt-6 text-center space-y-4">
+    <div id="action-btn-container">
+
+        <!-- LINE選択時のボタン -->
+        <button type="button" id="sim-line-action-btn"
+                class="flex items-center justify-center gap-3 w-full py-4 px-6 bg-[#06C755] hover:bg-[#05a847] text-white transition-colors shadow-md text-sm font-medium tracking-widest">
+            <span class="text-base">💬</span>
+            公式LINEでこの内容を送信・相談する
+        </button>
+
+        <!-- メール選択時のボタン -->
+        <button type="submit" id="sim-email-action-btn"
+                class="hidden flex items-center justify-center gap-3 w-full py-4 px-6 bg-navy hover:bg-bordeaux text-white transition-colors shadow-md text-sm font-medium tracking-widest">
+            ✉️ メールでこの内容を送信する
+        </button>
+
+    </div>
+
+    <p class="text-[11px] text-stone-500 tracking-wider">
+        ※ご送信後、24時間以内にアトリエ専任担当よりご連絡を差し上げます[cite: 4]。無理な勧誘は一切ございません[cite: 4]。
+    </p>
+</div>
                     <p class="text-[11px] text-stone-500 tracking-wider">
-                        ※送信完了後、24時間以内にアトリエ専任担当よりご連絡を差し上げます[cite: 4]。無理な勧誘は一切ございません[cite: 4]。
+                        ※ご送信後、24時間以内にアトリエ専任担当よりご連絡を差し上げます[cite: 4]。無理な勧誘は一切ございません[cite: 4]。
                     </p>
                 </div>
 
             </form>
+            <!-- LINE連携前の受付完了エリア -->
+<div id="lineNoticeArea"
+     class="hidden text-center py-10 px-6 bg-[#F9F7F2] border border-stone-200">
+
+    <div class="inline-block px-5 py-2 mb-6 bg-[#E8F5EC] text-[#137333] text-xs tracking-widest font-medium">
+        ✓ ご相談を受け付けました
+    </div>
+
+    <h3 class="font-serif-jp text-xl md:text-2xl text-navy tracking-widest mb-5">
+        あと1ステップで完了です
+    </h3>
+
+    <p class="font-serif-jp text-xs md:text-sm text-stone-600 leading-loose tracking-wider mb-8">
+        下記ボタンから公式LINEを開き、<br>
+        セットされているメッセージを<b>そのまま送信</b>してください。
+    </p>
+
+    <button type="button"
+            id="lineConnectBtn"
+            class="flex items-center justify-center gap-3 w-full py-4 px-6 bg-[#06C755] hover:bg-[#05a847] text-white transition-colors shadow-md text-sm font-medium tracking-widest">
+        💬 LINEで相談を続ける
+    </button>
+
+</div>
         </div>
 
     </div>
@@ -1012,86 +1127,383 @@
             document.getElementById('tokusho-modal').classList.add('hidden');
         }
 
-        // 4. シミュレーター ＆ リンク生成
-        (function() {
-            const BASE_PRICE = 99000;
-            let state = {
-                color: '紅系（あか）',
-                colorPrice: 0,
-                size: '小型犬（〜5kg程度）',
-                sizePrice: 0,
-                dogname: '',
-                wishdate: '',
-                yourname: ''
-            };
-
-            const LINE_URL = "https://line.me";
-            const MAIL_TO = "info@atelier-katsura.com";
-
-            // Swatch selection
-            document.querySelectorAll('#color-swatches .swatch-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#color-swatches .swatch-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    state.color = btn.getAttribute('data-value');
-                    state.colorPrice = parseInt(btn.getAttribute('data-price')) || 0;
-                    updateTotal();
-                });
-            });
-
-            // Size pill selection
-            document.querySelectorAll('#size-pills .size-pill').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#size-pills .size-pill').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    state.size = btn.getAttribute('data-value');
-                    state.sizePrice = parseInt(btn.getAttribute('data-price')) || 0;
-                    updateTotal();
-                });
-            });
-
-            // Text Inputs
-            ['input-dogname', 'input-wishdate', 'input-yourname'].forEach(id => {
-                document.getElementById(id).addEventListener('input', (e) => {
-                    if (id === 'input-dogname') state.dogname = e.target.value.trim();
-                    if (id === 'input-wishdate') state.wishdate = e.target.value.trim();
-                    if (id === 'input-yourname') state.yourname = e.target.value.trim();
-                    updateLinks();
-                });
-            });
-
-            function updateTotal() {
-                const total = BASE_PRICE + state.colorPrice + state.sizePrice;
-                document.getElementById('display-total').textContent = '¥' + total.toLocaleString();
-                updateLinks();
-            }
-
-            function buildSummary() {
-                return [
-                    '【アトリエ桂 お誂えシミュレーション相談】',
-                    'お客様のお名前：' + (state.yourname || '未記入'),
-                    '愛犬のお名前：' + (state.dogname || '未記入'),
-                    'ご希望の色柄：' + state.color,
-                    '体格の目安：' + state.size,
-                    'ご希望時期：' + (state.wishdate || '未定'),
-                    '概算合計：¥' + (BASE_PRICE + state.colorPrice + state.sizePrice).toLocaleString() + '（税込）',
-                    '',
-                    'まずは反物の写真を見せていただきたいです。'
-                ].join('\n');
-            }
-
-            function updateLinks() {
-                const text = buildSummary();
-                const encodedText = encodeURIComponent(text);
-                
-                document.getElementById('line-action-btn').href = LINE_URL;
-                
-                const subject = encodeURIComponent('【お誂え相談】' + (state.dogname ? state.dogname + 'の晴れ着について' : '反物についてのご相談'));
-                document.getElementById('mail-action-btn').href = 'mailto:' + MAIL_TO + '?subject=' + subject + '&body=' + encodedText;
-            }
-
-            updateTotal();
-        })();
+        
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ==========================================
+    // LINE / GAS 設定
+    // ==========================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDzssCz876CLQXNgAFmYqBs5z30ms_vFANe_TJM2UEke3JkPQ3F4IkuIwQMngm8Q1g/exec";
+    const LINE_BASIC_ID = "@031qggrt";
+    const MAIL_TO = "info@atelier-katsura.com";
+
+    let selectedColor = '職人におまかせ（毛色や雰囲気に合わせて提案）';
+    let currentSessionId = "";
+
+    // ==========================================
+    // ① 連絡ツール切り替え
+    // ==========================================
+    const contactToolRadios = document.querySelectorAll('input[name="contact_tool"]');
+    const emailFieldContainer = document.getElementById('email-field-container');
+    const emailInput = document.getElementById('sim-email');
+    const lineActionBtn = document.getElementById('sim-line-action-btn');
+    const emailActionBtn = document.getElementById('sim-email-action-btn');
+
+    contactToolRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+
+            if (this.value === 'email') {
+
+                emailFieldContainer.classList.remove('hidden');
+                emailInput.setAttribute('required', 'true');
+
+                lineActionBtn.classList.add('hidden');
+                emailActionBtn.classList.remove('hidden');
+
+            } else {
+
+                emailFieldContainer.classList.add('hidden');
+                emailInput.removeAttribute('required');
+
+                lineActionBtn.classList.remove('hidden');
+                emailActionBtn.classList.add('hidden');
+            }
+        });
+    });
+
+
+    // ==========================================
+    // ② 採寸方法切り替え
+    // ==========================================
+    const sizingMethodRadios = document.querySelectorAll('input[name="sizing_method"]');
+    const manualSizingFields = document.getElementById('manual-sizing-fields');
+
+    sizingMethodRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+
+            if (this.value === 'manual') {
+                manualSizingFields.classList.remove('hidden');
+            } else {
+                manualSizingFields.classList.add('hidden');
+            }
+
+        });
+    });
+
+
+    // ==========================================
+    // ③ 色柄選択
+    // ==========================================
+    const swatchButtons = document.querySelectorAll(
+        '#color-swatches .swatch-btn, #order-form button[data-value]'
+    );
+
+    swatchButtons.forEach(btn => {
+
+        btn.addEventListener('click', function() {
+
+            document.querySelectorAll('#order-form .swatch-btn')
+                .forEach(b => b.classList.remove('selected'));
+
+            this.classList.add('selected');
+
+            selectedColor = this.getAttribute('data-value');
+
+        });
+
+    });
+
+
+    // ==========================================
+    // ④ フォーム内容をまとめる
+    // ==========================================
+    function buildFormMessage() {
+
+        const yourname =
+            document.getElementById('sim-yourname').value.trim();
+
+        const email =
+            emailInput.value.trim();
+
+        const dogname =
+            document.getElementById('sim-dogname').value.trim();
+
+        const dogtype =
+            document.getElementById('sim-dogtype').value.trim();
+
+        const dogweight =
+            document.getElementById('sim-dogweight').value.trim();
+
+        const sizingMethod =
+            document.querySelector('input[name="sizing_method"]:checked').value;
+
+        const eventDate =
+            document.getElementById('sim-event-date').value || '未定';
+
+        const eventPurpose =
+            document.getElementById('sim-event-purpose').value;
+
+        const message =
+            document.getElementById('sim-message').value.trim() || 'なし';
+
+
+        let sizingText =
+            sizingMethod === 'photo'
+                ? 'あとから写真で採寸する'
+                : '自分で採寸する';
+
+
+        if (sizingMethod === 'manual') {
+
+            const neck =
+                document.getElementById('measure-neck').value || '-';
+
+            const chest =
+                document.getElementById('measure-chest').value || '-';
+
+            const length =
+                document.getElementById('measure-length').value || '-';
+
+            sizingText +=
+                ` (首周り:${neck}cm, 胴回り:${chest}cm, 背丈:${length}cm)`;
+        }
+
+
+        const bodyText = [
+
+            '【アトリエ桂 お誂えのご相談（Webフォーム）】',
+
+            '■ 飼い主様のお名前：' + yourname,
+
+            '■ メールアドレス：' +
+                (email || '未入力'),
+
+            '■ 愛犬のお名前：' + dogname,
+
+            '■ 犬種・体重：' +
+                dogtype + ' / ' + dogweight + 'kg',
+
+            '■ ご希望の色柄：' +
+                selectedColor,
+
+            '■ 採寸方法：' +
+                sizingText,
+
+            '■ ご着用予定：' +
+                eventPurpose +
+                '（希望日: ' +
+                eventDate +
+                '）',
+
+            '',
+
+            '■ その他ご相談：',
+
+            message
+
+        ].join('\n');
+
+
+        return {
+            name: yourname,
+            dogName: dogname,
+            email: email,
+            message: bodyText
+        };
+    }
+
+
+    // ==========================================
+    // ⑤ GASへ送信
+    // ==========================================
+    async function submitToGAS() {
+
+        const data = buildFormMessage();
+
+        const params = new URLSearchParams();
+
+        params.append('name', data.name);
+        params.append('dogName', data.dogName);
+        params.append('email', data.email);
+        params.append('message', data.message);
+
+
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params
+        });
+
+
+        const result = await response.json();
+
+
+        if (result.status !== 'success') {
+            throw new Error(
+                result.message || 'GASへの送信に失敗しました'
+            );
+        }
+
+
+        return result.sessionId;
+    }
+
+
+    // ==========================================
+    // ⑥ LINEボタン
+    // ==========================================
+    lineActionBtn.addEventListener('click', async function() {
+
+        const form = document.querySelector('#order-form form');
+
+        // HTML標準の必須入力チェック
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+
+        lineActionBtn.disabled = true;
+        lineActionBtn.innerHTML = '送信中…';
+
+
+        try {
+
+            currentSessionId = await submitToGAS();
+
+
+            // フォームを非表示
+            form.classList.add('hidden');
+
+
+            // 受付完了画面を表示
+            const noticeArea =
+                document.getElementById('lineNoticeArea');
+
+            noticeArea.classList.remove('hidden');
+
+
+            // 受付完了画面までスクロール
+            noticeArea.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                '通信エラーが発生しました。\n' +
+                '時間を置いて再度お試しください。'
+            );
+
+            lineActionBtn.disabled = false;
+
+            lineActionBtn.innerHTML =
+                '<span class="text-base">💬</span> 公式LINEでこの内容を送信・相談する';
+        }
+
+    });
+
+
+    // ==========================================
+    // ⑦ メール送信
+    // ==========================================
+    const form = document.querySelector('#order-form form');
+
+    if (form) {
+
+        form.addEventListener('submit', function(e) {
+
+            e.preventDefault();
+
+            // LINEボタンではなくメールボタンの場合のみ処理
+            const selectedTool =
+                document.querySelector(
+                    'input[name="contact_tool"]:checked'
+                ).value;
+
+            if (selectedTool !== 'email') {
+                return;
+            }
+
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+
+            const data = buildFormMessage();
+
+
+            const subject =
+                encodeURIComponent(
+                    '【お誂え相談】' +
+                    data.dogName +
+                    'ちゃんのお見積り依頼'
+                );
+
+
+            window.location.href =
+                `mailto:${MAIL_TO}` +
+                `?subject=${subject}` +
+                `&body=${encodeURIComponent(data.message)}`;
+
+        });
+
+    }
+
+
+    // ==========================================
+    // ⑧ LINEへ接続
+    // ==========================================
+    document.getElementById('lineConnectBtn')
+        .addEventListener('click', function() {
+
+            if (!currentSessionId) {
+                return;
+            }
+
+
+            const msgText =
+                "ご相談コード：" +
+                currentSessionId +
+                "\n\n\n\n" +
+
+                "━━━━━━━━━━━━━━━━━\n" +
+
+                " 🐾 アトリエ桂 Web連携 🐾\n" +
+
+                "━━━━━━━━━━━━━━━━━\n" +
+
+                "※上のコードを消さずに\n" +
+
+                " このまま送信ボタンを押してください\n\n" +
+
+                " Send ───> [ 📤 送信 ]";
+
+
+            const lineUrl =
+                "https://line.me/R/oaMessage/" +
+                LINE_BASIC_ID +
+                "/?" +
+                encodeURIComponent(msgText);
+
+
+            window.location.href = lineUrl;
+
+        });
+
+});
+</script>
+
 </body>
 </html>
