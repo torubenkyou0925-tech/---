@@ -3,65 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アトリエ桂 お問い合わせ</title>
-  <!-- LIFF SDK -->
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <title>アトリエ桂 ご相談フォーム</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
       max-width: 500px;
-      margin: 40px auto;
+      margin: 30px auto;
       padding: 20px;
       color: #333;
+      line-height: 1.6;
     }
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 18px;
     }
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-weight: bold;
+      font-size: 14px;
     }
     input[type="text"], input[type="email"], textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       box-sizing: border-box;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 16px;
     }
     textarea {
       height: 120px;
     }
-    button, .btn-line {
+    button {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       background-color: #06C755;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      box-sizing: border-box;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     button:disabled {
-      background-color: #ccc;
+      background-color: #bbb;
     }
-    #step-line, #step-complete, #loading {
+    #lineNoticeArea {
       display: none;
       text-align: center;
+      background: #f9f9f9;
+      padding: 25px 20px;
+      border-radius: 10px;
+      border: 1px solid #eee;
     }
-    .status-msg {
-      margin: 20px 0;
-      padding: 15px;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 6px;
-      color: #166534;
+    .success-badge {
+      display: inline-block;
+      background: #e6f4ea;
+      color: #137333;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
   </style>
 </head>
@@ -69,124 +71,105 @@
 
   <h2>アトリエ桂 ご相談フォーム</h2>
 
-  <!-- 1. 入力フォーム -->
-  <div id="step-form">
-    <form id="contactForm">
-      <div class="form-group">
-        <label for="name">お名前</label>
-        <input type="text" id="name" required placeholder="山田 太郎">
-      </div>
-      <div class="form-group">
-        <label for="email">メールアドレス</label>
-        <input type="email" id="email" required placeholder="example@example.com">
-      </div>
-      <div class="form-group">
-        <label for="message">ご相談内容</label>
-        <textarea id="message" required placeholder="愛犬のお召しものについてのご相談など"></textarea>
-      </div>
-      <button type="submit" id="submitBtn">送信する</button>
-    </form>
-  </div>
-
-  <!-- ローディング表示 -->
-  <div id="loading">
-    <p>処理中です。しばらくお待ちください...</p>
-  </div>
-
-  <!-- 2. LINE連携案内画面 -->
-  <div id="step-line">
-    <div class="status-msg">
-      フォームの送信が完了しました！
+  <!-- 入力フォーム -->
+  <form id="contactForm">
+    <div class="form-group">
+      <label for="name">お名前 <span style="color:red;">*</span></label>
+      <input type="text" id="name" required placeholder="山田 太郎">
     </div>
-    <p>続いて、公式LINEと連携してご相談をスムーズに進めましょう。</p>
-    <button id="lineConnectBtn" class="btn-line">LINEで相談を続ける</button>
-  </div>
-
-  <!-- 3. 完了画面 -->
-  <div id="step-complete">
-    <div class="status-msg">
-      🎉 LINE連携が完了しました!
+    <div class="form-group">
+      <label for="dogName">愛犬のお名前 <span style="color:red;">*</span></label>
+      <input type="text" id="dogName" required placeholder="ポチ">
     </div>
-    <p>アトリエ桂のLINE公式アカウントに確認メッセージをお送りしました。</p>
-    <p>LINEのトーク画面を開いてご確認ください。</p>
+    <div class="form-group">
+      <label for="email">メールアドレス <span style="color:red;">*</span></label>
+      <input type="email" id="email" required placeholder="example@example.com">
+    </div>
+    <div class="form-group">
+      <label for="message">ご相談内容 <span style="color:red;">*</span></label>
+      <textarea id="message" required placeholder="愛犬のお召しものやサイズについてのご相談など"></textarea>
+    </div>
+    <button type="submit" id="submitBtn">送信する</button>
+  </form>
+
+  <!-- フォーム送信完了後の表示エリア -->
+  <div id="lineNoticeArea">
+    <div class="success-badge">✓ フォーム受付完了</div>
+    <h3>あと1ステップで完了です！</h3>
+    <p style="font-size: 14px; color: #666; margin-bottom: 25px;">
+      下記ボタンを押してLINEを開き、セットされているメッセージを<b>そのまま送信</b>してください。
+    </p>
+    <button id="lineConnectBtn">LINEで相談を続ける ➔</button>
   </div>
 
+  <script>
+    // ==========================================
+    // ⚙️ 設定（ご自身のものに置き換えてください）
+    // ==========================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDzssCz876CLQXNgAFmYqBs5z30ms_vFANe_TJM2UEke3JkPQ3F4IkuIwQMngm8Q1g/exec"; // ★新しく発行された/exec URL
+    const LINE_BASIC_ID = "@031qggrt"; // ★例: @123abcd
 
-<script>
-  // LINE公式アカウントのBasic ID（@から始まるIDを設定してください）
-  const LINE_BASIC_ID = "@031qggrt"; // ← ★ご自身のLINE IDに変更（例: @atelier_katsura）
+    let currentSessionId = "";
 
-  // GASのWebアプリURL
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyi08pD8_zyrQaZWLYj1AA0FOMjbtjr1JPBr-_cICgXNUo-72GSg632neJXvlXx8UzV/exec"; // ← ★GASのURLを入れる
+    // フォーム送信処理
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
 
-  let currentSessionId = "";
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "送信中...";
 
-  // 1. フォーム送信処理
-  document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+      // CORSエラーを確実に回避するための通信形式データ（URLSearchParams）
+      const params = new URLSearchParams();
+      params.append('name', document.getElementById('name').value);
+      params.append('dogName', document.getElementById('dogName').value);
+      params.append('email', document.getElementById('email').value);
+      params.append('message', document.getElementById('message').value);
 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.textContent = "送信中...";
-
-    const formData = {
-      name: document.getElementById('name').value,
-      dogName: document.getElementById('dogName').value,
-      email: document.getElementById('email').value,
-      message: document.getElementById('message').value
-    };
-
-    try {
-      const response = await fetch(GAS_WEB_APP_URL, {
+      fetch(GAS_WEB_APP_URL, {
         method: 'POST',
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-
-      if (result.status === 'success') {
-        // 発行されたセッションIDを保持
-        currentSessionId = result.sessionId;
-
-        // フォームを非表示にし、LINE案内画面を表示
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('lineNoticeArea').style.display = 'block';
-      } else {
-        alert('送信に失敗しました。時間をおいて再度お試しください。');
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          currentSessionId = data.sessionId;
+          // 画面切り替え
+          document.getElementById('contactForm').style.display = 'none';
+          document.getElementById('lineNoticeArea').style.display = 'block';
+        } else {
+          alert('送信エラー: ' + data.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "送信する";
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert('通信エラーが発生しました。時間を置いて再度お試しください。');
         submitBtn.disabled = false;
         submitBtn.textContent = "送信する";
-      }
-    } catch (err) {
-      console.error(err);
-      alert('通信エラーが発生しました。');
-      submitBtn.disabled = false;
-      submitBtn.textContent = "送信する";
-    }
-  });
+      });
+    });
 
-  // 2. 「LINEで相談を続ける」ボタンタップ時の処理
-  document.getElementById('lineConnectBtn').addEventListener('click', () => {
-    if (!currentSessionId) {
-      alert('エラーが発生しました。フォームを最初からやり直してください。');
-      return;
-    }
+    // 「LINEで相談を続ける」ボタンを押した時
+    document.getElementById('lineConnectBtn').addEventListener('click', function() {
+      if (!currentSessionId) return;
 
-    // LINEの送信欄に自動セットする文章（装飾付き）
-    const msgText = 
-      "ご相談コード：" + currentSessionId + "\n\n\n\n" +
-      "━━━━━━━━━━━━━━━━━\n" +
-      " 🐾 アトリエ桂 Web連携 🐾\n" +
-      "━━━━━━━━━━━━━━━━━\n" +
-      "※上のコードを消さずに\n" +
-      " このまま送信ボタンを押してください\n \n" +
-      " Send ───> [ 📤 送信 ]";
+      const msgText = 
+        "ご相談コード：" + currentSessionId + "\n\n\n\n" +
+        "━━━━━━━━━━━━━━━━━\n" +
+        " 🐾 アトリエ桂 Web連携 🐾\n" +
+        "━━━━━━━━━━━━━━━━━\n" +
+        "※上のコードを消さずに\n" +
+        " このまま送信ボタンを押してください\n \n" +
+        " Send ───> [ 📤 送信 ]";
 
-    // LINEアプリを起動してトーク画面を開くディープリンク
-    const lineUrl = "https://line.me/R/oaMessage/" + LINE_BASIC_ID + "/?" + encodeURIComponent(msgText);
-
-    // LINEアプリを起動
-    window.location.href = lineUrl;
-  });
-</script>
+      const lineUrl = "https://line.me/R/oaMessage/" + LINE_BASIC_ID + "/?" + encodeURIComponent(msgText);
+      window.location.href = lineUrl;
+    });
+  </script>
 </body>
 </html>
