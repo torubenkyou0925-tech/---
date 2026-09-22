@@ -1222,98 +1222,76 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     function buildFormMessage() {
 
-        const yourname =
-            document.getElementById('sim-yourname').value.trim();
+    const yourname =
+        document.getElementById('sim-yourname').value.trim();
 
-        const email =
-            emailInput.value.trim();
+    const email =
+        emailInput.value.trim();
 
-        const dogname =
-            document.getElementById('sim-dogname').value.trim();
+    const dogname =
+        document.getElementById('sim-dogname').value.trim();
 
-        const dogtype =
-            document.getElementById('sim-dogtype').value.trim();
+    const dogtype =
+        document.getElementById('sim-dogtype').value.trim();
 
-        const dogweight =
-            document.getElementById('sim-dogweight').value.trim();
+    const dogweight =
+        document.getElementById('sim-dogweight').value.trim();
 
-        const sizingMethod =
-            document.querySelector('input[name="sizing_method"]:checked').value;
+    const sizingMethod =
+        document.querySelector(
+            'input[name="sizing_method"]:checked'
+        )?.value || 'photo';
 
-        const eventDate =
-            document.getElementById('sim-event-date').value || '未定';
+    const neck =
+        document.getElementById('measure-neck')?.value || '';
 
-        const eventPurpose =
-            document.getElementById('sim-event-purpose').value;
+    const chest =
+        document.getElementById('measure-chest')?.value || '';
 
-        const message =
-            document.getElementById('sim-message').value.trim() || 'なし';
+    const length =
+        document.getElementById('measure-length')?.value || '';
 
+    const eventDate =
+        document.getElementById('sim-event-date').value || '';
 
-        let sizingText =
+    const eventPurpose =
+        document.getElementById('sim-event-purpose').value || '';
+
+    const message =
+        document.getElementById('sim-message').value.trim();
+
+    return {
+
+        name: yourname,
+
+        dogName: dogname,
+
+        email: email,
+
+        dogType: dogtype,
+
+        dogWeight: dogweight,
+
+        color: selectedColor,
+
+        sizingMethod:
             sizingMethod === 'photo'
                 ? 'あとから写真で採寸する'
-                : '自分で採寸する';
+                : '自分で採寸する',
 
+        neck: neck,
 
-        if (sizingMethod === 'manual') {
+        chest: chest,
 
-            const neck =
-                document.getElementById('measure-neck').value || '-';
+        length: length,
 
-            const chest =
-                document.getElementById('measure-chest').value || '-';
+        eventDate: eventDate || '未定',
 
-            const length =
-                document.getElementById('measure-length').value || '-';
+        eventPurpose: eventPurpose,
 
-            sizingText +=
-                ` (首周り:${neck}cm, 胴回り:${chest}cm, 背丈:${length}cm)`;
-        }
-
-
-        const bodyText = [
-
-            '【アトリエ桂 お誂えのご相談（Webフォーム）】',
-
-            '■ 飼い主様のお名前：' + yourname,
-
-            '■ メールアドレス：' +
-                (email || '未入力'),
-
-            '■ 愛犬のお名前：' + dogname,
-
-            '■ 犬種・体重：' +
-                dogtype + ' / ' + dogweight + 'kg',
-
-            '■ ご希望の色柄：' +
-                selectedColor,
-
-            '■ 採寸方法：' +
-                sizingText,
-
-            '■ ご着用予定：' +
-                eventPurpose +
-                '（希望日: ' +
-                eventDate +
-                '）',
-
-            '',
-
-            '■ その他ご相談：',
-
-            message
-
-        ].join('\n');
-
-
-        return {
-            name: yourname,
-            dogName: dogname,
-            email: email,
-            message: bodyText
-        };
-    }
+        message: message || 'なし'
+    };
+}
 
 
     // ==========================================
@@ -1321,37 +1299,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     async function submitToGAS() {
 
-        const data = buildFormMessage();
+    const data = buildFormMessage();
 
-        const params = new URLSearchParams();
+    const params = new URLSearchParams();
 
-        params.append('name', data.name);
-        params.append('dogName', data.dogName);
-        params.append('email', data.email);
-        params.append('message', data.message);
+    params.append('name', data.name);
+    params.append('dogName', data.dogName);
+    params.append('email', data.email);
 
+    params.append('dogType', data.dogType);
+    params.append('dogWeight', data.dogWeight);
+    params.append('color', data.color);
 
-        const response = await fetch(GAS_WEB_APP_URL, {
+    params.append('sizingMethod', data.sizingMethod);
+    params.append('neck', data.neck);
+    params.append('chest', data.chest);
+    params.append('length', data.length);
+
+    params.append('eventDate', data.eventDate);
+    params.append('eventPurpose', data.eventPurpose);
+
+    params.append('message', data.message);
+
+    const response = await fetch(
+        GAS_WEB_APP_URL,
+        {
             method: 'POST',
+
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type':
+                    'application/x-www-form-urlencoded'
             },
+
             body: params
-        });
-
-
-        const result = await response.json();
-
-
-        if (result.status !== 'success') {
-            throw new Error(
-                result.message || 'GASへの送信に失敗しました'
-            );
         }
+    );
 
+    const result = await response.json();
 
-        return result.sessionId;
+    if (result.status !== 'success') {
+
+        throw new Error(
+            result.message ||
+            'GASへの送信に失敗しました'
+        );
     }
+
+    return result.sessionId;
+}
 
 
     // ==========================================
