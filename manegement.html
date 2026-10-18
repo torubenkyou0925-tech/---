@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6B1D2F">
+<title>Atelier Katsura｜制作・オーダー管理</title>
+<style>
+:root {
+  --navy: #0A162C;
+  --bordeaux: #6B1D2F;
+  --gold: #C5A880;
+  --ivory: #FBF9F5;
+  --ink: #182235;
+  --muted: #788090;
+  --line: #E7E3DC;
+  --card: #ffffff;
+  --soft: #F3F1EC;
+  --green: #2E7D62;
+  --amber: #B7791F;
+  --red: #A63D40;
+  --blue: #2B6CB0;
+  --shadow: 0 8px 28px rgba(10,22,44,.07);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans JP", "Yu Gothic", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+
+.app { min-height: 100vh; padding-bottom: 60px; }
+
+/* ヘッダー (#6B1D2F) */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  height: 64px; background: var(--bordeaux);
+  color: #fff; border-bottom: 1px solid rgba(0,0,0,.1);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; box-shadow: 0 2px 10px rgba(0,0,0,.15);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { font-family: Georgia, serif; font-size: 16px; letter-spacing: .08em; color: #fff; font-weight: 700; }
+.brand-sub { font-size: 11px; color: rgba(255,255,255,.8); letter-spacing: .12em; }
+.ext-link-btn {
+  border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.1); border-radius: 8px;
+  padding: 6px 10px; font-size: 11px; font-weight: 700; color: #fff; text-decoration: none;
+}
+
+.screen { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+.page-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.page-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 24px; margin: 0; color: var(--navy); }
+
+/* 一覧グループ */
+.status-group-section { margin-bottom: 32px; }
+.status-group-title {
+  font-size: 16px; font-weight: 700; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.group-active { background: #FFF4DD; color: var(--amber); border-left: 4px solid var(--amber); }
+.group-todo { background: #E2E8F0; color: #4A5568; border-left: 4px solid #718096; }
+.group-completed { background: #EAF4EF; color: var(--green); border-left: 4px solid var(--green); }
+.group-delivered { background: #EBF8FF; color: var(--blue); border-left: 4px solid var(--blue); }
+/* キャンセル済みグループスタイル */
+.group-canceled { background: #FFF5F5; color: var(--red); border-left: 4px solid var(--red); }
+
+/* 作品カード */
+.work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.work-card {
+  text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px; box-shadow: var(--shadow); transition: transform .15s;
+  display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+}
+.work-card:active { transform: scale(.98); }
+.work-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.work-name { font-weight: 700; font-size: 16px; color: var(--navy); }
+.work-owner { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.badge.amber { background: #FFF4DD; color: var(--amber); }
+.badge.blue { background: #EBF8FF; color: var(--blue); }
+.badge.gray { background: #EDF2F7; color: #4A5568; }
+.badge.red { background: #FFF5F5; color: var(--red); }
+
+.work-product { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.progress-bar-bg { height: 6px; background: #EDEAE4; border-radius: 99px; overflow: hidden; margin: 10px 0 6px; }
+.progress-bar-fill { display: block; height: 100%; background: var(--navy); border-radius: inherit; }
+.work-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+/* ナビゲーションサブヘッダー */
+.detail-head {
+  position: sticky; top: 64px; z-index: 30; background: rgba(251,249,245,.97);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  margin: -20px -16px 16px; padding: 10px 16px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.back-btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; color: var(--navy); font-weight: 700; font-size: 12px; }
+
+/* 画面切り替え用の大型主張ボタン */
+.nav-switch-lg-btn {
+  border: 2px solid var(--gold); background: #FFFDF9; border-radius: 12px;
+  padding: 10px 18px; color: var(--bordeaux); font-weight: 800; font-size: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(197,168,128,.3); transition: transform .1s;
+}
+.nav-switch-lg-btn:active { transform: scale(.97); }
+
+.hero-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-bottom: 16px; }
+.detail-dog { font-family: Georgia, "Noto Serif JP", serif; font-size: 26px; color: var(--navy); margin: 0; }
+.detail-owner { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+.section { margin-top: 20px; }
+.section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
+.section-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 17px; color: var(--navy); margin: 0; }
+.section-action {
+  border: 1px solid #C9BBA8; background: #fff; color: var(--navy); border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; font-weight: 700;
+}
+
+/* 工程カード */
+.process-list { display: flex; flex-direction: column; gap: 10px; }
+.process-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+  transition: all .15s ease; position: relative;
+}
+.process-card.active { border: 2px solid var(--gold); background: #FFFDF9; }
+.process-card.done { background: #FAF9F6; opacity: .9; }
+
+.process-top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.process-info-group { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
+.process-badge-num {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 12px; font-weight: 800; background: #F0EEE9; color: var(--muted); flex-shrink: 0;
+}
+.process-card.done .process-badge-num { background: #EAF4EF; color: var(--green); }
+.process-card.active .process-badge-num { background: var(--gold); color: #fff; }
+
+.process-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+.process-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.process-actions-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.toggle-btn-inline {
+  border: 1px solid #C9BBA8; background: #FAF7F2; color: var(--navy);
+  border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+
+.status-display-btn {
+  font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 8px;
+  border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+}
+.status-display-btn.todo { background: #EDF2F7; color: #4A5568; border-color: #CBD5E0; }
+.status-display-btn.active { background: #FFF0D4; color: var(--amber); border-color: #E8D2A7; }
+.status-display-btn.done { background: #EAF4EF; color: var(--green); border-color: #A3D9C9; }
+
+/* トグル領域 */
+.process-photos-container { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.process-photos-container.open { display: block; }
+
+.toggle-inner-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) {
+  .toggle-inner-grid { grid-template-columns: 2fr 1fr; }
+}
+
+.photo-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.photo-thumb { aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #EEEAE2; border: 1px solid var(--line); position: relative; }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.add-photo-btn-toggle {
+  aspect-ratio: 1; border: 1px dashed #C8BDAE; background: #FCFAF6; border-radius: 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--navy); font-size: 11px; font-weight: 700; cursor: pointer;
+}
+
+.step-memo-input {
+  width: 100%; min-height: 80px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  padding: 8px; font-size: 12px; line-height: 1.5; resize: vertical; color: var(--ink);
+}
+
+.memo-area {
+  width: 100%; min-height: 90px; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  padding: 10px; font-size: 13px; line-height: 1.6; resize: vertical; color: var(--ink);
+}
+
+/* オーダー情報ページ */
+.order-sec-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.order-sec-title {
+  font-family: Georgia, "Noto Serif JP", serif; font-size: 15px; color: var(--navy); margin: 0 0 12px;
+  padding-bottom: 6px; border-bottom: 2px solid var(--soft); display: flex; justify-content: space-between; align-items: center;
+}
+
+.dog-profile-row-lg { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; }
+.dog-avatar-lg {
+  width: 140px; height: 140px; border-radius: 12px; border: 2px solid var(--gold); object-fit: cover; background: #EEEAE2; flex-shrink: 0;
+}
+
+.info-cell-view { background: var(--soft); padding: 8px 10px; border-radius: 8px; }
+.info-cell-view .lbl { font-size: 10px; color: var(--muted); margin-bottom: 2px; }
+.info-cell-view .val { font-size: 13px; font-weight: 700; color: var(--ink); }
+
+.info-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.info-cell-edit { background: var(--soft); padding: 8px 10px; border-radius: 8px; }
+.info-cell-edit label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 2px; }
+.info-cell-edit input { width: 100%; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; font-size: 12px; font-weight: 700; background: #fff; }
+
+.detail-order-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.detail-order-table th, .detail-order-table td {
+  padding: 8px; text-align: left; font-size: 12px; border-bottom: 1px solid var(--line); vertical-align: top;
+}
+.detail-order-table th { width: 35%; color: var(--muted); font-weight: 600; background: #FAF9F6; }
+
+.tsv-textarea {
+  width: 100%; height: 90px; border: 1px solid var(--line); border-radius: 8px; padding: 8px;
+  font-size: 12px; font-family: monospace; line-height: 1.4; white-space: pre; margin-top: 6px;
+}
+
+/* モーダル */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100; background: rgba(10,22,44,.5);
+  backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal-card {
+  background: #fff; width: 100%; max-width: 500px; max-height: 85vh; border-radius: 16px;
+  display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,.2);
+}
+.modal-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-weight: 700; font-size: 15px; color: var(--navy); margin: 0; }
+.modal-body { padding: 16px; overflow-y: auto; flex: 1; }
+.modal-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; background: #FAF9F6; }
+
+/* ボタン立体スタイル */
+.btn-sec {
+  border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 9px 16px;
+  font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 2px 4px rgba(0,0,0,.06);
+  transition: all .1s ease;
+}
+.btn-sec:active { transform: translateY(1px); box-shadow: none; }
+
+.btn-pri {
+  border: 0; background: var(--navy); border-radius: 8px; padding: 9px 18px;
+  font-size: 12px; font-weight: 700; color: #fff; box-shadow: 0 3px 8px rgba(10,22,44,.2);
+  transition: all .1s ease;
+}
+.btn-pri:active { transform: translateY(1px); box-shadow: none; }
+
+.btn-danger {
+  border: 0; background: var(--red); border-radius: 8px; padding: 9px 16px;
+  font-size: 12px; font-weight: 700; color: #fff; box-shadow: 0 3px 8px rgba(166,61,64,.2);
+  transition: all .1s ease;
+}
+.btn-danger:active { transform: translateY(1px); box-shadow: none; }
+
+.btn-success {
+  border: 0; background: var(--green); border-radius: 8px; padding: 9px 16px;
+  font-size: 12px; font-weight: 700; color: #fff; box-shadow: 0 3px 8px rgba(46,125,98,.2);
+  transition: all .1s ease;
+}
+.btn-success:active { transform: translateY(1px); box-shadow: none; }
+
+.btn-blue {
+  border: 0; background: var(--blue); border-radius: 8px; padding: 9px 16px;
+  font-size: 12px; font-weight: 700; color: #fff; box-shadow: 0 3px 8px rgba(43,108,176,.2);
+  transition: all .1s ease;
+}
+.btn-blue:active { transform: translateY(1px); box-shadow: none; }
+.btn-blue:disabled, .btn-blue.disabled {
+  background: #CBD5E0 !important; color: #718096 !important; box-shadow: none !important;
+  cursor: not-allowed !important; opacity: 0.7;
+}
+
+/* ★ ドラッグ＆ドロップ用ドロップインジケーター（線） */
+.edit-step-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px; background: #FAF9F6;
+  border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; cursor: grab;
+  position: relative; transition: border-color .1s, transform .1s;
+}
+.edit-step-item.dragging { opacity: 0.3; background: #E2E8F0; }
+.drag-handle { cursor: grab; color: var(--muted); font-size: 18px; padding: 0 4px; user-select: none; }
+.edit-step-item input { flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+
+/* 挿入位置を示す青い横線インジケーター */
+.edit-step-item.drop-above::before {
+  content: ""; position: absolute; top: -5px; left: 0; right: 0; height: 4px;
+  background: var(--blue); border-radius: 2px; box-shadow: 0 0 6px rgba(43,108,176,.5); z-index: 10;
+}
+.edit-step-item.drop-below::after {
+  content: ""; position: absolute; bottom: -5px; left: 0; right: 0; height: 4px;
+  background: var(--blue); border-radius: 2px; box-shadow: 0 0 6px rgba(43,108,176,.5); z-index: 10;
+}
+
+.file-input { display: none; }
+.form-group { margin-bottom: 12px; }
+.form-group label { font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; }
+.form-group input, .form-group select { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-size: 13px; }
+
+.warning-box {
+  background: #FFF5F5; border-left: 4px solid var(--red); padding: 10px 12px;
+  border-radius: 4px; font-size: 12px; color: #9B2C2C; margin-bottom: 12px; font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">Atelier Katsura</div>
+      <div class="brand-sub">制作管理</div>
+    </div>
+    <a href="javascript:void(0)" onclick="goToMainPage()" class="ext-link-btn">メインページへ ↗</a>
+  </header>
+
+  <main id="app"></main>
+</div>
+
+<input id="photoPicker" class="file-input" type="file" accept="image/*" capture="environment" multiple>
+<input id="clientPhotoPicker" class="file-input" type="file" accept="image/*" capture="environment" multiple>
+
+<!-- 工程完了確認モーダル -->
+<div id="doneConfirmModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head"><h3 class="modal-title">工程の完了確認</h3></div>
+    <div class="modal-body">
+      <p style="margin:0 0 10px; font-size:13px;">以下の工程を<strong>「完了」</strong>にしますか？</p>
+      <div id="doneTargetName" style="font-weight:700; font-size:15px; color:var(--navy); background:var(--soft); padding:8px 10px; border-radius:6px; margin-bottom:12px;"></div>
+      <textarea id="doneModalMemo" class="step-memo-input" placeholder="この工程でのこだわり・気付きを入力..."></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeDoneModal()">キャンセル</button>
+      <button class="btn-pri" onclick="confirmDoneProcess()">完了にする</button>
+    </div>
+  </div>
+</div>
+
+<!-- 作品確認モーダル -->
+<div id="workStatusConfirmModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head"><h3 class="modal-title" id="workModalTitle">作品ステータスの変更確認</h3></div>
+    <div class="modal-body">
+      <p id="workModalMessage" style="margin:0 0 12px; font-size:14px; font-weight:700; color:var(--navy);"></p>
+      <div id="workModalWarning" class="warning-box" style="display:none;"></div>
+      <p id="workModalSubText" style="font-size:12px; color:var(--muted); margin:0;"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeWorkStatusModal()">キャンセル</button>
+      <button id="workModalConfirmBtn" class="btn-pri" onclick="executeWorkStatusChange()">変更を確定する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 工程編集モーダル -->
+<div id="stepEditModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head"><h3 class="modal-title">⚙ 制作工程の編集</h3></div>
+    <div class="modal-body">
+      <p style="font-size:11px; color:var(--muted); margin:0 0 10px;">☷ を掴んで移動すると、青いラインの位置に差し込まれます。</p>
+      <div id="editStepList"></div>
+      <button class="btn-sec" style="width:100%; margin-top:6px; border-style:dashed;" onclick="addModalStep()">＋ 新しい工程を追加</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeStepEditModal()">キャンセル</button>
+      <button class="btn-pri" onclick="saveStepEditModal()">変更を保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 手動作品追加モーダル -->
+<div id="addWorkModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head"><h3 class="modal-title">＋ 新しい作品の追加</h3></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>商品タイプ</label>
+        <select id="newWorkProductType">
+          <option value="着物">犬用着物</option>
+          <option value="カフェマット">カフェマット</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>ワンちゃんのお名前</label>
+        <input type="text" id="newWorkDog" placeholder="例: ルークちゃん">
+      </div>
+      <div class="form-group">
+        <label>飼い主様のお名前</label>
+        <input type="text" id="newWorkOwner" placeholder="例: 高橋様">
+      </div>
+      <div class="form-group">
+        <label>商品詳細名称</label>
+        <input type="text" id="newWorkProduct" placeholder="例: 犬用着物・晴れ着仕様">
+      </div>
+      <div class="form-group">
+        <label>納期</label>
+        <input type="date" id="newWorkDue">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeAddWorkModal()">キャンセル</button>
+      <button class="btn-pri" onclick="saveNewWork()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MAIN_PAGE_URL = "https://atelier-katsura.example.com"; 
+
+function goToMainPage() {
+  if (MAIN_PAGE_URL && !MAIN_PAGE_URL.includes("example.com")) {
+    window.location.href = MAIN_PAGE_URL;
+  } else {
+    alert("「メインページへ」のリンク先URLは未設定です。");
+  }
+}
+
+const DEFAULT_STEPS = [
+  { id: "s1", name: "型紙・布を決める", time: "—", status: "todo", memo: "" },
+  { id: "s2", name: "布の準備・印付け", time: "約1〜1.5時間", status: "todo", memo: "" },
+  { id: "s3", name: "裁断・パーツ整理", time: "約1時間10分", status: "todo", memo: "" },
+  { id: "s4", name: "袖を仕立てる", time: "約3時間40分", status: "todo", memo: "" },
+  { id: "s5", name: "見頃を仕立てる", time: "約3時間20分", status: "todo", memo: "" },
+  { id: "s6", name: "裾を仕立てる", time: "約3時間30分", status: "todo", memo: "" },
+  { id: "s7", name: "全体を仕立てる", time: "約5時間", status: "todo", memo: "" },
+  { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
+];
+
+// ★ テスト・開発用に各グループ2~3個ずつの初期データを配置
+const works = [
+  // 1. 進行中グループ (active)
+  {
+    id: "momo",
+    workStatus: "active",
+    productType: "着物",
+    dog: "モモちゃん", owner: "山田様", product: "犬用着物・正絹赤古典柄", due: "2026-12-25", deliveredAt: null, urgency: "amber",
+    basicOrder: { dogName: "モモ", dogSex: "女の子 (トイプードル)", photo: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80", neck: "22cm", chest: "35cm", length: "28cm", neckToHip: "26cm" },
+    clientPhotos: ["https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=400&q=80"],
+    detailOrder: [{ key: "使用する生地", val: "正絹 雲取り花菱文様（赤）" }, { key: "帯仕様", val: "金襴織 扇面重ね" }],
+    steps: [
+      { id: "s1", name: "型紙・布を決める", time: "—", status: "done", memo: "確認済み" },
+      { id: "s2", name: "布の準備・印付け", time: "約1〜1.5時間", status: "done", memo: "地直し完了" },
+      { id: "s3", name: "裁断・パーツ整理", time: "約1時間10分", status: "done", memo: "柄合わせ完了" },
+      { id: "s4", name: "袖を仕立てる", time: "約3時間40分", status: "active", memo: "ほつれ注意" },
+      { id: "s5", name: "見頃を仕立てる", time: "約3時間20分", status: "todo", memo: "" },
+      { id: "s6", name: "裾を仕立てる", time: "約3時間30分", status: "todo", memo: "" },
+      { id: "s7", name: "全体を仕立てる", time: "約5時間", status: "todo", memo: "" },
+      { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
+    ],
+    photos: [{ stepId: "s4", src: "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?auto=format&fit=crop&w=500&q=80" }], openPhotosStepId: "s4", workMemo: "柄合わせをしっかり確認。"
+  },
+  {
+    id: "choko",
+    workStatus: "active",
+    productType: "カフェマット",
+    dog: "チョコちゃん", owner: "木村様", product: "カフェマット・フリルリボン仕様", due: "2026-11-15", deliveredAt: null, urgency: "amber",
+    basicOrder: { dogName: "チョコ", dogSex: "男の子 (ダックス)", photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80" },
+    clientPhotos: [], detailOrder: [{ key: "マットサイズ", val: "50cm × 40cm" }, { key: "裏地", val: "滑り止め加工生地" }],
+    steps: DEFAULT_STEPS.map((s, i) => i < 2 ? { ...s, status: "done" } : i === 2 ? { ...s, status: "active" } : { ...s }),
+    photos: [], openPhotosStepId: null, workMemo: "裏地の滑り止め加工向きに注意。"
+  },
+
+  // 2. 未着手グループ (todo)
+  {
+    id: "coco",
+    workStatus: "todo",
+    productType: "着物",
+    dog: "ココちゃん", owner: "佐藤様", product: "犬用着物・古布リメイク", due: "2027-01-18", deliveredAt: null, urgency: "gray",
+    basicOrder: { dogName: "ココ", dogSex: "男の子", neck: "19cm", chest: "30cm", length: "22cm", neckToHip: "20cm" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "古布傷みチェック必要。"
+  },
+  {
+    id: "maru",
+    workStatus: "todo",
+    productType: "カフェマット",
+    dog: "マルちゃん", owner: "林様", product: "カフェマット・キルティング刺繍", due: "2027-02-01", deliveredAt: null, urgency: "gray",
+    basicOrder: { dogName: "マル", dogSex: "女の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "イニシャル刺繍位置の確認待ち。"
+  },
+
+  // 3. 完成グループ (completed)
+  {
+    id: "hana",
+    workStatus: "completed",
+    productType: "カフェマット",
+    dog: "ハナちゃん", owner: "田中様", product: "カフェマット・高級レース仕立て", due: "2026-10-30", deliveredAt: null, urgency: "green",
+    basicOrder: { dogName: "ハナ", dogSex: "女の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "アイロンがけ完了。梱包準備中。"
+  },
+  {
+    id: "sakura",
+    workStatus: "completed",
+    productType: "着物",
+    dog: "サクラちゃん", owner: "中村様", product: "犬用着物・ピンク桜柄振袖", due: "2026-11-01", deliveredAt: null, urgency: "green",
+    basicOrder: { dogName: "サクラ", dogSex: "女の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "写真撮影完了。"
+  },
+
+  // 4. 納品済みグループ (delivered)
+  {
+    id: "taro",
+    workStatus: "delivered",
+    productType: "着物",
+    dog: "タロちゃん", owner: "鈴木様", product: "犬用着物・黒羽織袴", due: "2026-10-10", deliveredAt: "2026-10-12 14:30", urgency: "blue",
+    basicOrder: { dogName: "タロ", dogSex: "男の子", neck: "25cm", chest: "40cm", length: "30cm", neckToHip: "28cm" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "無事発送完了。"
+  },
+  {
+    id: "kotaro",
+    workStatus: "delivered",
+    productType: "着物",
+    dog: "小太郎ちゃん", owner: "渡辺様", product: "犬用着物・紺地葵文様", due: "2026-09-20", deliveredAt: "2026-09-22 11:15", urgency: "blue",
+    basicOrder: { dogName: "小太郎", dogSex: "男の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "店頭お渡し完了。"
+  },
+
+  // 5. キャンセル済みグループ (canceled)
+  {
+    id: "leo",
+    workStatus: "canceled",
+    productType: "着物",
+    dog: "レオちゃん", owner: "小林様", product: "犬用着物・ゴールド錦織", due: "2026-12-01", deliveredAt: null, urgency: "red",
+    basicOrder: { dogName: "レオ", dogSex: "男の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "お客様都合によりキャンセル。"
+  },
+  {
+    id: "puchi",
+    workStatus: "canceled",
+    productType: "カフェマット",
+    dog: "プチちゃん", owner: "加藤様", product: "カフェマット・デニムリメイク", due: "2026-11-20", deliveredAt: null, urgency: "red",
+    basicOrder: { dogName: "プチ", dogSex: "女の子" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "生地在庫切れのためキャンセル。"
+  }
+];
+
+let activeWorkId = null;
+let currentTab = "production";
+let pendingPhotoStepId = null;
+let pendingDoneStepId = null;
+let pendingTargetWorkStatus = null;
+let editingStepsTemp = [];
+let isOrderAdminEditMode = false;
+
+const app = document.getElementById("app");
+const picker = document.getElementById("photoPicker");
+const clientPicker = document.getElementById("clientPhotoPicker");
+
+function getWork() { return works.find(w => w.id === activeWorkId); }
+function completedCount(w) { return w.steps.filter(s => s.status === "done").length; }
+function progressPct(w) { return Math.round((completedCount(w) / w.steps.length) * 100) || 0; }
+function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
+
+// ---- 1. 親ページ（作品一覧：キャンセル済みグループを最下部に追加） ----
+function renderList() {
+  activeWorkId = null;
+  isOrderAdminEditMode = false;
+
+  const groups = [
+    { key: "active", title: "⚡ 進行中の作品", class: "group-active" },
+    { key: "todo", title: "☕ 未着手の作品", class: "group-todo" },
+    { key: "completed", title: "✨ 完成した作品", class: "group-completed" },
+    { key: "delivered", title: "📦 納品済みの作品", class: "group-delivered" },
+    { key: "canceled", title: "🚫 キャンセル済みの作品", class: "group-canceled" } // ★ 最下部に配置
+  ];
+
+  app.innerHTML = `
+    <section class="screen">
+      <div class="page-header-flex">
+        <h1 class="page-title">制作中の作品一覧</h1>
+        <button class="btn-pri" onclick="openAddWorkModal()">＋ 手動で作品を追加</button>
+      </div>
+
+      ${groups.map(g => {
+        const list = works.filter(w => w.workStatus === g.key);
+        return `
+          <div class="status-group-section">
+            <div class="status-group-title ${g.class}">
+              <span>${g.title}</span>
+              <span style="font-size:12px;">${list.length} 件</span>
+            </div>
+            ${list.length === 0 ? `<p style="font-size:12px; color:var(--muted); padding-left:8px;">該当する作品はありません。</p>` : `
+              <div class="work-grid">
+                ${list.map(w => {
+                  const pct = progressPct(w);
+                  return `
+                    <div class="work-card" onclick="openWork('${w.id}', 'production')">
+                      <div>
+                        <div class="work-top">
+                          <div>
+                            <div class="work-name">${escapeHtml(w.dog)}</div>
+                            <div class="work-owner">${escapeHtml(w.owner)}様</div>
+                          </div>
+                          <span class="badge ${w.workStatus === 'canceled' ? 'red' : w.urgency === 'amber' ? 'amber' : w.urgency === 'blue' ? 'blue' : 'gray'}">
+                            ${w.productType}
+                          </span>
+                        </div>
+                        <div class="work-product">${escapeHtml(w.product)}</div>
+                      </div>
+
+                      <div style="margin-top:12px;">
+                        <div style="font-size:11px; color:var(--muted);">納期: <strong>${escapeHtml(w.due || "未設定")}</strong></div>
+                        ${w.deliveredAt ? `<div style="font-size:10px; color:var(--blue); margin-top:2px;">納品日時: ${w.deliveredAt}</div>` : ""}
+                        <div class="progress-bar-bg"><span class="progress-bar-fill" style="width:${pct}%"></span></div>
+                        <div class="work-meta">
+                          <span>${completedCount(w)}/${w.steps.length} 工程</span>
+                          <span>${pct}% 完了</span>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            `}
+          </div>
+        `;
+      }).join("")}
+    </section>
+  `;
+}
+
+function openWork(id, tab = "production") {
+  activeWorkId = id;
+  currentTab = tab;
+  renderScreen();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+function renderScreen() {
+  const w = getWork();
+  if (!w) return renderList();
+  if (currentTab === "production") {
+    renderProductionScreen(w);
+  } else {
+    renderOrderScreen(w);
+  }
+}
+
+// ---- 2. 制作管理画面 ----
+function renderProductionScreen(w) {
+  const pct = progressPct(w);
+  const isCompleted = w.workStatus === "completed";
+  
+  app.innerHTML = `
+    <section class="screen">
+      <div class="detail-head">
+        <button class="back-btn" onclick="renderList()">← ホーム</button>
+        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(w.dog)}の制作管理</div>
+        <div></div>
+      </div>
+
+      <div class="hero-row" style="margin-top:8px;">
+        <div>
+          <h1 class="detail-dog">${escapeHtml(w.dog)}</h1>
+          <div class="detail-owner">${escapeHtml(w.owner)}様｜${escapeHtml(w.product)}</div>
+        </div>
+        <button class="nav-switch-lg-btn" onclick="switchTab('order')">
+          📄 オーダー情報へ ➔
+        </button>
+      </div>
+
+      <!-- 作品全体の制作メモ -->
+      <section class="section" style="margin-top:12px;">
+        <div class="section-head">
+          <h2 class="section-title">作品全体の制作メモ</h2>
+        </div>
+        <textarea class="memo-area" oninput="saveWorkMemo(this.value)" placeholder="制作して気づいたこと、次回のための注意点、引き継ぎ事項など">${escapeHtml(w.workMemo || "")}</textarea>
+      </section>
+
+      <!-- 制作工程一覧 -->
+      <section class="section">
+        <div class="section-head">
+          <h2 class="section-title">制作工程</h2>
+          <button class="section-action" onclick="openStepEditModal()">⚙ 工程を編集</button>
+        </div>
+        
+        <div class="process-list">
+          ${w.steps.map((s, index) => renderProcessCard(w, s, index)).join("")}
+        </div>
+      </section>
+
+      <!-- 作品全体のステータス操作エリア -->
+      <section class="section" style="margin-top:32px; padding-top:16px; border-top:1px solid var(--line);">
+        <div style="background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+          <div>
+            <span style="font-size:13px; font-weight:700; color:var(--navy);">作品全体のステータス操作:</span>
+            ${!isCompleted && w.workStatus !== 'delivered' ? `<div style="font-size:10px; color:var(--muted); margin-top:2px;">※「完成」にすると「納品済み」ボタンが押せるようになります。</div>` : ''}
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-success" onclick="promptWorkStatusChange('completed')">✨ 作品を完成にする</button>
+            <button class="btn-blue ${!isCompleted ? 'disabled' : ''}" ${!isCompleted ? 'disabled' : ''} onclick="promptWorkStatusChange('delivered')">
+              📦 納品済みにする
+            </button>
+            <button class="btn-danger" onclick="promptWorkStatusChange('canceled')">キャンセル</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  `;
+}
+
+// 制作工程カード描画
+function renderProcessCard(w, s, index) {
+  const isDone = s.status === "done";
+  const isActive = s.status === "active";
+  const photoList = w.photos.filter(p => p.stepId === s.id);
+  const isPhotoOpen = w.openPhotosStepId === s.id;
+
+  return `
+    <div class="process-card ${s.status} ${isActive ? 'active' : ''}">
+      <div class="process-top-bar">
+        <div class="process-info-group" onclick="handleStepStatusNext('${s.id}')">
+          <div class="process-badge-num">${isDone ? "✓" : isActive ? "▶" : index + 1}</div>
+          <div>
+            <div class="process-name">${escapeHtml(s.name)}</div>
+            <div class="process-time">目安: ${escapeHtml(s.time)}</div>
+          </div>
+        </div>
+
+        <div class="process-actions-right">
+          <button class="toggle-btn-inline" onclick="togglePhotoArea(event, '${s.id}')">
+            📷 写真・メモ (${photoList.length}) ${isPhotoOpen ? "▲" : "▼"}
+          </button>
+
+          <button class="status-display-btn ${s.status}" onclick="handleStepStatusNext('${s.id}')">
+            ${isDone ? "✓ 完了" : isActive ? "▶ 進行中" : "未着手"}
+          </button>
+        </div>
+      </div>
+
+      <div class="process-photos-container ${isPhotoOpen ? 'open' : ''}">
+        <div class="toggle-inner-grid">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px;">顧客共有用 写真</div>
+            <div class="photo-3col-grid">
+              ${photoList.map(p => `
+                <div class="photo-thumb"><img src="${escapeHtml(p.src)}" alt="工程写真"></div>
+              `).join("")}
+              <button class="add-photo-btn-toggle" onclick="triggerAddPhoto(event, '${s.id}')">
+                <span>＋</span><span>写真追加</span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <textarea class="step-memo-input" oninput="saveStepMemo('${s.id}', this.value)" placeholder="この工程でのこだわり・気付きを入力...">${escapeHtml(s.memo || "")}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function handleStepStatusNext(stepId) {
+  const w = getWork();
+  if (!w) return;
+  const step = w.steps.find(s => s.id === stepId);
+  if (!step) return;
+
+  if (step.status === "todo") {
+    step.status = "active";
+    w.openPhotosStepId = stepId;
+    renderScreen();
+  } else if (step.status === "active") {
+    pendingDoneStepId = stepId;
+    document.getElementById("doneTargetName").innerText = step.name;
+    document.getElementById("doneModalMemo").value = step.memo || "";
+    document.getElementById("doneConfirmModal").classList.add("open");
+  } else if (step.status === "done") {
+    if (confirm(`「${step.name}」を未着手に戻しますか？`)) {
+      step.status = "todo";
+      renderScreen();
+    }
+  }
+}
+
+function closeDoneModal() {
+  document.getElementById("doneConfirmModal").classList.remove("open");
+  pendingDoneStepId = null;
+}
+
+function confirmDoneProcess() {
+  const w = getWork();
+  if (!w || !pendingDoneStepId) return;
+  const step = w.steps.find(s => s.id === pendingDoneStepId);
+  if (step) {
+    step.status = "done";
+    step.memo = document.getElementById("doneModalMemo").value;
+  }
+  closeDoneModal();
+  renderScreen();
+}
+
+function togglePhotoArea(e, stepId) {
+  e.stopPropagation();
+  const w = getWork();
+  if (!w) return;
+  w.openPhotosStepId = (w.openPhotosStepId === stepId) ? null : stepId;
+  renderScreen();
+}
+
+function saveStepMemo(stepId, val) {
+  const w = getWork();
+  if (!w) return;
+  const step = w.steps.find(s => s.id === stepId);
+  if (step) step.memo = val;
+}
+
+function saveWorkMemo(val) {
+  const w = getWork();
+  if (w) w.workMemo = val;
+}
+
+function promptWorkStatusChange(targetStatus) {
+  const w = getWork();
+  if (!w) return;
+
+  pendingTargetWorkStatus = targetStatus;
+  
+  const titleEl = document.getElementById("workModalTitle");
+  const msgEl = document.getElementById("workModalMessage");
+  const warnEl = document.getElementById("workModalWarning");
+  const subEl = document.getElementById("workModalSubText");
+  const confirmBtn = document.getElementById("workModalConfirmBtn");
+
+  warnEl.style.display = "none";
+  warnEl.innerHTML = "";
+
+  if (targetStatus === "completed") {
+    titleEl.innerText = "✨ 作品の完成確認";
+    msgEl.innerText = `「${w.dog}」の作品を『完成』にしますか？`;
+    subEl.innerText = "完成にすると「納品済み」ステータスへ進めるようになります。";
+    confirmBtn.className = "btn-success";
+    confirmBtn.innerText = "完成にする";
+
+    const uncompleted = w.steps.filter(s => s.status !== "done");
+    if (uncompleted.length > 0) {
+      warnEl.style.display = "block";
+      warnEl.innerHTML = `⚠️ 未完了の工程が ${uncompleted.length} 件残っています：<br>・` + 
+        uncompleted.map(s => `${s.name} (${s.status === 'active' ? '進行中' : '未着手'})`).join("<br>・");
+    }
+
+  } else if (targetStatus === "delivered") {
+    titleEl.innerText = "📦 納品の確認";
+    msgEl.innerText = `「${w.dog}」の作品を『納品済み』にしますか？`;
+    subEl.innerText = "納品済みに変更すると、納品日時が記録されます。";
+    confirmBtn.className = "btn-blue";
+    confirmBtn.innerText = "納品済みにする";
+
+  } else if (targetStatus === "canceled") {
+    titleEl.innerText = "⚠️ キャンセル確認";
+    msgEl.innerText = `「${w.dog}」の注文を『キャンセル済み』にしますか？`;
+    subEl.innerText = "※削除されず、親ページの「キャンセル済みの作品」グループに移動・保管されます。"; // ★ 削除せず保管を明確化
+    confirmBtn.className = "btn-danger";
+    confirmBtn.innerText = "キャンセル済みにする";
+  }
+
+  document.getElementById("workStatusConfirmModal").classList.add("open");
+}
+
+function closeWorkStatusModal() {
+  document.getElementById("workStatusConfirmModal").classList.remove("open");
+  pendingTargetWorkStatus = null;
+}
+
+// ★ キャンセル時も削除せずステータス変更のみで保持
+function executeWorkStatusChange() {
+  const w = getWork();
+  if (!w || !pendingTargetWorkStatus) return;
+
+  w.workStatus = pendingTargetWorkStatus;
+  
+  if (pendingTargetWorkStatus === "delivered") {
+    const now = new Date();
+    w.deliveredAt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  }
+
+  closeWorkStatusModal();
+  renderScreen();
+}
+
+function triggerAddPhoto(e, stepId) {
+  e.stopPropagation();
+  pendingPhotoStepId = stepId;
+  picker.value = "";
+  picker.click();
+}
+
+picker.addEventListener("change", (e) => {
+  const w = getWork();
+  if (!w || !pendingPhotoStepId) return;
+  const files = [...e.target.files];
+  files.forEach(file => {
+    w.photos.push({
+      stepId: pendingPhotoStepId,
+      src: URL.createObjectURL(file)
+    });
+  });
+  w.openPhotosStepId = pendingPhotoStepId;
+  pendingPhotoStepId = null;
+  renderScreen();
+});
+
+// ---- 3. オーダー情報ページ ----
+function switchTab(tab) {
+  currentTab = tab;
+  renderScreen();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+function toggleOrderAdminEdit() {
+  isOrderAdminEditMode = !isOrderAdminEditMode;
+  renderScreen();
+}
+
+function renderOrderScreen(w) {
+  const bo = w.basicOrder || {};
+  const clientPhotos = w.clientPhotos || [];
+  
+  app.innerHTML = `
+    <section class="screen">
+      <div class="detail-head">
+        <button class="back-btn" onclick="renderList()">← ホーム</button>
+        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(w.dog)}のオーダー情報</div>
+        <div></div>
+      </div>
+
+      <div class="hero-row" style="margin-top:8px;">
+        <div>
+          <h1 class="detail-dog">${escapeHtml(w.dog)}のオーダー詳細</h1>
+          <div class="detail-owner">注文者: ${escapeHtml(w.owner)}様</div>
+        </div>
+        <button class="nav-switch-lg-btn" onclick="switchTab('production')">
+          ✂ 制作管理画面へ ➔
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+        <button class="${isOrderAdminEditMode ? 'btn-danger' : 'btn-sec'}" onclick="toggleOrderAdminEdit()">
+          ${isOrderAdminEditMode ? '🔒 編集を終了する (閲覧モードへ)' : '⚙ 管理者編集モードに切り替え'}
+        </button>
+      </div>
+
+      <!-- A. 基本情報 -->
+      <div class="order-sec-card">
+        <div class="order-sec-title">
+          <span>A. 基本情報</span>
+          ${isOrderAdminEditMode ? '<span style="color:var(--red); font-size:11px;">[編集モード]</span>' : '<span style="color:var(--muted); font-size:11px;">[閲覧専用]</span>'}
+        </div>
+
+        <div class="dog-profile-row-lg">
+          <img class="dog-avatar-lg" src="${escapeHtml(bo.photo || 'https://via.placeholder.com/150')}" alt="愛犬写真">
+          
+          <div style="flex:1; min-width:200px;">
+            ${isOrderAdminEditMode ? `
+              <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <input type="text" value="${escapeHtml(bo.dogName || w.dog)}" onchange="updateBasicOrder('dogName', this.value)" style="font-weight:700; font-size:16px; border:1px solid var(--line); border-radius:4px; padding:4px; width:50%;">
+                <input type="text" value="${escapeHtml(bo.dogSex || '')}" placeholder="性別・犬種" onchange="updateBasicOrder('dogSex', this.value)" style="font-size:12px; border:1px solid var(--line); border-radius:4px; padding:4px; width:50%;">
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+                <span style="font-size:11px; font-weight:700; color:var(--bordeaux);">納期:</span>
+                <input type="date" value="${escapeHtml(w.due || '')}" onchange="updateDue(this.value)" style="border:1px solid var(--line); border-radius:4px; padding:3px 6px; font-size:12px;">
+              </div>
+            ` : `
+              <div style="font-size:22px; font-weight:800; color:var(--navy);">${escapeHtml(bo.dogName || w.dog)}</div>
+              <div style="font-size:13px; color:var(--muted); margin-top:2px;">性別・犬種: ${escapeHtml(bo.dogSex || "未確認")}</div>
+              <div style="font-size:13px; font-weight:700; color:var(--bordeaux); margin-top:6px;">納期: ${escapeHtml(w.due || "未設定")}</div>
+            `}
+
+            <div class="${isOrderAdminEditMode ? 'info-grid-edit' : 'info-grid-edit'}" style="margin-top:10px;">
+              ${isOrderAdminEditMode ? `
+                <div class="info-cell-edit"><label>首周り</label><input type="text" value="${escapeHtml(bo.neck||'')}" onchange="updateBasicOrder('neck', this.value)"></div>
+                <div class="info-cell-edit"><label>胴回り</label><input type="text" value="${escapeHtml(bo.chest||'')}" onchange="updateBasicOrder('chest', this.value)"></div>
+                <div class="info-cell-edit"><label>背丈</label><input type="text" value="${escapeHtml(bo.length||'')}" onchange="updateBasicOrder('length', this.value)"></div>
+                <div class="info-cell-edit"><label>首〜お尻</label><input type="text" value="${escapeHtml(bo.neckToHip||'')}" onchange="updateBasicOrder('neckToHip', this.value)"></div>
+              ` : `
+                <div class="info-cell-view"><div class="lbl">首周り</div><div class="val">${escapeHtml(bo.neck||'未測定')}</div></div>
+                <div class="info-cell-view"><div class="lbl">胴回り</div><div class="val">${escapeHtml(bo.chest||'未測定')}</div></div>
+                <div class="info-cell-view"><div class="lbl">背丈</div><div class="val">${escapeHtml(bo.length||'未測定')}</div></div>
+                <div class="info-cell-view"><div class="lbl">首〜お尻</div><div class="val">${escapeHtml(bo.neckToHip||'未測定')}</div></div>
+              `}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 顧客送付写真 -->
+      <div class="order-sec-card">
+        <div class="order-sec-title">
+          <span>📷 顧客送付写真</span>
+          ${isOrderAdminEditMode ? `<button class="btn-sec" style="font-size:11px; padding:4px 8px;" onclick="triggerAddClientPhoto()">＋ 写真を追加</button>` : ''}
+        </div>
+        
+        <div class="photo-3col-grid">
+          ${clientPhotos.map(src => `
+            <div class="photo-thumb" style="height:110px;"><img src="${escapeHtml(src)}" alt="顧客送付写真"></div>
+          `).join("")}
+          ${clientPhotos.length === 0 ? `<p style="font-size:12px; color:var(--muted); grid-column:span 3;">登録されている顧客写真はありません。</p>` : ''}
+        </div>
+      </div>
+
+      <!-- B. 詳細オーダー情報 -->
+      <div class="order-sec-card">
+        <div class="order-sec-title">
+          <span>B. 詳細オーダー情報 (確定仕様)</span>
+        </div>
+
+        ${isOrderAdminEditMode ? `
+          <p style="font-size:11px; color:var(--muted); margin:0 0 6px;">TSV・コピペで一括更新が可能です。</p>
+          <textarea class="tsv-textarea" id="tsvInput" placeholder="例:&#10;使用する生地	正絹 雲取り花菱文様&#10;帯仕様	金襴織 扇面重ね"></textarea>
+          <button class="btn-pri" style="margin-top:6px; width:100%;" onclick="applyTsvImport()">📋 テキストから表を一括更新</button>
+        ` : ''}
+
+        <table class="detail-order-table" style="margin-top:10px;">
+          <tbody>
+            ${(w.detailOrder || []).map((item) => `
+              <tr>
+                <th>${escapeHtml(item.key)}</th>
+                <td>${escapeHtml(item.val)}</td>
+              </tr>
+            `).join("")}
+            ${(w.detailOrder || []).length === 0 ? `<tr><td colspan="2" style="color:var(--muted);">詳細オーダー情報は登録されていません。</td></tr>` : ''}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+}
+
+function updateBasicOrder(key, val) {
+  const w = getWork();
+  if (w) {
+    if (!w.basicOrder) w.basicOrder = {};
+    w.basicOrder[key] = val;
+    if (key === "dogName") w.dog = val;
+  }
+}
+
+function updateDue(val) {
+  const w = getWork();
+  if (w) w.due = val;
+}
+
+function triggerAddClientPhoto() {
+  clientPicker.value = "";
+  clientPicker.click();
+}
+
+clientPicker.addEventListener("change", (e) => {
+  const w = getWork();
+  if (!w) return;
+  if (!w.clientPhotos) w.clientPhotos = [];
+  [...e.target.files].forEach(file => {
+    w.clientPhotos.push(URL.createObjectURL(file));
+  });
+  renderOrderScreen(w);
+});
+
+function applyTsvImport() {
+  const w = getWork();
+  if (!w) return;
+  const text = document.getElementById("tsvInput").value.trim();
+  if (!text) return alert("テキストが入力されていません。");
+
+  const lines = text.split("\n");
+  const newDetails = [];
+  lines.forEach(line => {
+    const parts = line.split("\t");
+    if (parts.length >= 2) {
+      newDetails.push({ key: parts[0].trim(), val: parts[1].trim() });
+    } else if (parts.length === 1 && parts[0].trim()) {
+      newDetails.push({ key: "メモ", val: parts[0].trim() });
+    }
+  });
+
+  w.detailOrder = newDetails;
+  renderOrderScreen(w);
+  alert("詳細オーダー表を更新しました。");
+}
+
+// ---- 4. 工程編集モーダル（ドロップ位置の青いインジケーター表示を追加） ----
+function openStepEditModal() {
+  const w = getWork();
+  if (!w) return;
+  editingStepsTemp = JSON.parse(JSON.stringify(w.steps));
+  renderStepEditModalList();
+  document.getElementById("stepEditModal").classList.add("open");
+}
+
+function closeStepEditModal() {
+  document.getElementById("stepEditModal").classList.remove("open");
+  editingStepsTemp = [];
+}
+
+function renderStepEditModalList() {
+  const container = document.getElementById("editStepList");
+  container.innerHTML = editingStepsTemp.map((s, idx) => `
+    <div class="edit-step-item" draggable="true" data-index="${idx}">
+      <span class="drag-handle">☷</span>
+      <input type="text" value="${escapeHtml(s.name)}" onchange="editingStepsTemp[${idx}].name = this.value">
+      <button style="border:none; background:transparent; color:var(--red); font-weight:700;" onclick="removeModalStep(${idx})">削除</button>
+    </div>
+  `).join("");
+
+  const items = container.querySelectorAll('.edit-step-item');
+  let dragSrcIndex = null;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragSrcIndex = Number(item.getAttribute('data-index'));
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+
+      // インジケーター表示位置（要素の上半分か下半分か）を計算
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      
+      // クラスを一旦リセット
+      items.forEach(i => { i.classList.remove('drop-above', 'drop-below'); });
+
+      if (e.clientY < midY) {
+        item.classList.add('drop-above');
+      } else {
+        item.classList.add('drop-below');
+      }
+    });
+
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drop-above', 'drop-below');
+    });
+
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const dropIndex = Number(item.getAttribute('data-index'));
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const isBelow = e.clientY >= midY;
+
+      items.forEach(i => { i.classList.remove('drop-above', 'drop-below'); });
+
+      if (dragSrcIndex !== null) {
+        let targetIndex = isBelow ? dropIndex + 1 : dropIndex;
+        if (dragSrcIndex < targetIndex) targetIndex--;
+
+        const movedItem = editingStepsTemp.splice(dragSrcIndex, 1)[0];
+        editingStepsTemp.splice(targetIndex, 0, movedItem);
+        renderStepEditModalList();
+      }
+    });
+
+    item.addEventListener('dragend', () => {
+      items.forEach(i => { i.classList.remove('dragging', 'drop-above', 'drop-below'); });
+    });
+  });
+}
+
+function addModalStep() {
+  editingStepsTemp.push({ id: "s_" + Date.now(), name: "新しい工程", time: "目安未設定", status: "todo", memo: "" });
+  renderStepEditModalList();
+}
+
+function removeModalStep(idx) {
+  if (editingStepsTemp.length <= 1) return alert("工程は最低1つ必要です。");
+  editingStepsTemp.splice(idx, 1);
+  renderStepEditModalList();
+}
+
+function saveStepEditModal() {
+  const w = getWork();
+  if (!w) return;
+  w.steps = JSON.parse(JSON.stringify(editingStepsTemp));
+  closeStepEditModal();
+  renderScreen();
+}
+
+// ---- 5. 手動作品追加 ----
+function openAddWorkModal() {
+  document.getElementById("addWorkModal").classList.add("open");
+}
+function closeAddWorkModal() {
+  document.getElementById("addWorkModal").classList.remove("open");
+}
+function saveNewWork() {
+  const type = document.getElementById("newWorkProductType").value;
+  const dog = document.getElementById("newWorkDog").value.trim() || "無題のワンちゃん";
+  const owner = document.getElementById("newWorkOwner").value.trim() || "未設定";
+  const product = document.getElementById("newWorkProduct").value.trim() || type;
+  const due = document.getElementById("newWorkDue").value;
+
+  const newWork = {
+    id: "w_" + Date.now(),
+    workStatus: "todo",
+    productType: type,
+    dog: dog, owner: owner, product: product, due: due,
+    deliveredAt: null, urgency: "green",
+    basicOrder: { dogName: dog, dogSex: "未確認" },
+    clientPhotos: [],
+    detailOrder: [],
+    steps: DEFAULT_STEPS.map(s => ({ ...s })),
+    photos: [], openPhotosStepId: null, workMemo: ""
+  };
+
+  works.push(newWork);
+  closeAddWorkModal();
+  renderList();
+}
+
+renderList();
+</script>
+</body>
+</html>
