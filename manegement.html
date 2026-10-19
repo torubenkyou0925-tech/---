@@ -12,7 +12,7 @@
   --gold: #C5A880;
   --ivory: #FBF9F5;
   --ink: #182235;
-  --muted: #788090;
+  --muted: #646E7E;
   --line: #E7E3DC;
   --card: #ffffff;
   --soft: #F3F1EC;
@@ -57,40 +57,43 @@ button { cursor: pointer; }
 .page-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .page-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 24px; margin: 0; color: var(--navy); }
 
-/* 一覧グループ */
+/* 一覧グループ (絵文字削除でシンプルに) */
 .status-group-section { margin-bottom: 32px; }
 .status-group-title {
-  font-size: 16px; font-weight: 700; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;
-  display: flex; align-items: center; justify-content: space-between;
+  font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: space-between; letter-spacing: .04em;
 }
 .group-active { background: #FFF4DD; color: var(--amber); border-left: 4px solid var(--amber); }
 .group-todo { background: #E2E8F0; color: #4A5568; border-left: 4px solid #718096; }
 .group-completed { background: #EAF4EF; color: var(--green); border-left: 4px solid var(--green); }
 .group-delivered { background: #EBF8FF; color: var(--blue); border-left: 4px solid var(--blue); }
-/* キャンセル済みグループスタイル */
 .group-canceled { background: #FFF5F5; color: var(--red); border-left: 4px solid var(--red); }
 
-/* 作品カード */
+/* 作品カード (高さ一定・レイアウト美化) */
 .work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
 .work-card {
   text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-  padding: 14px; box-shadow: var(--shadow); transition: transform .15s;
-  display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+  padding: 16px; box-shadow: var(--shadow); transition: transform .15s;
+  display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; min-height: 165px;
 }
 .work-card:active { transform: scale(.98); }
 .work-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 .work-name { font-weight: 700; font-size: 16px; color: var(--navy); }
 .work-owner { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
-.badge.amber { background: #FFF4DD; color: var(--amber); }
-.badge.blue { background: #EBF8FF; color: var(--blue); }
-.badge.gray { background: #EDF2F7; color: #4A5568; }
-.badge.red { background: #FFF5F5; color: var(--red); }
 
-.work-product { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
+/* 商品タイプタグ */
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.badge.kimono { background: #FBE8E8; color: var(--bordeaux); border: 1px solid #F5C6C6; }
+.badge.cafemat { background: #EBF8FF; color: var(--blue); border: 1px solid #BEE3F8; }
+
+.work-event { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--ink); min-height: 20px; }
+.work-event-placeholder { min-height: 20px; margin-top: 8px; } /* カフェマット用の高さ揃え用空欄 */
+
 .progress-bar-bg { height: 6px; background: #EDEAE4; border-radius: 99px; overflow: hidden; margin: 10px 0 6px; }
 .progress-bar-fill { display: block; height: 100%; background: var(--navy); border-radius: inherit; }
-.work-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+.work-meta { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; margin-top: 4px; }
+.consult-code-text { font-family: monospace; font-size: 10px; color: #94A3B8; }
 
 /* ナビゲーションサブヘッダー */
 .detail-head {
@@ -101,7 +104,6 @@ button { cursor: pointer; }
 }
 .back-btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; color: var(--navy); font-weight: 700; font-size: 12px; }
 
-/* 画面切り替え用の大型主張ボタン */
 .nav-switch-lg-btn {
   border: 2px solid var(--gold); background: #FFFDF9; border-radius: 12px;
   padding: 10px 18px; color: var(--bordeaux); font-weight: 800; font-size: 14px;
@@ -159,7 +161,6 @@ button { cursor: pointer; }
 .status-display-btn.active { background: #FFF0D4; color: var(--amber); border-color: #E8D2A7; }
 .status-display-btn.done { background: #EAF4EF; color: var(--green); border-color: #A3D9C9; }
 
-/* トグル領域 */
 .process-photos-container { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
 .process-photos-container.open { display: block; }
 
@@ -188,34 +189,40 @@ button { cursor: pointer; }
   padding: 10px; font-size: 13px; line-height: 1.6; resize: vertical; color: var(--ink);
 }
 
-/* オーダー情報ページ */
+/* ★ オーダー情報ページ：基本情報カードの広々レイアウト改修 */
 .order-sec-card {
-  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: var(--shadow);
 }
 .order-sec-title {
-  font-family: Georgia, "Noto Serif JP", serif; font-size: 15px; color: var(--navy); margin: 0 0 12px;
-  padding-bottom: 6px; border-bottom: 2px solid var(--soft); display: flex; justify-content: space-between; align-items: center;
+  font-family: Georgia, "Noto Serif JP", serif; font-size: 16px; color: var(--navy); margin: 0 0 16px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--soft); display: flex; justify-content: space-between; align-items: center;
 }
 
-.dog-profile-row-lg { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; }
+.dog-profile-row-lg { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; }
 .dog-avatar-lg {
-  width: 140px; height: 140px; border-radius: 12px; border: 2px solid var(--gold); object-fit: cover; background: #EEEAE2; flex-shrink: 0;
+  width: 160px; height: 160px; border-radius: 14px; border: 2px solid var(--gold); object-fit: cover; background: #EEEAE2; flex-shrink: 0;
 }
 
-.info-cell-view { background: var(--soft); padding: 8px 10px; border-radius: 8px; }
-.info-cell-view .lbl { font-size: 10px; color: var(--muted); margin-bottom: 2px; }
-.info-cell-view .val { font-size: 13px; font-weight: 700; color: var(--ink); }
+/* 閲覧用セルのゆったりレイアウト */
+.info-cell-view { background: var(--soft); padding: 12px 14px; border-radius: 10px; }
+.info-cell-view .lbl { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.info-cell-view .val { font-size: 15px; font-weight: 700; color: var(--ink); }
 
-.info-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
-.info-cell-edit { background: var(--soft); padding: 8px 10px; border-radius: 8px; }
-.info-cell-edit label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 2px; }
-.info-cell-edit input { width: 100%; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; font-size: 12px; font-weight: 700; background: #fff; }
+.info-grid-spacious { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
+
+.info-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.info-cell-edit { background: var(--soft); padding: 10px 12px; border-radius: 8px; }
+.info-cell-edit label { font-size: 11px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 4px; }
+
+.input-with-unit { display: flex; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding-right: 8px; }
+.input-with-unit input { width: 100%; border: none; padding: 6px 8px; font-size: 13px; font-weight: 700; background: transparent; outline: none; }
+.input-with-unit .unit { font-size: 12px; font-weight: 700; color: var(--muted); user-select: none; }
 
 .detail-order-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
 .detail-order-table th, .detail-order-table td {
-  padding: 8px; text-align: left; font-size: 12px; border-bottom: 1px solid var(--line); vertical-align: top;
+  padding: 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: top;
 }
-.detail-order-table th { width: 35%; color: var(--muted); font-weight: 600; background: #FAF9F6; }
+.detail-order-table th { width: 32%; color: var(--navy); font-weight: 700; background: #FAF9F6; }
 
 .tsv-textarea {
   width: 100%; height: 90px; border: 1px solid var(--line); border-radius: 8px; padding: 8px;
@@ -277,7 +284,7 @@ button { cursor: pointer; }
   cursor: not-allowed !important; opacity: 0.7;
 }
 
-/* ★ ドラッグ＆ドロップ用ドロップインジケーター（線） */
+/* ドラッグ＆ドロップインジケーター */
 .edit-step-item {
   display: flex; align-items: center; gap: 8px; padding: 8px; background: #FAF9F6;
   border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; cursor: grab;
@@ -287,7 +294,6 @@ button { cursor: pointer; }
 .drag-handle { cursor: grab; color: var(--muted); font-size: 18px; padding: 0 4px; user-select: none; }
 .edit-step-item input { flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
 
-/* 挿入位置を示す青い横線インジケーター */
 .edit-step-item.drop-above::before {
   content: ""; position: absolute; top: -5px; left: 0; right: 0; height: 4px;
   background: var(--blue); border-radius: 2px; box-shadow: 0 0 6px rgba(43,108,176,.5); z-index: 10;
@@ -299,7 +305,7 @@ button { cursor: pointer; }
 
 .file-input { display: none; }
 .form-group { margin-bottom: 12px; }
-.form-group label { font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; }
+.form-group label { font-size: 11px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 4px; }
 .form-group input, .form-group select { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-size: 13px; }
 
 .warning-box {
@@ -341,7 +347,7 @@ button { cursor: pointer; }
   </div>
 </div>
 
-<!-- 作品確認モーダル -->
+<!-- 作品ステータス確認モーダル -->
 <div id="workStatusConfirmModal" class="modal-overlay">
   <div class="modal-card">
     <div class="modal-head"><h3 class="modal-title" id="workModalTitle">作品ステータスの変更確認</h3></div>
@@ -353,6 +359,23 @@ button { cursor: pointer; }
     <div class="modal-foot">
       <button class="btn-sec" onclick="closeWorkStatusModal()">キャンセル</button>
       <button id="workModalConfirmBtn" class="btn-pri" onclick="executeWorkStatusChange()">変更を確定する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理者モード切替の確認警告モーダル -->
+<div id="adminModeConfirmModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head"><h3 class="modal-title">⚙ 管理者編集モードの切り替え</h3></div>
+    <div class="modal-body">
+      <div class="warning-box" style="margin-bottom:10px;">⚠️ 重要な設定情報が含まれます。</div>
+      <p style="margin:0; font-size:13px; color:var(--ink); line-height:1.5;">
+        基本情報や採寸データ、詳細オーダー情報を編集可能な状態にします。<br>編集を行いますか？
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeAdminModeModal()">キャンセル</button>
+      <button class="btn-danger" onclick="confirmAdminModeChange()">編集モードに入る</button>
     </div>
   </div>
 </div>
@@ -386,16 +409,27 @@ button { cursor: pointer; }
         </select>
       </div>
       <div class="form-group">
-        <label>ワンちゃんのお名前</label>
-        <input type="text" id="newWorkDog" placeholder="例: ルークちゃん">
+        <label>ワンちゃんのお名前 (「くん」「ちゃん」自動補完)</label>
+        <input type="text" id="newWorkDog" placeholder="例: モモ">
+      </div>
+      <div class="form-group">
+        <label>性別</label>
+        <select id="newWorkSex">
+          <option value="女の子">女の子 (「ちゃん」)</option>
+          <option value="男の子">男の子 (「くん」)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>犬種</label>
+        <input type="text" id="newWorkBreed" placeholder="例: トイプードル">
       </div>
       <div class="form-group">
         <label>飼い主様のお名前</label>
-        <input type="text" id="newWorkOwner" placeholder="例: 高橋様">
+        <input type="text" id="newWorkOwner" placeholder="例: 山田">
       </div>
       <div class="form-group">
-        <label>商品詳細名称</label>
-        <input type="text" id="newWorkProduct" placeholder="例: 犬用着物・晴れ着仕様">
+        <label>着用予定のイベント (着物の場合のみ入力)</label>
+        <input type="text" id="newWorkEvent" placeholder="例: お正月の初詣、七五三撮影">
       </div>
       <div class="form-group">
         <label>納期</label>
@@ -420,6 +454,17 @@ function goToMainPage() {
   }
 }
 
+function cleanDogName(rawName) {
+  return String(rawName || "").replace(/(ちゃん|くん)$/, "").trim();
+}
+
+function getFormattedDogName(rawName, sex) {
+  const base = cleanDogName(rawName);
+  if (!base) return "";
+  const suffix = (sex === "男の子") ? "くん" : "ちゃん";
+  return base + suffix;
+}
+
 const DEFAULT_STEPS = [
   { id: "s1", name: "型紙・布を決める", time: "—", status: "todo", memo: "" },
   { id: "s2", name: "布の準備・印付け", time: "約1〜1.5時間", status: "todo", memo: "" },
@@ -431,15 +476,26 @@ const DEFAULT_STEPS = [
   { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
 ];
 
-// ★ テスト・開発用に各グループ2~3個ずつの初期データを配置
 const works = [
-  // 1. 進行中グループ (active)
   {
     id: "momo",
+    consultCode: "S_20260526_A819X2",
     workStatus: "active",
     productType: "着物",
-    dog: "モモちゃん", owner: "山田様", product: "犬用着物・正絹赤古典柄", due: "2026-12-25", deliveredAt: null, urgency: "amber",
-    basicOrder: { dogName: "モモ", dogSex: "女の子 (トイプードル)", photo: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80", neck: "22cm", chest: "35cm", length: "28cm", neckToHip: "26cm" },
+    dogBaseName: "モモ",
+    dogSex: "女の子",
+    dogBreed: "トイプードル",
+    owner: "山田",
+    event: "お正月の初詣で着用",
+    contactTool: "LINE",
+    weight: "3.2kg",
+    due: "2026-12-25",
+    deliveredAt: null,
+    basicOrder: {
+      photo: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80",
+      neck: "22", chest: "35", length: "28", neckToHip: "26",
+      preferredColor: "赤・ゴールド系（華やかな印象）"
+    },
     clientPhotos: ["https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=400&q=80"],
     detailOrder: [{ key: "使用する生地", val: "正絹 雲取り花菱文様（赤）" }, { key: "帯仕様", val: "金襴織 扇面重ね" }],
     steps: [
@@ -452,89 +508,45 @@ const works = [
       { id: "s7", name: "全体を仕立てる", time: "約5時間", status: "todo", memo: "" },
       { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
     ],
-    photos: [{ stepId: "s4", src: "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?auto=format&fit=crop&w=500&q=80" }], openPhotosStepId: "s4", workMemo: "柄合わせをしっかり確認。"
+    photos: [{ stepId: "s4", src: "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?auto=format&fit=crop&w=500&q=80" }],
+    openPhotosStepId: "s4",
+    workMemo: "柄合わせをしっかり確認。"
   },
   {
     id: "choko",
+    consultCode: "S_20260601_B231Y9",
     workStatus: "active",
     productType: "カフェマット",
-    dog: "チョコちゃん", owner: "木村様", product: "カフェマット・フリルリボン仕様", due: "2026-11-15", deliveredAt: null, urgency: "amber",
-    basicOrder: { dogName: "チョコ", dogSex: "男の子 (ダックス)", photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80" },
-    clientPhotos: [], detailOrder: [{ key: "マットサイズ", val: "50cm × 40cm" }, { key: "裏地", val: "滑り止め加工生地" }],
+    dogBaseName: "チョコ",
+    dogSex: "男の子",
+    dogBreed: "ミニチュアダックス",
+    owner: "木村",
+    event: "", // カフェマットはイベント不要
+    contactTool: "メール",
+    weight: "4.8kg",
+    due: "2026-11-15",
+    deliveredAt: null,
+    basicOrder: { photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80", neck: "24", chest: "38", length: "32", neckToHip: "30", preferredColor: "ブラウン・ベージュ系" },
+    clientPhotos: [], detailOrder: [{ key: "マットサイズ", val: "50cm × 40cm" }],
     steps: DEFAULT_STEPS.map((s, i) => i < 2 ? { ...s, status: "done" } : i === 2 ? { ...s, status: "active" } : { ...s }),
-    photos: [], openPhotosStepId: null, workMemo: "裏地の滑り止め加工向きに注意。"
+    photos: [], openPhotosStepId: null, workMemo: "滑り止め加工生地向き確認。"
   },
-
-  // 2. 未着手グループ (todo)
   {
     id: "coco",
+    consultCode: "S_20260610_C782Z4",
     workStatus: "todo",
     productType: "着物",
-    dog: "ココちゃん", owner: "佐藤様", product: "犬用着物・古布リメイク", due: "2027-01-18", deliveredAt: null, urgency: "gray",
-    basicOrder: { dogName: "ココ", dogSex: "男の子", neck: "19cm", chest: "30cm", length: "22cm", neckToHip: "20cm" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "古布傷みチェック必要。"
-  },
-  {
-    id: "maru",
-    workStatus: "todo",
-    productType: "カフェマット",
-    dog: "マルちゃん", owner: "林様", product: "カフェマット・キルティング刺繍", due: "2027-02-01", deliveredAt: null, urgency: "gray",
-    basicOrder: { dogName: "マル", dogSex: "女の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "イニシャル刺繍位置の確認待ち。"
-  },
-
-  // 3. 完成グループ (completed)
-  {
-    id: "hana",
-    workStatus: "completed",
-    productType: "カフェマット",
-    dog: "ハナちゃん", owner: "田中様", product: "カフェマット・高級レース仕立て", due: "2026-10-30", deliveredAt: null, urgency: "green",
-    basicOrder: { dogName: "ハナ", dogSex: "女の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "アイロンがけ完了。梱包準備中。"
-  },
-  {
-    id: "sakura",
-    workStatus: "completed",
-    productType: "着物",
-    dog: "サクラちゃん", owner: "中村様", product: "犬用着物・ピンク桜柄振袖", due: "2026-11-01", deliveredAt: null, urgency: "green",
-    basicOrder: { dogName: "サクラ", dogSex: "女の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "写真撮影完了。"
-  },
-
-  // 4. 納品済みグループ (delivered)
-  {
-    id: "taro",
-    workStatus: "delivered",
-    productType: "着物",
-    dog: "タロちゃん", owner: "鈴木様", product: "犬用着物・黒羽織袴", due: "2026-10-10", deliveredAt: "2026-10-12 14:30", urgency: "blue",
-    basicOrder: { dogName: "タロ", dogSex: "男の子", neck: "25cm", chest: "40cm", length: "30cm", neckToHip: "28cm" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "無事発送完了。"
-  },
-  {
-    id: "kotaro",
-    workStatus: "delivered",
-    productType: "着物",
-    dog: "小太郎ちゃん", owner: "渡辺様", product: "犬用着物・紺地葵文様", due: "2026-09-20", deliveredAt: "2026-09-22 11:15", urgency: "blue",
-    basicOrder: { dogName: "小太郎", dogSex: "男の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s, status: "done" })), photos: [], openPhotosStepId: null, workMemo: "店頭お渡し完了。"
-  },
-
-  // 5. キャンセル済みグループ (canceled)
-  {
-    id: "leo",
-    workStatus: "canceled",
-    productType: "着物",
-    dog: "レオちゃん", owner: "小林様", product: "犬用着物・ゴールド錦織", due: "2026-12-01", deliveredAt: null, urgency: "red",
-    basicOrder: { dogName: "レオ", dogSex: "男の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "お客様都合によりキャンセル。"
-  },
-  {
-    id: "puchi",
-    workStatus: "canceled",
-    productType: "カフェマット",
-    dog: "プチちゃん", owner: "加藤様", product: "カフェマット・デニムリメイク", due: "2026-11-20", deliveredAt: null, urgency: "red",
-    basicOrder: { dogName: "プチ", dogSex: "女の子" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "生地在庫切れのためキャンセル。"
+    dogBaseName: "ココ",
+    dogSex: "男の子",
+    dogBreed: "チワワ",
+    owner: "佐藤",
+    event: "七五三の記念撮影",
+    contactTool: "LINE",
+    weight: "2.1kg",
+    due: "2027-01-18",
+    deliveredAt: null,
+    basicOrder: { neck: "19", chest: "30", length: "22", neckToHip: "20", preferredColor: "紫・シック系" },
+    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "古布裁断前チェック。"
   }
 ];
 
@@ -555,17 +567,18 @@ function completedCount(w) { return w.steps.filter(s => s.status === "done").len
 function progressPct(w) { return Math.round((completedCount(w) / w.steps.length) * 100) || 0; }
 function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
 
-// ---- 1. 親ページ（作品一覧：キャンセル済みグループを最下部に追加） ----
+// ---- 1. 親ページ（作品一覧：グループ絵文字削除・進捗バーのみ残す） ----
 function renderList() {
   activeWorkId = null;
   isOrderAdminEditMode = false;
 
+  // グループ名から絵文字を排除してシンプルに
   const groups = [
-    { key: "active", title: "⚡ 進行中の作品", class: "group-active" },
-    { key: "todo", title: "☕ 未着手の作品", class: "group-todo" },
-    { key: "completed", title: "✨ 完成した作品", class: "group-completed" },
-    { key: "delivered", title: "📦 納品済みの作品", class: "group-delivered" },
-    { key: "canceled", title: "🚫 キャンセル済みの作品", class: "group-canceled" } // ★ 最下部に配置
+    { key: "active", title: "進行中の作品", class: "group-active" },
+    { key: "todo", title: "未着手の作品", class: "group-todo" },
+    { key: "completed", title: "完成した作品", class: "group-completed" },
+    { key: "delivered", title: "納品済みの作品", class: "group-delivered" },
+    { key: "canceled", title: "キャンセル済みの作品", class: "group-canceled" }
   ];
 
   app.innerHTML = `
@@ -581,34 +594,44 @@ function renderList() {
           <div class="status-group-section">
             <div class="status-group-title ${g.class}">
               <span>${g.title}</span>
-              <span style="font-size:12px;">${list.length} 件</span>
+              <span style="font-size:12px; font-weight:normal;">${list.length} 件</span>
             </div>
             ${list.length === 0 ? `<p style="font-size:12px; color:var(--muted); padding-left:8px;">該当する作品はありません。</p>` : `
               <div class="work-grid">
                 ${list.map(w => {
+                  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
+                  const isKimono = w.productType === "着物";
                   const pct = progressPct(w);
                   return `
                     <div class="work-card" onclick="openWork('${w.id}', 'production')">
                       <div>
                         <div class="work-top">
                           <div>
-                            <div class="work-name">${escapeHtml(w.dog)}</div>
+                            <div class="work-name">${escapeHtml(dogFormatted)}</div>
                             <div class="work-owner">${escapeHtml(w.owner)}様</div>
                           </div>
-                          <span class="badge ${w.workStatus === 'canceled' ? 'red' : w.urgency === 'amber' ? 'amber' : w.urgency === 'blue' ? 'blue' : 'gray'}">
+                          <span class="badge ${isKimono ? 'kimono' : 'cafemat'}">
                             ${w.productType}
                           </span>
                         </div>
-                        <div class="work-product">${escapeHtml(w.product)}</div>
+                        
+                        <!-- イベント表示：着物はイベント名（🎉削除）、カフェマットは高さを揃える空欄エリア -->
+                        ${isKimono ? `
+                          <div class="work-event">${escapeHtml(w.event || "着用イベント未設定")}</div>
+                        ` : `
+                          <div class="work-event-placeholder"></div>
+                        `}
                       </div>
 
-                      <div style="margin-top:12px;">
-                        <div style="font-size:11px; color:var(--muted);">納期: <strong>${escapeHtml(w.due || "未設定")}</strong></div>
+                      <div>
+                        <div style="font-size:11px; color:var(--muted); margin-top:8px;">納期: <strong>${escapeHtml(w.due || "未設定")}</strong></div>
                         ${w.deliveredAt ? `<div style="font-size:10px; color:var(--blue); margin-top:2px;">納品日時: ${w.deliveredAt}</div>` : ""}
+                        
+                        <!-- 進捗バー（メーター）のみを残し、テキスト%表記は排除 -->
                         <div class="progress-bar-bg"><span class="progress-bar-fill" style="width:${pct}%"></span></div>
+
                         <div class="work-meta">
-                          <span>${completedCount(w)}/${w.steps.length} 工程</span>
-                          <span>${pct}% 完了</span>
+                          <span class="consult-code-text">${escapeHtml(w.consultCode || "")}</span>
                         </div>
                       </div>
                     </div>
@@ -642,21 +665,22 @@ function renderScreen() {
 
 // ---- 2. 制作管理画面 ----
 function renderProductionScreen(w) {
-  const pct = progressPct(w);
+  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
   const isCompleted = w.workStatus === "completed";
+  const isKimono = w.productType === "着物";
   
   app.innerHTML = `
     <section class="screen">
       <div class="detail-head">
         <button class="back-btn" onclick="renderList()">← ホーム</button>
-        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(w.dog)}の制作管理</div>
+        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(dogFormatted)}の制作管理</div>
         <div></div>
       </div>
 
       <div class="hero-row" style="margin-top:8px;">
         <div>
-          <h1 class="detail-dog">${escapeHtml(w.dog)}</h1>
-          <div class="detail-owner">${escapeHtml(w.owner)}様｜${escapeHtml(w.product)}</div>
+          <h1 class="detail-dog">${escapeHtml(dogFormatted)}</h1>
+          <div class="detail-owner">${escapeHtml(w.owner)}様 ${isKimono ? `｜ ${escapeHtml(w.event || "イベント未設定")}` : ''}</div>
         </div>
         <button class="nav-switch-lg-btn" onclick="switchTab('order')">
           📄 オーダー情報へ ➔
@@ -703,7 +727,6 @@ function renderProductionScreen(w) {
   `;
 }
 
-// 制作工程カード描画
 function renderProcessCard(w, s, index) {
   const isDone = s.status === "done";
   const isActive = s.status === "active";
@@ -735,7 +758,7 @@ function renderProcessCard(w, s, index) {
       <div class="process-photos-container ${isPhotoOpen ? 'open' : ''}">
         <div class="toggle-inner-grid">
           <div>
-            <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px;">顧客共有用 写真</div>
+            <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:6px;">顧客共有用 写真</div>
             <div class="photo-3col-grid">
               ${photoList.map(p => `
                 <div class="photo-thumb"><img src="${escapeHtml(p.src)}" alt="工程写真"></div>
@@ -817,6 +840,7 @@ function saveWorkMemo(val) {
 function promptWorkStatusChange(targetStatus) {
   const w = getWork();
   if (!w) return;
+  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
 
   pendingTargetWorkStatus = targetStatus;
   
@@ -831,7 +855,7 @@ function promptWorkStatusChange(targetStatus) {
 
   if (targetStatus === "completed") {
     titleEl.innerText = "✨ 作品の完成確認";
-    msgEl.innerText = `「${w.dog}」の作品を『完成』にしますか？`;
+    msgEl.innerText = `「${dogFormatted}」の作品を『完成』にしますか？`;
     subEl.innerText = "完成にすると「納品済み」ステータスへ進めるようになります。";
     confirmBtn.className = "btn-success";
     confirmBtn.innerText = "完成にする";
@@ -845,15 +869,15 @@ function promptWorkStatusChange(targetStatus) {
 
   } else if (targetStatus === "delivered") {
     titleEl.innerText = "📦 納品の確認";
-    msgEl.innerText = `「${w.dog}」の作品を『納品済み』にしますか？`;
+    msgEl.innerText = `「${dogFormatted}」の作品を『納品済み』にしますか？`;
     subEl.innerText = "納品済みに変更すると、納品日時が記録されます。";
     confirmBtn.className = "btn-blue";
     confirmBtn.innerText = "納品済みにする";
 
   } else if (targetStatus === "canceled") {
     titleEl.innerText = "⚠️ キャンセル確認";
-    msgEl.innerText = `「${w.dog}」の注文を『キャンセル済み』にしますか？`;
-    subEl.innerText = "※削除されず、親ページの「キャンセル済みの作品」グループに移動・保管されます。"; // ★ 削除せず保管を明確化
+    msgEl.innerText = `「${dogFormatted}」の注文を『キャンセル済み』にしますか？`;
+    subEl.innerText = "※親ページの「キャンセル済みの作品」グループに保管されます。";
     confirmBtn.className = "btn-danger";
     confirmBtn.innerText = "キャンセル済みにする";
   }
@@ -866,7 +890,6 @@ function closeWorkStatusModal() {
   pendingTargetWorkStatus = null;
 }
 
-// ★ キャンセル時も削除せずステータス変更のみで保持
 function executeWorkStatusChange() {
   const w = getWork();
   if (!w || !pendingTargetWorkStatus) return;
@@ -904,90 +927,173 @@ picker.addEventListener("change", (e) => {
   renderScreen();
 });
 
-// ---- 3. オーダー情報ページ ----
+// ---- 3. オーダー情報ページ (基本情報エリアの広々レイアウト化) ----
 function switchTab(tab) {
   currentTab = tab;
   renderScreen();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-function toggleOrderAdminEdit() {
-  isOrderAdminEditMode = !isOrderAdminEditMode;
+function requestAdminModeToggle() {
+  if (isOrderAdminEditMode) {
+    isOrderAdminEditMode = false;
+    renderScreen();
+  } else {
+    document.getElementById("adminModeConfirmModal").classList.add("open");
+  }
+}
+
+function closeAdminModeModal() {
+  document.getElementById("adminModeConfirmModal").classList.remove("open");
+}
+
+function confirmAdminModeChange() {
+  isOrderAdminEditMode = true;
+  closeAdminModeModal();
   renderScreen();
 }
 
 function renderOrderScreen(w) {
   const bo = w.basicOrder || {};
   const clientPhotos = w.clientPhotos || [];
+  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
+  const isKimono = w.productType === "着物";
   
   app.innerHTML = `
     <section class="screen">
       <div class="detail-head">
         <button class="back-btn" onclick="renderList()">← ホーム</button>
-        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(w.dog)}のオーダー情報</div>
+        <div style="font-weight:700; font-size:14px; color:var(--navy);">${escapeHtml(dogFormatted)}のオーダー情報</div>
         <div></div>
       </div>
 
       <div class="hero-row" style="margin-top:8px;">
         <div>
-          <h1 class="detail-dog">${escapeHtml(w.dog)}のオーダー詳細</h1>
-          <div class="detail-owner">注文者: ${escapeHtml(w.owner)}様</div>
+          <h1 class="detail-dog">${escapeHtml(dogFormatted)}のオーダー詳細</h1>
+          <div class="detail-owner">注文者: ${escapeHtml(w.owner)}様 ｜ 相談コード: <span style="font-family:monospace; font-weight:700;">${escapeHtml(w.consultCode || "")}</span></div>
         </div>
         <button class="nav-switch-lg-btn" onclick="switchTab('production')">
           ✂ 制作管理画面へ ➔
         </button>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
-        <button class="${isOrderAdminEditMode ? 'btn-danger' : 'btn-sec'}" onclick="toggleOrderAdminEdit()">
-          ${isOrderAdminEditMode ? '🔒 編集を終了する (閲覧モードへ)' : '⚙ 管理者編集モードに切り替え'}
-        </button>
-      </div>
-
-      <!-- A. 基本情報 -->
+      <!-- A. 基本情報 (広々とレイアウト拡張) -->
       <div class="order-sec-card">
         <div class="order-sec-title">
-          <span>A. 基本情報</span>
-          ${isOrderAdminEditMode ? '<span style="color:var(--red); font-size:11px;">[編集モード]</span>' : '<span style="color:var(--muted); font-size:11px;">[閲覧専用]</span>'}
+          <span>A. 基本情報 (Webフォーム・予約データ)</span>
+          ${isOrderAdminEditMode ? '<span style="color:var(--red); font-size:11px; font-weight:bold;">[管理者編集中]</span>' : '<span style="color:var(--muted); font-size:11px;">[閲覧専用]</span>'}
         </div>
 
         <div class="dog-profile-row-lg">
           <img class="dog-avatar-lg" src="${escapeHtml(bo.photo || 'https://via.placeholder.com/150')}" alt="愛犬写真">
           
-          <div style="flex:1; min-width:200px;">
+          <div style="flex:1; min-width:280px;">
             ${isOrderAdminEditMode ? `
-              <div style="display:flex; gap:8px; margin-bottom:8px;">
-                <input type="text" value="${escapeHtml(bo.dogName || w.dog)}" onchange="updateBasicOrder('dogName', this.value)" style="font-weight:700; font-size:16px; border:1px solid var(--line); border-radius:4px; padding:4px; width:50%;">
-                <input type="text" value="${escapeHtml(bo.dogSex || '')}" placeholder="性別・犬種" onchange="updateBasicOrder('dogSex', this.value)" style="font-size:12px; border:1px solid var(--line); border-radius:4px; padding:4px; width:50%;">
+              <!-- 管理者編集フォーム -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">犬の名前 (ベース)</label>
+                  <input type="text" value="${escapeHtml(w.dogBaseName || '')}" onchange="updateDogBaseName(this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px; font-weight:700;">
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">性別 (ちゃん/くん自動判定)</label>
+                  <select onchange="updateDogSex(this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                    <option value="女の子" ${w.dogSex === '女の子' ? 'selected' : ''}>女の子 (ちゃん)</option>
+                    <option value="男の子" ${w.dogSex === '男の子' ? 'selected' : ''}>男の子 (くん)</option>
+                  </select>
+                </div>
               </div>
-              <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
-                <span style="font-size:11px; font-weight:700; color:var(--bordeaux);">納期:</span>
-                <input type="date" value="${escapeHtml(w.due || '')}" onchange="updateDue(this.value)" style="border:1px solid var(--line); border-radius:4px; padding:3px 6px; font-size:12px;">
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">犬種</label>
+                  <input type="text" value="${escapeHtml(w.dogBreed || '')}" onchange="updateWorkField('dogBreed', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">体重</label>
+                  <input type="text" value="${escapeHtml(w.weight || '')}" onchange="updateWorkField('weight', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">飼い主のお名前</label>
+                  <input type="text" value="${escapeHtml(w.owner || '')}" onchange="updateWorkField('owner', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">連絡ツール</label>
+                  <select onchange="updateWorkField('contactTool', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                    <option value="LINE" ${w.contactTool === 'LINE' ? 'selected' : ''}>LINE</option>
+                    <option value="メール" ${w.contactTool === 'メール' ? 'selected' : ''}>メール</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">着用予定イベント</label>
+                  <input type="text" value="${escapeHtml(w.event || '')}" onchange="updateWorkField('event', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">納期</label>
+                  <input type="date" value="${escapeHtml(w.due || '')}" onchange="updateWorkField('due', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+              </div>
+
+              <!-- 採寸入力 -->
+              <div style="font-size:12px; font-weight:700; color:var(--navy); margin-top:14px; margin-bottom:6px;">採寸サイズ (右側に単位 cm 表示)</div>
+              <div class="info-grid-edit">
+                <div class="info-cell-edit">
+                  <label>首周り</label>
+                  <div class="input-with-unit"><input type="text" value="${escapeHtml(bo.neck||'')}" onchange="updateBasicOrder('neck', this.value)"><span class="unit">cm</span></div>
+                </div>
+                <div class="info-cell-edit">
+                  <label>胴回り</label>
+                  <div class="input-with-unit"><input type="text" value="${escapeHtml(bo.chest||'')}" onchange="updateBasicOrder('chest', this.value)"><span class="unit">cm</span></div>
+                </div>
+                <div class="info-cell-edit">
+                  <label>背丈</label>
+                  <div class="input-with-unit"><input type="text" value="${escapeHtml(bo.length||'')}" onchange="updateBasicOrder('length', this.value)"><span class="unit">cm</span></div>
+                </div>
+                <div class="info-cell-edit">
+                  <label>首〜お尻</label>
+                  <div class="input-with-unit"><input type="text" value="${escapeHtml(bo.neckToHip||'')}" onchange="updateBasicOrder('neckToHip', this.value)"><span class="unit">cm</span></div>
+                </div>
               </div>
             ` : `
-              <div style="font-size:22px; font-weight:800; color:var(--navy);">${escapeHtml(bo.dogName || w.dog)}</div>
-              <div style="font-size:13px; color:var(--muted); margin-top:2px;">性別・犬種: ${escapeHtml(bo.dogSex || "未確認")}</div>
-              <div style="font-size:13px; font-weight:700; color:var(--bordeaux); margin-top:6px;">納期: ${escapeHtml(w.due || "未設定")}</div>
-            `}
+              <!-- 広々とレイアウトされた閲覧表示 -->
+              <div style="font-size:24px; font-weight:800; color:var(--navy); line-height:1.2;">${escapeHtml(dogFormatted)}</div>
+              
+              <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:14px; color:var(--ink); margin-top:8px; font-weight:600;">
+                <span>性別: <strong>${escapeHtml(w.dogSex || "未確認")}</strong></span>
+                <span>犬種: <strong>${escapeHtml(w.dogBreed || "未確認")}</strong></span>
+                <span>体重: <strong>${escapeHtml(w.weight || "未設定")}</strong></span>
+              </div>
 
-            <div class="${isOrderAdminEditMode ? 'info-grid-edit' : 'info-grid-edit'}" style="margin-top:10px;">
-              ${isOrderAdminEditMode ? `
-                <div class="info-cell-edit"><label>首周り</label><input type="text" value="${escapeHtml(bo.neck||'')}" onchange="updateBasicOrder('neck', this.value)"></div>
-                <div class="info-cell-edit"><label>胴回り</label><input type="text" value="${escapeHtml(bo.chest||'')}" onchange="updateBasicOrder('chest', this.value)"></div>
-                <div class="info-cell-edit"><label>背丈</label><input type="text" value="${escapeHtml(bo.length||'')}" onchange="updateBasicOrder('length', this.value)"></div>
-                <div class="info-cell-edit"><label>首〜お尻</label><input type="text" value="${escapeHtml(bo.neckToHip||'')}" onchange="updateBasicOrder('neckToHip', this.value)"></div>
-              ` : `
-                <div class="info-cell-view"><div class="lbl">首周り</div><div class="val">${escapeHtml(bo.neck||'未測定')}</div></div>
-                <div class="info-cell-view"><div class="lbl">胴回り</div><div class="val">${escapeHtml(bo.chest||'未測定')}</div></div>
-                <div class="info-cell-view"><div class="lbl">背丈</div><div class="val">${escapeHtml(bo.length||'未測定')}</div></div>
-                <div class="info-cell-view"><div class="lbl">首〜お尻</div><div class="val">${escapeHtml(bo.neckToHip||'未測定')}</div></div>
-              `}
-            </div>
+              <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:13px; color:var(--muted); margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);">
+                <span>飼い主: <strong>${escapeHtml(w.owner)}様</strong> (${escapeHtml(w.contactTool || "未設定")})</span>
+                <span>納期: <strong style="color:var(--bordeaux);">${escapeHtml(w.due || "未設定")}</strong></span>
+              </div>
+
+              ${isKimono ? `
+                <div style="font-size:13px; font-weight:700; color:var(--navy); margin-top:8px;">
+                  イベント: ${escapeHtml(w.event || "未設定")}
+                </div>
+              ` : ''}
+
+              <!-- 採寸サイズ表示 (グリッド幅を広げて見やすく) -->
+              <div class="info-grid-spacious">
+                <div class="info-cell-view"><div class="lbl">首周り</div><div class="val">${escapeHtml(bo.neck || '—')} cm</div></div>
+                <div class="info-cell-view"><div class="lbl">胴回り</div><div class="val">${escapeHtml(bo.chest || '—')} cm</div></div>
+                <div class="info-cell-view"><div class="lbl">背丈</div><div class="val">${escapeHtml(bo.length || '—')} cm</div></div>
+                <div class="info-cell-view"><div class="lbl">首〜お尻</div><div class="val">${escapeHtml(bo.neckToHip || '—')} cm</div></div>
+              </div>
+            `}
           </div>
         </div>
       </div>
 
-      <!-- 顧客送付写真 -->
+      <!-- 📷 顧客送付写真 -->
       <div class="order-sec-card">
         <div class="order-sec-title">
           <span>📷 顧客送付写真</span>
@@ -996,7 +1102,7 @@ function renderOrderScreen(w) {
         
         <div class="photo-3col-grid">
           ${clientPhotos.map(src => `
-            <div class="photo-thumb" style="height:110px;"><img src="${escapeHtml(src)}" alt="顧客送付写真"></div>
+            <div class="photo-thumb" style="height:120px;"><img src="${escapeHtml(src)}" alt="顧客送付写真"></div>
           `).join("")}
           ${clientPhotos.length === 0 ? `<p style="font-size:12px; color:var(--muted); grid-column:span 3;">登録されている顧客写真はありません。</p>` : ''}
         </div>
@@ -1005,7 +1111,7 @@ function renderOrderScreen(w) {
       <!-- B. 詳細オーダー情報 -->
       <div class="order-sec-card">
         <div class="order-sec-title">
-          <span>B. 詳細オーダー情報 (確定仕様)</span>
+          <span>B. 詳細オーダー情報</span>
         </div>
 
         ${isOrderAdminEditMode ? `
@@ -1026,8 +1132,38 @@ function renderOrderScreen(w) {
           </tbody>
         </table>
       </div>
+
+      <!-- 管理者編集モード切替ボタン (最下部) -->
+      <div style="margin-top:40px; padding-top:16px; border-top:1px solid var(--line); text-align:center;">
+        <button class="${isOrderAdminEditMode ? 'btn-danger' : 'btn-sec'}" style="font-size:11px; padding:6px 12px;" onclick="requestAdminModeToggle()">
+          ${isOrderAdminEditMode ? '🔒 管理者編集モードを終了する (閲覧専用へ)' : '⚙ 管理者編集モードに切り替える'}
+        </button>
+      </div>
     </section>
   `;
+}
+
+function updateDogBaseName(val) {
+  const w = getWork();
+  if (w) {
+    w.dogBaseName = cleanDogName(val);
+    renderOrderScreen(w);
+  }
+}
+
+function updateDogSex(val) {
+  const w = getWork();
+  if (w) {
+    w.dogSex = val;
+    renderOrderScreen(w);
+  }
+}
+
+function updateWorkField(field, val) {
+  const w = getWork();
+  if (w) {
+    w[field] = val;
+  }
 }
 
 function updateBasicOrder(key, val) {
@@ -1035,13 +1171,7 @@ function updateBasicOrder(key, val) {
   if (w) {
     if (!w.basicOrder) w.basicOrder = {};
     w.basicOrder[key] = val;
-    if (key === "dogName") w.dog = val;
   }
-}
-
-function updateDue(val) {
-  const w = getWork();
-  if (w) w.due = val;
 }
 
 function triggerAddClientPhoto() {
@@ -1081,7 +1211,7 @@ function applyTsvImport() {
   alert("詳細オーダー表を更新しました。");
 }
 
-// ---- 4. 工程編集モーダル（ドロップ位置の青いインジケーター表示を追加） ----
+// ---- 4. 工程編集モーダル ----
 function openStepEditModal() {
   const w = getWork();
   if (!w) return;
@@ -1119,11 +1249,9 @@ function renderStepEditModalList() {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
 
-      // インジケーター表示位置（要素の上半分か下半分か）を計算
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
       
-      // クラスを一旦リセット
       items.forEach(i => { i.classList.remove('drop-above', 'drop-below'); });
 
       if (e.clientY < midY) {
@@ -1168,9 +1296,25 @@ function addModalStep() {
 }
 
 function removeModalStep(idx) {
-  if (editingStepsTemp.length <= 1) return alert("工程は最低1つ必要です。");
-  editingStepsTemp.splice(idx, 1);
-  renderStepEditModalList();
+  const w = getWork();
+  if (!w) return;
+  const targetStep = editingStepsTemp[idx];
+
+  if (editingStepsTemp.length <= 1) {
+    return alert("工程は最低1つ必要です。");
+  }
+
+  const hasPhotos = w.photos.some(p => p.stepId === targetStep.id);
+  const hasMemo = Boolean(targetStep.memo && targetStep.memo.trim());
+
+  if (hasPhotos || hasMemo) {
+    return alert(`「${targetStep.name}」には既に写真またはメモが記録されているため削除できません。`);
+  }
+
+  if (confirm(`工程「${targetStep.name}」を削除しますか？`)) {
+    editingStepsTemp.splice(idx, 1);
+    renderStepEditModalList();
+  }
 }
 
 function saveStepEditModal() {
@@ -1190,18 +1334,33 @@ function closeAddWorkModal() {
 }
 function saveNewWork() {
   const type = document.getElementById("newWorkProductType").value;
-  const dog = document.getElementById("newWorkDog").value.trim() || "無題のワンちゃん";
+  const rawDog = document.getElementById("newWorkDog").value.trim() || "無題";
+  const sex = document.getElementById("newWorkSex").value;
+  const breed = document.getElementById("newWorkBreed").value.trim() || "未設定";
   const owner = document.getElementById("newWorkOwner").value.trim() || "未設定";
-  const product = document.getElementById("newWorkProduct").value.trim() || type;
+  const event = document.getElementById("newWorkEvent").value.trim() || "イベント未設定";
   const due = document.getElementById("newWorkDue").value;
+
+  const now = new Date();
+  const dateStr = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+  const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const consultCode = `S_${dateStr}_${randomCode}`;
 
   const newWork = {
     id: "w_" + Date.now(),
+    consultCode: consultCode,
     workStatus: "todo",
     productType: type,
-    dog: dog, owner: owner, product: product, due: due,
-    deliveredAt: null, urgency: "green",
-    basicOrder: { dogName: dog, dogSex: "未確認" },
+    dogBaseName: cleanDogName(rawDog),
+    dogSex: sex,
+    dogBreed: breed,
+    owner: owner,
+    event: event,
+    contactTool: "LINE",
+    weight: "未設定",
+    due: due,
+    deliveredAt: null,
+    basicOrder: { photo: "", neck: "", chest: "", length: "", neckToHip: "" },
     clientPhotos: [],
     detailOrder: [],
     steps: DEFAULT_STEPS.map(s => ({ ...s })),
