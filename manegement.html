@@ -57,7 +57,22 @@ button { cursor: pointer; }
 .page-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .page-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 24px; margin: 0; color: var(--navy); }
 
-/* 一覧グループ (絵文字削除でシンプルに) */
+/* 検索・ソート フィルターバー */
+.filter-bar {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px; margin-bottom: 20px; box-shadow: var(--shadow);
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+}
+.search-input-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-input {
+  width: 100%; border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px 8px 32px; font-size: 13px; background: var(--ivory); outline: none;
+}
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; }
+.sort-select-wrap { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--navy); }
+.sort-select { border: 1px solid var(--line); border-radius: 8px; padding: 8px; font-size: 12px; background: #fff; outline: none; }
+
+/* 一覧グループ */
 .status-group-section { margin-bottom: 32px; }
 .status-group-title {
   font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 8px; margin-bottom: 12px;
@@ -69,12 +84,12 @@ button { cursor: pointer; }
 .group-delivered { background: #EBF8FF; color: var(--blue); border-left: 4px solid var(--blue); }
 .group-canceled { background: #FFF5F5; color: var(--red); border-left: 4px solid var(--red); }
 
-/* 作品カード (高さ一定・レイアウト美化) */
+/* 作品カード */
 .work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
 .work-card {
   text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
   padding: 16px; box-shadow: var(--shadow); transition: transform .15s;
-  display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; min-height: 165px;
+  display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; min-height: 175px;
 }
 .work-card:active { transform: scale(.98); }
 .work-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
@@ -87,7 +102,7 @@ button { cursor: pointer; }
 .badge.cafemat { background: #EBF8FF; color: var(--blue); border: 1px solid #BEE3F8; }
 
 .work-event { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--ink); min-height: 20px; }
-.work-event-placeholder { min-height: 20px; margin-top: 8px; } /* カフェマット用の高さ揃え用空欄 */
+.work-event-placeholder { min-height: 20px; margin-top: 8px; }
 
 .progress-bar-bg { height: 6px; background: #EDEAE4; border-radius: 99px; overflow: hidden; margin: 10px 0 6px; }
 .progress-bar-fill { display: block; height: 100%; background: var(--navy); border-radius: inherit; }
@@ -140,7 +155,7 @@ button { cursor: pointer; }
   font-size: 12px; font-weight: 800; background: #F0EEE9; color: var(--muted); flex-shrink: 0;
 }
 .process-card.done .process-badge-num { background: #EAF4EF; color: var(--green); }
-.process-card.active .process-badge-num { background: var(--gold); color: #fff; }
+.process-card.active .process-badge-num { background: #C5A880; color: #fff; }
 
 .process-name { font-size: 14px; font-weight: 700; color: var(--navy); }
 .process-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
@@ -166,30 +181,58 @@ button { cursor: pointer; }
 
 .toggle-inner-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 @media (min-width: 640px) {
-  .toggle-inner-grid { grid-template-columns: 2fr 1fr; }
+  .toggle-inner-grid { grid-template-columns: 2fr 1.2fr; }
 }
 
-.photo-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.photo-thumb { aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #EEEAE2; border: 1px solid var(--line); position: relative; }
+.photo-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.photo-item-card { background: #FAF9F6; border: 1px solid var(--line); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.photo-thumb { aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #EEEAE2; border: 1px solid var(--line); position: relative; cursor: pointer; width: 100%; }
 .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.add-photo-btn-toggle {
-  aspect-ratio: 1; border: 1px dashed #C8BDAE; background: #FCFAF6; border-radius: 6px;
+/* 写真下のメモ表示部分（最初2行まで、タップでプレビュー＆編集モーダルへ） */
+.photo-memo-preview-box {
+  background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
+  font-size: 11px; color: var(--ink); cursor: pointer; min-height: 38px; max-height: 44px;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3;
+}
+.photo-memo-preview-box:hover { background: #FFFDF9; border-color: var(--gold); }
+.photo-memo-preview-box.empty { color: #94A3B8; font-style: italic; }
+
+.photo-del-btn {
+  position: absolute; top: 4px; right: 4px; z-index: 10;
+  width: 22px; height: 22px; border-radius: 50%; background: rgba(166,61,64,.85);
+  color: #fff; border: none; font-size: 12px; font-weight: bold;
+  display: grid; place-items: center; cursor: pointer; line-height: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .1s;
+}
+.photo-del-btn:active { transform: scale(.9); background: var(--red); }
+
+.add-photo-btn-square {
+  aspect-ratio: 1; border: 1px dashed #C8BDAE; background: #FCFAF6; border-radius: 8px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: var(--navy); font-size: 11px; font-weight: 700; cursor: pointer;
+  color: var(--navy); font-size: 11px; font-weight: 700; cursor: pointer; width: 100%;
+}
+.add-photo-btn-square:active { background: #F0ECE6; }
+
+.step-right-col { display: flex; flex-direction: column; gap: 8px; justify-content: space-between; height: 100%; }
+.step-memo-input {
+  width: 100%; height: 72px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  padding: 8px; font-size: 12px; line-height: 1.4; resize: vertical; color: var(--ink);
 }
 
-.step-memo-input {
-  width: 100%; min-height: 80px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
-  padding: 8px; font-size: 12px; line-height: 1.5; resize: vertical; color: var(--ink);
+.step-related-info {
+  background: #FAF7F2; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  font-size: 11px; color: var(--ink); line-height: 1.4; flex: 1; display: flex; flex-direction: column; justify-content: center;
 }
+.step-related-title { font-weight: 700; color: var(--bordeaux); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.step-related-item { margin-top: 2px; }
 
 .memo-area {
   width: 100%; min-height: 90px; border: 1px solid var(--line); border-radius: 12px; background: #fff;
   padding: 10px; font-size: 13px; line-height: 1.6; resize: vertical; color: var(--ink);
 }
 
-/* ★ オーダー情報ページ：基本情報カードの広々レイアウト改修 */
+/* オーダー情報ページ */
 .order-sec-card {
   background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: var(--shadow);
 }
@@ -199,18 +242,23 @@ button { cursor: pointer; }
 }
 
 .dog-profile-row-lg { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; }
-.dog-avatar-lg {
-  width: 160px; height: 160px; border-radius: 14px; border: 2px solid var(--gold); object-fit: cover; background: #EEEAE2; flex-shrink: 0;
+.dog-avatar-wrap {
+  position: relative; width: 140px; height: 140px; border-radius: 14px; border: 2px solid var(--gold); overflow: hidden; background: #EEEAE2; flex-shrink: 0;
 }
+.dog-avatar-lg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dog-avatar-overlay-btn {
+  position: absolute; inset: 0; background: rgba(10,22,44,.5); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; opacity: 0; transition: opacity .15s; cursor: pointer;
+}
+.dog-avatar-wrap:hover .dog-avatar-overlay-btn { opacity: 1; }
 
-/* 閲覧用セルのゆったりレイアウト */
-.info-cell-view { background: var(--soft); padding: 12px 14px; border-radius: 10px; }
-.info-cell-view .lbl { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-.info-cell-view .val { font-size: 15px; font-weight: 700; color: var(--ink); }
+.info-cell-view { background: var(--soft); padding: 10px 12px; border-radius: 10px; }
+.info-cell-view .lbl { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.info-cell-view .val { font-size: 14px; font-weight: 700; color: var(--ink); }
 
-.info-grid-spacious { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
+.info-grid-spacious { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
 
-.info-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.info-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
 .info-cell-edit { background: var(--soft); padding: 10px 12px; border-radius: 8px; }
 .info-cell-edit label { font-size: 11px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 4px; }
 
@@ -218,20 +266,26 @@ button { cursor: pointer; }
 .input-with-unit input { width: 100%; border: none; padding: 6px 8px; font-size: 13px; font-weight: 700; background: transparent; outline: none; }
 .input-with-unit .unit { font-size: 12px; font-weight: 700; color: var(--muted); user-select: none; }
 
+/* 詳細オーダー表 */
 .detail-order-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
 .detail-order-table th, .detail-order-table td {
-  padding: 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: top;
+  padding: 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: middle;
 }
 .detail-order-table th { width: 32%; color: var(--navy); font-weight: 700; background: #FAF9F6; }
 
+.detail-edit-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+.detail-edit-row input { border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+.detail-edit-key { width: 35%; font-weight: 700; }
+.detail-edit-val { flex: 1; }
+
 .tsv-textarea {
-  width: 100%; height: 90px; border: 1px solid var(--line); border-radius: 8px; padding: 8px;
+  width: 100%; height: 80px; border: 1px solid var(--line); border-radius: 8px; padding: 8px;
   font-size: 12px; font-family: monospace; line-height: 1.4; white-space: pre; margin-top: 6px;
 }
 
-/* モーダル */
+/* モーダル共通 */
 .modal-overlay {
-  position: fixed; inset: 0; z-index: 100; background: rgba(10,22,44,.5);
+  position: fixed; inset: 0; z-index: 100; background: rgba(10,22,44,.6);
   backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 16px;
 }
 .modal-overlay.open { display: flex; }
@@ -243,6 +297,30 @@ button { cursor: pointer; }
 .modal-title { font-weight: 700; font-size: 15px; color: var(--navy); margin: 0; }
 .modal-body { padding: 16px; overflow-y: auto; flex: 1; }
 .modal-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; background: #FAF9F6; }
+
+/* 画像プレビュー＆メモ編集モーダル */
+.image-modal-card {
+  background: #111; width: 100%; max-width: 560px; max-height: 90vh; border-radius: 16px; overflow: hidden;
+  display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,.6);
+}
+.image-modal-body {
+  position: relative; flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 220px; padding: 20px; background: #000;
+}
+.image-modal-body img { max-width: 100%; max-height: 50vh; object-fit: contain; display: block; }
+.image-modal-close {
+  position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: #fff;
+  border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 20px;
+  display: grid; place-items: center; cursor: pointer; z-index: 101;
+}
+.image-modal-footer {
+  background: #1e1e1e; color: #fff; padding: 16px 20px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 6px;
+}
+.image-modal-footer label { font-size: 11px; font-weight: 700; color: var(--gold); }
+.image-modal-textarea {
+  width: 100%; height: 76px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px;
+  color: #fff; padding: 8px; font-size: 13px; resize: vertical; outline: none;
+}
+.image-modal-textarea:focus { border-color: var(--gold); }
 
 /* ボタン立体スタイル */
 .btn-sec {
@@ -284,14 +362,18 @@ button { cursor: pointer; }
   cursor: not-allowed !important; opacity: 0.7;
 }
 
-/* ドラッグ＆ドロップインジケーター */
+/* ドラッグ＆ドロップ */
 .edit-step-item {
   display: flex; align-items: center; gap: 8px; padding: 8px; background: #FAF9F6;
-  border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; cursor: grab;
+  border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px;
   position: relative; transition: border-color .1s, transform .1s;
 }
 .edit-step-item.dragging { opacity: 0.3; background: #E2E8F0; }
-.drag-handle { cursor: grab; color: var(--muted); font-size: 18px; padding: 0 4px; user-select: none; }
+.drag-handle {
+  cursor: grab; color: var(--muted); font-size: 18px; padding: 4px 8px; user-select: none;
+  background: #EFECE6; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;
+}
+.drag-handle:active { cursor: grabbing; background: var(--gold); color: #fff; }
 .edit-step-item input { flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
 
 .edit-step-item.drop-above::before {
@@ -328,8 +410,24 @@ button { cursor: pointer; }
   <main id="app"></main>
 </div>
 
+<!-- アップローダー -->
 <input id="photoPicker" class="file-input" type="file" accept="image/*" capture="environment" multiple>
 <input id="clientPhotoPicker" class="file-input" type="file" accept="image/*" capture="environment" multiple>
+<input id="dogAvatarPicker" class="file-input" type="file" accept="image/*" capture="environment">
+
+<!-- 画像プレビュー＆メモ編集モーダル -->
+<div id="imageModal" class="modal-overlay" onclick="closeImageModal()">
+  <div class="image-modal-card" onclick="event.stopPropagation()">
+    <div class="image-modal-body">
+      <button class="image-modal-close" onclick="closeImageModal()">✕</button>
+      <img id="imageModalTarget" src="" alt="拡大プレビュー">
+    </div>
+    <div class="image-modal-footer">
+      <label>📌 この写真のメモ (編集可能)</label>
+      <textarea id="imageModalMemoInput" class="image-modal-textarea" oninput="onActiveModalMemoInput(this.value)" placeholder="この写真に関するメモを入力..."></textarea>
+    </div>
+  </div>
+</div>
 
 <!-- 工程完了確認モーダル -->
 <div id="doneConfirmModal" class="modal-overlay">
@@ -338,7 +436,7 @@ button { cursor: pointer; }
     <div class="modal-body">
       <p style="margin:0 0 10px; font-size:13px;">以下の工程を<strong>「完了」</strong>にしますか？</p>
       <div id="doneTargetName" style="font-weight:700; font-size:15px; color:var(--navy); background:var(--soft); padding:8px 10px; border-radius:6px; margin-bottom:12px;"></div>
-      <textarea id="doneModalMemo" class="step-memo-input" placeholder="この工程でのこだわり・気付きを入力..."></textarea>
+      <textarea id="doneModalMemo" class="step-memo-input" style="height:90px;" placeholder="この工程でのこだわり・気付きを入力..."></textarea>
     </div>
     <div class="modal-foot">
       <button class="btn-sec" onclick="closeDoneModal()">キャンセル</button>
@@ -363,7 +461,7 @@ button { cursor: pointer; }
   </div>
 </div>
 
-<!-- 管理者モード切替の確認警告モーダル -->
+<!-- 管理者モード切替モーダル -->
 <div id="adminModeConfirmModal" class="modal-overlay">
   <div class="modal-card">
     <div class="modal-head"><h3 class="modal-title">⚙ 管理者編集モードの切り替え</h3></div>
@@ -385,7 +483,7 @@ button { cursor: pointer; }
   <div class="modal-card">
     <div class="modal-head"><h3 class="modal-title">⚙ 制作工程の編集</h3></div>
     <div class="modal-body">
-      <p style="font-size:11px; color:var(--muted); margin:0 0 10px;">☷ を掴んで移動すると、青いラインの位置に差し込まれます。</p>
+      <p style="font-size:11px; color:var(--muted); margin:0 0 10px;">☷ 部分を掴んで移動すると工程順を並べ替えられます。</p>
       <div id="editStepList"></div>
       <button class="btn-sec" style="width:100%; margin-top:6px; border-style:dashed;" onclick="addModalStep()">＋ 新しい工程を追加</button>
     </div>
@@ -465,6 +563,13 @@ function getFormattedDogName(rawName, sex) {
   return base + suffix;
 }
 
+function parseOrderDateFromCode(code) {
+  if (!code) return "0000-00-00";
+  const m = code.match(/S_(\d{4})(\d{2})(\d{2})_/);
+  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+  return "0000-00-00";
+}
+
 const DEFAULT_STEPS = [
   { id: "s1", name: "型紙・布を決める", time: "—", status: "todo", memo: "" },
   { id: "s2", name: "布の準備・印付け", time: "約1〜1.5時間", status: "todo", memo: "" },
@@ -476,79 +581,102 @@ const DEFAULT_STEPS = [
   { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
 ];
 
-const works = [
-  {
-    id: "momo",
-    consultCode: "S_20260526_A819X2",
-    workStatus: "active",
-    productType: "着物",
-    dogBaseName: "モモ",
-    dogSex: "女の子",
-    dogBreed: "トイプードル",
-    owner: "山田",
-    event: "お正月の初詣で着用",
-    contactTool: "LINE",
-    weight: "3.2kg",
-    due: "2026-12-25",
-    deliveredAt: null,
-    basicOrder: {
-      photo: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80",
-      neck: "22", chest: "35", length: "28", neckToHip: "26",
-      preferredColor: "赤・ゴールド系（華やかな印象）"
+const sampleDogNames = ["モモ", "チョコ", "ココ", "マロン", "ハナ", "レオ", "ソラ", "ポチ", "フク", "ムギ", "ベル", "モカ", "サクラ", "ルーク", "ルナ", "マル", "ユキ", "カイ", "コテツ", "ナナ"];
+const sampleBreeds = ["トイプードル", "ミニチュアダックス", "チワワ", "柴犬", "ポメラニアン", "マルチーズ", "フレンチブルドッグ", "シーズー", "パグ", "ヨークシャーテリア"];
+const sampleOwners = ["山田", "木村", "佐藤", "田中", "鈴木", "高橋", "渡辺", "伊藤", "中村", "小林", "加藤", "吉田", "山本", "松本", "井上"];
+const sampleEvents = ["お正月の初詣で着用", "七五三の記念撮影", "成人式記念撮影", "親戚の結婚式出席", "年賀状用写真撮影", "1歳のバースデー記念", "桜ロケーション撮影", "お雛祭り撮影"];
+const sampleColors = ["赤・ゴールド系（華やか）", "紫・シック系", "ブラウン・ベージュ系", "ピンク・可愛い系", "紺・凛とした雰囲気", "抹茶・伝統和風", "白・清楚", "黒・豪華金らん"];
+const sampleStatuses = ["active", "todo", "completed", "delivered", "canceled"];
+
+function generateBulkWorks(count = 97) {
+  const list = [
+    {
+      id: "momo", consultCode: "S_20260526_A819X2", workStatus: "active", productType: "着物",
+      dogBaseName: "モモ", dogSex: "女の子", dogBreed: "トイプードル", owner: "山田", event: "成人式記念撮影", contactTool: "LINE", weight: "3.2kg", due: "2026-12-25", deliveredAt: null,
+      basicOrder: { photo: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80", neck: "22", chest: "35", length: "28", neckToHip: "26", preferredColor: "赤・ゴールド系", avoidPattern: "大ぶりの髑髏柄" },
+      clientPhotos: [
+        { id: "cp1", src: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=400&q=80", memo: "正面からの全身写真です。お尻周りのボリューム感もこちらで確認できます。" }
+      ],
+      detailOrder: [{ key: "使用する生地", val: "正絹 雲取り花菱文様（赤）" }, { key: "帯仕様", val: "金襴織 扇面重ね" }],
+      steps: DEFAULT_STEPS.map((s, i) => i < 3 ? { ...s, status: "done" } : i === 3 ? { ...s, status: "active" } : { ...s }),
+      photos: [{ id: "p1", stepId: "s4", src: "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?auto=format&fit=crop&w=500&q=80", memo: "袖の縫い合わせ途中。裏地の柄合わせを入念に行いました。" }], 
+      manualOpenStepIds: [], workMemo: "柄合わせをしっかり確認。"
     },
-    clientPhotos: ["https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=400&q=80"],
-    detailOrder: [{ key: "使用する生地", val: "正絹 雲取り花菱文様（赤）" }, { key: "帯仕様", val: "金襴織 扇面重ね" }],
-    steps: [
-      { id: "s1", name: "型紙・布を決める", time: "—", status: "done", memo: "確認済み" },
-      { id: "s2", name: "布の準備・印付け", time: "約1〜1.5時間", status: "done", memo: "地直し完了" },
-      { id: "s3", name: "裁断・パーツ整理", time: "約1時間10分", status: "done", memo: "柄合わせ完了" },
-      { id: "s4", name: "袖を仕立てる", time: "約3時間40分", status: "active", memo: "ほつれ注意" },
-      { id: "s5", name: "見頃を仕立てる", time: "約3時間20分", status: "todo", memo: "" },
-      { id: "s6", name: "裾を仕立てる", time: "約3時間30分", status: "todo", memo: "" },
-      { id: "s7", name: "全体を仕立てる", time: "約5時間", status: "todo", memo: "" },
-      { id: "s8", name: "半襟を付ける", time: "約2時間", status: "todo", memo: "" }
-    ],
-    photos: [{ stepId: "s4", src: "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?auto=format&fit=crop&w=500&q=80" }],
-    openPhotosStepId: "s4",
-    workMemo: "柄合わせをしっかり確認。"
-  },
-  {
-    id: "choko",
-    consultCode: "S_20260601_B231Y9",
-    workStatus: "active",
-    productType: "カフェマット",
-    dogBaseName: "チョコ",
-    dogSex: "男の子",
-    dogBreed: "ミニチュアダックス",
-    owner: "木村",
-    event: "", // カフェマットはイベント不要
-    contactTool: "メール",
-    weight: "4.8kg",
-    due: "2026-11-15",
-    deliveredAt: null,
-    basicOrder: { photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80", neck: "24", chest: "38", length: "32", neckToHip: "30", preferredColor: "ブラウン・ベージュ系" },
-    clientPhotos: [], detailOrder: [{ key: "マットサイズ", val: "50cm × 40cm" }],
-    steps: DEFAULT_STEPS.map((s, i) => i < 2 ? { ...s, status: "done" } : i === 2 ? { ...s, status: "active" } : { ...s }),
-    photos: [], openPhotosStepId: null, workMemo: "滑り止め加工生地向き確認。"
-  },
-  {
-    id: "coco",
-    consultCode: "S_20260610_C782Z4",
-    workStatus: "todo",
-    productType: "着物",
-    dogBaseName: "ココ",
-    dogSex: "男の子",
-    dogBreed: "チワワ",
-    owner: "佐藤",
-    event: "七五三の記念撮影",
-    contactTool: "LINE",
-    weight: "2.1kg",
-    due: "2027-01-18",
-    deliveredAt: null,
-    basicOrder: { neck: "19", chest: "30", length: "22", neckToHip: "20", preferredColor: "紫・シック系" },
-    clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], openPhotosStepId: null, workMemo: "古布裁断前チェック。"
+    {
+      id: "choko", consultCode: "S_20260601_B231Y9", workStatus: "active", productType: "カフェマット",
+      dogBaseName: "チョコ", dogSex: "男の子", dogBreed: "ミニチュアダックス", owner: "木村", event: "", contactTool: "メール", weight: "4.8kg", due: "2026-11-15", deliveredAt: null,
+      basicOrder: { photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80", neck: "24", chest: "38", length: "32", neckToHip: "30", preferredColor: "ブラウン・ベージュ系", avoidPattern: "原色チェック" },
+      clientPhotos: [], detailOrder: [{ key: "マットサイズ", val: "50cm × 40cm" }],
+      steps: DEFAULT_STEPS.map((s, i) => i < 2 ? { ...s, status: "done" } : i === 2 ? { ...s, status: "active" } : { ...s }),
+      photos: [], manualOpenStepIds: [], workMemo: "滑り止め加工生地向き確認。"
+    },
+    {
+      id: "coco", consultCode: "S_20260610_C782Z4", workStatus: "todo", productType: "着物",
+      dogBaseName: "ココ", dogSex: "男の子", dogBreed: "チワワ", owner: "佐藤", event: "七五三の記念撮影", contactTool: "LINE", weight: "2.1kg", due: "2027-01-18", deliveredAt: null,
+      basicOrder: { neck: "19", chest: "30", length: "22", neckToHip: "20", preferredColor: "紫・シック系", avoidPattern: "ピンク系" },
+      clientPhotos: [], detailOrder: [], steps: DEFAULT_STEPS.map(s => ({ ...s })), photos: [], manualOpenStepIds: [], workMemo: "古布裁断前チェック。"
+    }
+  ];
+
+  for (let i = 1; i <= count; i++) {
+    const pType = (i % 3 === 0) ? "カフェマット" : "着物";
+    const status = sampleStatuses[i % sampleStatuses.length];
+    const sex = (i % 2 === 0) ? "女の子" : "男の子";
+    const name = sampleDogNames[i % sampleDogNames.length] + (i > 20 ? i : "");
+    const breed = sampleBreeds[i % sampleBreeds.length];
+    const owner = sampleOwners[i % sampleOwners.length];
+    const event = (pType === "着物") ? sampleEvents[i % sampleEvents.length] : "";
+    const color = sampleColors[i % sampleColors.length];
+    
+    const month = String((i % 12) + 1).padStart(2, '0');
+    const day = String((i % 28) + 1).padStart(2, '0');
+    const dueYear = (i % 2 === 0) ? "2026" : "2027";
+    const dueStr = `${dueYear}-${month}-${day}`;
+
+    const codeDateStr = `2026${String((i%6)+5).padStart(2,'0')}${String((i%25)+1).padStart(2,'0')}`;
+    const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const consultCode = `S_${codeDateStr}_${randStr}`;
+
+    const neckVal = 18 + (i % 15);
+    const chestVal = neckVal + 10 + (i % 8);
+    const lengthVal = 20 + (i % 12);
+    const neckToHipVal = lengthVal + 2 + (i % 5);
+
+    let steps = DEFAULT_STEPS.map(s => ({ ...s }));
+    if (status === "completed" || status === "delivered") {
+      steps = steps.map(s => ({ ...s, status: "done" }));
+    } else if (status === "active") {
+      const activeIdx = i % 6;
+      steps = steps.map((s, idx) => idx < activeIdx ? { ...s, status: "done" } : idx === activeIdx ? { ...s, status: "active" } : { ...s });
+    }
+
+    list.push({
+      id: `w_auto_${i}`,
+      consultCode: consultCode,
+      workStatus: status,
+      productType: pType,
+      dogBaseName: name,
+      dogSex: sex,
+      dogBreed: breed,
+      owner: owner,
+      event: event,
+      contactTool: (i % 2 === 0) ? "LINE" : "メール",
+      weight: `${(2.0 + (i % 8) * 0.5).toFixed(1)}kg`,
+      due: dueStr,
+      deliveredAt: status === "delivered" ? `${dueStr} 14:00` : null,
+      basicOrder: { photo: "", neck: String(neckVal), chest: String(chestVal), length: String(lengthVal), neckToHip: String(neckToHipVal), preferredColor: color, avoidPattern: "特になし" },
+      clientPhotos: [],
+      detailOrder: [{ key: "裏地仕様", val: "正絹 羽二重（白）" }],
+      steps: steps,
+      photos: [],
+      manualOpenStepIds: [],
+      workMemo: `サンプル作品 #${i} の注意事項メモ`
+    });
   }
-];
+  return list;
+}
+
+const works = generateBulkWorks(97);
 
 let activeWorkId = null;
 let currentTab = "production";
@@ -558,21 +686,132 @@ let pendingTargetWorkStatus = null;
 let editingStepsTemp = [];
 let isOrderAdminEditMode = false;
 
+let searchQuery = "";
+let currentSortMode = "default";
+
+// 現在プレビュー・編集中の写真オブジェクトへの参照
+let activeModalPhotoRef = null;
+
 const app = document.getElementById("app");
 const picker = document.getElementById("photoPicker");
 const clientPicker = document.getElementById("clientPhotoPicker");
+const dogAvatarPicker = document.getElementById("dogAvatarPicker");
 
 function getWork() { return works.find(w => w.id === activeWorkId); }
 function completedCount(w) { return w.steps.filter(s => s.status === "done").length; }
 function progressPct(w) { return Math.round((completedCount(w) / w.steps.length) * 100) || 0; }
 function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
 
-// ---- 1. 親ページ（作品一覧：グループ絵文字削除・進捗バーのみ残す） ----
+function openImageModal(photoObj) {
+  activeModalPhotoRef = photoObj;
+  document.getElementById("imageModalTarget").src = photoObj.src;
+  document.getElementById("imageModalMemoInput").value = photoObj.memo || "";
+  document.getElementById("imageModal").classList.add("open");
+}
+
+function closeImageModal() {
+  document.getElementById("imageModal").classList.remove("open");
+  activeModalPhotoRef = null;
+  renderScreen(); // 画面側のプレビュー表示も即時更新
+}
+
+function onActiveModalMemoInput(val) {
+  if (activeModalPhotoRef) {
+    activeModalPhotoRef.memo = val;
+  }
+}
+
+// ---- 1. ホーム画面 ----
 function renderList() {
   activeWorkId = null;
   isOrderAdminEditMode = false;
 
-  // グループ名から絵文字を排除してシンプルに
+  const existingFilterBar = document.getElementById("filterBarContainer");
+
+  if (!existingFilterBar) {
+    app.innerHTML = `
+      <section class="screen">
+        <div class="page-header-flex">
+          <h1 class="page-title">制作中の作品一覧 (${works.length}件)</h1>
+          <button class="btn-pri" onclick="openAddWorkModal()">＋ 手動で作品を追加</button>
+        </div>
+
+        <div id="filterBarContainer"></div>
+        <div id="groupsContainer"></div>
+      </section>
+    `;
+    renderFilterBar();
+  }
+
+  renderGroupsContent();
+}
+
+function renderFilterBar() {
+  const container = document.getElementById("filterBarContainer");
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="filter-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" value="${escapeHtml(searchQuery)}" placeholder="愛犬名、飼い主名、イベント、コード等で検索...">
+      </div>
+      
+      <div class="sort-select-wrap">
+        <span>並び替え:</span>
+        <select id="sortSelect" class="sort-select">
+          <option value="default" ${currentSortMode === 'default' ? 'selected' : ''}>グループ標準順</option>
+          <option value="due" ${currentSortMode === 'due' ? 'selected' : ''}>納期が近い順</option>
+          <option value="neckToHip" ${currentSortMode === 'neckToHip' ? 'selected' : ''}>首〜お尻の長さ順 (長い順)</option>
+          <option value="orderDate" ${currentSortMode === 'orderDate' ? 'selected' : ''}>受注日時順 (新しい順)</option>
+        </select>
+      </div>
+    </div>
+  `;
+
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    renderGroupsContent();
+  });
+
+  const sortSelect = document.getElementById("sortSelect");
+  sortSelect.addEventListener("change", (e) => {
+    currentSortMode = e.target.value;
+    renderList();
+  });
+}
+
+function renderGroupsContent() {
+  const groupsContainer = document.getElementById("groupsContainer");
+  if (!groupsContainer) return;
+
+  const q = searchQuery.trim().toLowerCase();
+
+  function sortWorksList(list) {
+    if (currentSortMode === "due") {
+      return [...list].sort((a, b) => (a.due || "9999-99-99").localeCompare(b.due || "9999-99-99"));
+    } else if (currentSortMode === "neckToHip") {
+      return [...list].sort((a, b) => (parseFloat(b.basicOrder?.neckToHip || 0) - parseFloat(a.basicOrder?.neckToHip || 0)));
+    } else if (currentSortMode === "orderDate") {
+      return [...list].sort((a, b) => parseOrderDateFromCode(b.consultCode).localeCompare(parseOrderDateFromCode(a.consultCode)));
+    }
+    return list;
+  }
+
+  function filterWorksList(list) {
+    if (!q) return list;
+    return list.filter(w => {
+      const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex).toLowerCase();
+      const owner = (w.owner || "").toLowerCase();
+      const event = (w.event || "").toLowerCase();
+      const code = (w.consultCode || "").toLowerCase();
+      const breed = (w.dogBreed || "").toLowerCase();
+      const ptype = (w.productType || "").toLowerCase();
+      return dogFormatted.includes(q) || owner.includes(q) || event.includes(q) || code.includes(q) || breed.includes(q) || ptype.includes(q);
+    });
+  }
+
   const groups = [
     { key: "active", title: "進行中の作品", class: "group-active" },
     { key: "todo", title: "未着手の作品", class: "group-todo" },
@@ -581,68 +820,68 @@ function renderList() {
     { key: "canceled", title: "キャンセル済みの作品", class: "group-canceled" }
   ];
 
-  app.innerHTML = `
-    <section class="screen">
-      <div class="page-header-flex">
-        <h1 class="page-title">制作中の作品一覧</h1>
-        <button class="btn-pri" onclick="openAddWorkModal()">＋ 手動で作品を追加</button>
+  groupsContainer.innerHTML = groups.map(g => {
+    const rawGroupList = works.filter(w => w.workStatus === g.key);
+    const filteredGroupList = filterWorksList(rawGroupList);
+    const finalGroupList = sortWorksList(filteredGroupList);
+
+    return `
+      <div class="status-group-section">
+        <div class="status-group-title ${g.class}">
+          <span>${g.title}</span>
+          <span style="font-size:12px; font-weight:normal;">${finalGroupList.length} / ${rawGroupList.length} 件</span>
+        </div>
+        ${finalGroupList.length === 0 ? `<p style="font-size:12px; color:var(--muted); padding-left:8px;">該当する作品はありません。</p>` : `
+          <div class="work-grid">
+            ${finalGroupList.map(w => renderWorkCardHtml(w)).join("")}
+          </div>
+        `}
+      </div>
+    `;
+  }).join("");
+}
+
+function renderWorkCardHtml(w) {
+  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
+  const isKimono = w.productType === "着物";
+  const pct = progressPct(w);
+  const orderDateStr = parseOrderDateFromCode(w.consultCode);
+
+  return `
+    <div class="work-card" onclick="openWork('${w.id}', 'production')">
+      <div>
+        <div class="work-top">
+          <div>
+            <div class="work-name">${escapeHtml(dogFormatted)}</div>
+            <div class="work-owner">${escapeHtml(w.owner)}様</div>
+          </div>
+          <span class="badge ${isKimono ? 'kimono' : 'cafemat'}">
+            ${w.productType}
+          </span>
+        </div>
+        
+        ${isKimono ? `
+          <div class="work-event">${escapeHtml(w.event || "着用イベント未設定")}</div>
+        ` : `
+          <div class="work-event-placeholder"></div>
+        `}
       </div>
 
-      ${groups.map(g => {
-        const list = works.filter(w => w.workStatus === g.key);
-        return `
-          <div class="status-group-section">
-            <div class="status-group-title ${g.class}">
-              <span>${g.title}</span>
-              <span style="font-size:12px; font-weight:normal;">${list.length} 件</span>
-            </div>
-            ${list.length === 0 ? `<p style="font-size:12px; color:var(--muted); padding-left:8px;">該当する作品はありません。</p>` : `
-              <div class="work-grid">
-                ${list.map(w => {
-                  const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
-                  const isKimono = w.productType === "着物";
-                  const pct = progressPct(w);
-                  return `
-                    <div class="work-card" onclick="openWork('${w.id}', 'production')">
-                      <div>
-                        <div class="work-top">
-                          <div>
-                            <div class="work-name">${escapeHtml(dogFormatted)}</div>
-                            <div class="work-owner">${escapeHtml(w.owner)}様</div>
-                          </div>
-                          <span class="badge ${isKimono ? 'kimono' : 'cafemat'}">
-                            ${w.productType}
-                          </span>
-                        </div>
-                        
-                        <!-- イベント表示：着物はイベント名（🎉削除）、カフェマットは高さを揃える空欄エリア -->
-                        ${isKimono ? `
-                          <div class="work-event">${escapeHtml(w.event || "着用イベント未設定")}</div>
-                        ` : `
-                          <div class="work-event-placeholder"></div>
-                        `}
-                      </div>
+      <div>
+        <div style="font-size:13px; color:var(--ink); margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span>納期: <strong style="color:var(--bordeaux); font-size:15px;">${escapeHtml(w.due || "未設定")}</strong></span>
+          <span style="font-size:11px; color:var(--muted);">首~尻: ${escapeHtml(w.basicOrder?.neckToHip || '—')}cm</span>
+        </div>
+        ${w.deliveredAt ? `<div style="font-size:10px; color:var(--blue); margin-top:2px;">納品日時: ${w.deliveredAt}</div>` : ""}
+        
+        <div class="progress-bar-bg"><span class="progress-bar-fill" style="width:${pct}%"></span></div>
 
-                      <div>
-                        <div style="font-size:11px; color:var(--muted); margin-top:8px;">納期: <strong>${escapeHtml(w.due || "未設定")}</strong></div>
-                        ${w.deliveredAt ? `<div style="font-size:10px; color:var(--blue); margin-top:2px;">納品日時: ${w.deliveredAt}</div>` : ""}
-                        
-                        <!-- 進捗バー（メーター）のみを残し、テキスト%表記は排除 -->
-                        <div class="progress-bar-bg"><span class="progress-bar-fill" style="width:${pct}%"></span></div>
-
-                        <div class="work-meta">
-                          <span class="consult-code-text">${escapeHtml(w.consultCode || "")}</span>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join("")}
-              </div>
-            `}
-          </div>
-        `;
-      }).join("")}
-    </section>
+        <div class="work-meta">
+          <span class="consult-code-text">${escapeHtml(w.consultCode || "")}</span>
+          <span style="font-size:10px; color:var(--muted);">受注: ${orderDateStr}</span>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -687,7 +926,6 @@ function renderProductionScreen(w) {
         </button>
       </div>
 
-      <!-- 作品全体の制作メモ -->
       <section class="section" style="margin-top:12px;">
         <div class="section-head">
           <h2 class="section-title">作品全体の制作メモ</h2>
@@ -695,7 +933,6 @@ function renderProductionScreen(w) {
         <textarea class="memo-area" oninput="saveWorkMemo(this.value)" placeholder="制作して気づいたこと、次回のための注意点、引き継ぎ事項など">${escapeHtml(w.workMemo || "")}</textarea>
       </section>
 
-      <!-- 制作工程一覧 -->
       <section class="section">
         <div class="section-head">
           <h2 class="section-title">制作工程</h2>
@@ -707,7 +944,6 @@ function renderProductionScreen(w) {
         </div>
       </section>
 
-      <!-- 作品全体のステータス操作エリア -->
       <section class="section" style="margin-top:32px; padding-top:16px; border-top:1px solid var(--line);">
         <div style="background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
           <div>
@@ -731,7 +967,33 @@ function renderProcessCard(w, s, index) {
   const isDone = s.status === "done";
   const isActive = s.status === "active";
   const photoList = w.photos.filter(p => p.stepId === s.id);
-  const isPhotoOpen = w.openPhotosStepId === s.id;
+  
+  if (!w.manualOpenStepIds) w.manualOpenStepIds = [];
+  const isPhotoOpen = isActive || w.manualOpenStepIds.includes(s.id);
+
+  const bo = w.basicOrder || {};
+  let relatedInfoHtml = "";
+  if (s.name.includes("型紙") || s.name.includes("布を決める")) {
+    relatedInfoHtml = `
+      <div class="step-related-info">
+        <div class="step-related-title">📌 オーダー基本情報 (デザイン関連)</div>
+        <div class="step-related-item"><strong>色の系統:</strong> ${escapeHtml(bo.preferredColor || '未設定')}</div>
+        <div class="step-related-item"><strong>避けてほしい絵柄:</strong> ${escapeHtml(bo.avoidPattern || 'なし')}</div>
+      </div>
+    `;
+  } else if (s.name.includes("布の準備") || s.name.includes("印付け") || s.name.includes("裁断") || s.name.includes("パーツ整理")) {
+    relatedInfoHtml = `
+      <div class="step-related-info">
+        <div class="step-related-title">📏 採寸データ</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:2px;">
+          <div>首周り: <strong>${escapeHtml(bo.neck || '—')} cm</strong></div>
+          <div>胴回り: <strong>${escapeHtml(bo.chest || '—')} cm</strong></div>
+          <div>背丈: <strong>${escapeHtml(bo.length || '—')} cm</strong></div>
+          <div>首〜お尻: <strong>${escapeHtml(bo.neckToHip || '—')} cm</strong></div>
+        </div>
+      </div>
+    `;
+  }
 
   return `
     <div class="process-card ${s.status} ${isActive ? 'active' : ''}">
@@ -758,18 +1020,30 @@ function renderProcessCard(w, s, index) {
       <div class="process-photos-container ${isPhotoOpen ? 'open' : ''}">
         <div class="toggle-inner-grid">
           <div>
-            <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:6px;">顧客共有用 写真</div>
+            <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:6px;">顧客共有用 写真 (タップして拡大・メモ編集)</div>
             <div class="photo-3col-grid">
-              ${photoList.map(p => `
-                <div class="photo-thumb"><img src="${escapeHtml(p.src)}" alt="工程写真"></div>
-              `).join("")}
-              <button class="add-photo-btn-toggle" onclick="triggerAddPhoto(event, '${s.id}')">
-                <span>＋</span><span>写真追加</span>
+              ${photoList.map(p => {
+                const memoTrim = String(p.memo || "").trim();
+                return `
+                  <div class="photo-item-card">
+                    <div class="photo-thumb" onclick="openImageModal(works.find(x => x.id === '${w.id}').photos.find(item => item.id === '${p.id}'))">
+                      <button class="photo-del-btn" title="写真を削除" onclick="deleteStepPhoto(event, '${p.id}')">✕</button>
+                      <img src="${escapeHtml(p.src)}" alt="工程写真">
+                    </div>
+                    <div class="photo-memo-preview-box ${memoTrim ? '' : 'empty'}" onclick="openImageModal(works.find(x => x.id === '${w.id}').photos.find(item => item.id === '${p.id}'))" title="タップしてメモを編集">
+                      ${memoTrim ? escapeHtml(memoTrim) : '写真メモを追加...'}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+              <button class="add-photo-btn-square" onclick="triggerAddPhoto(event, '${s.id}')">
+                <span style="font-size:16px;">＋</span><span>写真追加</span>
               </button>
             </div>
           </div>
-          <div>
+          <div class="step-right-col">
             <textarea class="step-memo-input" oninput="saveStepMemo('${s.id}', this.value)" placeholder="この工程でのこだわり・気付きを入力...">${escapeHtml(s.memo || "")}</textarea>
+            ${relatedInfoHtml}
           </div>
         </div>
       </div>
@@ -785,7 +1059,6 @@ function handleStepStatusNext(stepId) {
 
   if (step.status === "todo") {
     step.status = "active";
-    w.openPhotosStepId = stepId;
     renderScreen();
   } else if (step.status === "active") {
     pendingDoneStepId = stepId;
@@ -821,8 +1094,35 @@ function togglePhotoArea(e, stepId) {
   e.stopPropagation();
   const w = getWork();
   if (!w) return;
-  w.openPhotosStepId = (w.openPhotosStepId === stepId) ? null : stepId;
+  if (!w.manualOpenStepIds) w.manualOpenStepIds = [];
+
+  const idx = w.manualOpenStepIds.indexOf(stepId);
+  if (idx >= 0) {
+    w.manualOpenStepIds.splice(idx, 1);
+  } else {
+    w.manualOpenStepIds.push(stepId);
+  }
   renderScreen();
+}
+
+function deleteStepPhoto(e, photoId) {
+  e.stopPropagation();
+  const w = getWork();
+  if (!w) return;
+  if (confirm("この工程写真を削除しますか？")) {
+    w.photos = w.photos.filter(p => p.id !== photoId);
+    renderScreen();
+  }
+}
+
+function deleteClientPhoto(e, photoId) {
+  e.stopPropagation();
+  const w = getWork();
+  if (!w) return;
+  if (confirm("この顧客送付写真を削除しますか？")) {
+    w.clientPhotos = w.clientPhotos.filter(p => p.id !== photoId);
+    renderScreen();
+  }
 }
 
 function saveStepMemo(stepId, val) {
@@ -856,7 +1156,7 @@ function promptWorkStatusChange(targetStatus) {
   if (targetStatus === "completed") {
     titleEl.innerText = "✨ 作品の完成確認";
     msgEl.innerText = `「${dogFormatted}」の作品を『完成』にしますか？`;
-    subEl.innerText = "完成にすると「納品済み」ステータスへ進めるようになります。";
+    subEl.innerText = "完成に変更後、自動的に作品一覧（ホーム）に戻ります。";
     confirmBtn.className = "btn-success";
     confirmBtn.innerText = "完成にする";
 
@@ -870,14 +1170,14 @@ function promptWorkStatusChange(targetStatus) {
   } else if (targetStatus === "delivered") {
     titleEl.innerText = "📦 納品の確認";
     msgEl.innerText = `「${dogFormatted}」の作品を『納品済み』にしますか？`;
-    subEl.innerText = "納品済みに変更すると、納品日時が記録されます。";
+    subEl.innerText = "納品済みに変更後、自動的に作品一覧（ホーム）に戻ります。";
     confirmBtn.className = "btn-blue";
     confirmBtn.innerText = "納品済みにする";
 
   } else if (targetStatus === "canceled") {
     titleEl.innerText = "⚠️ キャンセル確認";
     msgEl.innerText = `「${dogFormatted}」の注文を『キャンセル済み』にしますか？`;
-    subEl.innerText = "※親ページの「キャンセル済みの作品」グループに保管されます。";
+    subEl.innerText = "キャンセル変更後、自動的に作品一覧（ホーム）に戻ります。";
     confirmBtn.className = "btn-danger";
     confirmBtn.innerText = "キャンセル済みにする";
   }
@@ -902,7 +1202,7 @@ function executeWorkStatusChange() {
   }
 
   closeWorkStatusModal();
-  renderScreen();
+  renderList();
 }
 
 function triggerAddPhoto(e, stepId) {
@@ -918,16 +1218,21 @@ picker.addEventListener("change", (e) => {
   const files = [...e.target.files];
   files.forEach(file => {
     w.photos.push({
+      id: "p_" + Date.now() + "_" + Math.random().toString(36).substring(2, 5),
       stepId: pendingPhotoStepId,
-      src: URL.createObjectURL(file)
+      src: URL.createObjectURL(file),
+      memo: ""
     });
   });
-  w.openPhotosStepId = pendingPhotoStepId;
+  if (!w.manualOpenStepIds) w.manualOpenStepIds = [];
+  if (!w.manualOpenStepIds.includes(pendingPhotoStepId)) {
+    w.manualOpenStepIds.push(pendingPhotoStepId);
+  }
   pendingPhotoStepId = null;
   renderScreen();
 });
 
-// ---- 3. オーダー情報ページ (基本情報エリアの広々レイアウト化) ----
+// ---- 3. オーダー情報ページ ----
 function switchTab(tab) {
   currentTab = tab;
   renderScreen();
@@ -955,7 +1260,15 @@ function confirmAdminModeChange() {
 
 function renderOrderScreen(w) {
   const bo = w.basicOrder || {};
-  const clientPhotos = w.clientPhotos || [];
+  let clientPhotos = w.clientPhotos || [];
+  clientPhotos = clientPhotos.map((item, idx) => {
+    if (typeof item === 'string') {
+      return { id: "cp_old_" + idx, src: item, memo: "" };
+    }
+    return item;
+  });
+  w.clientPhotos = clientPhotos;
+
   const dogFormatted = getFormattedDogName(w.dogBaseName, w.dogSex);
   const isKimono = w.productType === "着物";
   
@@ -977,7 +1290,6 @@ function renderOrderScreen(w) {
         </button>
       </div>
 
-      <!-- A. 基本情報 (広々とレイアウト拡張) -->
       <div class="order-sec-card">
         <div class="order-sec-title">
           <span>A. 基本情報 (Webフォーム・予約データ)</span>
@@ -985,18 +1297,25 @@ function renderOrderScreen(w) {
         </div>
 
         <div class="dog-profile-row-lg">
-          <img class="dog-avatar-lg" src="${escapeHtml(bo.photo || 'https://via.placeholder.com/150')}" alt="愛犬写真">
+          <div class="dog-avatar-wrap">
+            <img class="dog-avatar-lg" src="${escapeHtml(bo.photo || 'https://via.placeholder.com/150')}" alt="愛犬写真">
+            ${isOrderAdminEditMode ? `
+              <div class="dog-avatar-overlay-btn" onclick="triggerChangeDogAvatar()">
+                <span>📷</span>
+                <span>写真変更</span>
+              </div>
+            ` : ''}
+          </div>
           
           <div style="flex:1; min-width:280px;">
             ${isOrderAdminEditMode ? `
-              <!-- 管理者編集フォーム -->
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
                 <div>
                   <label style="font-size:11px; font-weight:700; color:var(--navy);">犬の名前 (ベース)</label>
                   <input type="text" value="${escapeHtml(w.dogBaseName || '')}" onchange="updateDogBaseName(this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px; font-weight:700;">
                 </div>
                 <div>
-                  <label style="font-size:11px; font-weight:700; color:var(--navy);">性別 (ちゃん/くん自動判定)</label>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">性別 (自動判定)</label>
                   <select onchange="updateDogSex(this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
                     <option value="女の子" ${w.dogSex === '女の子' ? 'selected' : ''}>女の子 (ちゃん)</option>
                     <option value="男の子" ${w.dogSex === '男の子' ? 'selected' : ''}>男の子 (くん)</option>
@@ -1012,6 +1331,17 @@ function renderOrderScreen(w) {
                 <div>
                   <label style="font-size:11px; font-weight:700; color:var(--navy);">体重</label>
                   <input type="text" value="${escapeHtml(w.weight || '')}" onchange="updateWorkField('weight', this.value)" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">色の系統</label>
+                  <input type="text" value="${escapeHtml(bo.preferredColor || '')}" onchange="updateBasicOrder('preferredColor', this.value)" placeholder="例: 赤・ゴールド系" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--navy);">避けてほしい絵柄</label>
+                  <input type="text" value="${escapeHtml(bo.avoidPattern || '')}" onchange="updateBasicOrder('avoidPattern', this.value)" placeholder="例: 黒地の暗い柄" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:13px;">
                 </div>
               </div>
 
@@ -1040,8 +1370,7 @@ function renderOrderScreen(w) {
                 </div>
               </div>
 
-              <!-- 採寸入力 -->
-              <div style="font-size:12px; font-weight:700; color:var(--navy); margin-top:14px; margin-bottom:6px;">採寸サイズ (右側に単位 cm 表示)</div>
+              <div style="font-size:12px; font-weight:700; color:var(--navy); margin-top:14px; margin-bottom:6px;">採寸サイズ</div>
               <div class="info-grid-edit">
                 <div class="info-cell-edit">
                   <label>首周り</label>
@@ -1061,7 +1390,6 @@ function renderOrderScreen(w) {
                 </div>
               </div>
             ` : `
-              <!-- 広々とレイアウトされた閲覧表示 -->
               <div style="font-size:24px; font-weight:800; color:var(--navy); line-height:1.2;">${escapeHtml(dogFormatted)}</div>
               
               <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:14px; color:var(--ink); margin-top:8px; font-weight:600;">
@@ -1081,7 +1409,11 @@ function renderOrderScreen(w) {
                 </div>
               ` : ''}
 
-              <!-- 採寸サイズ表示 (グリッド幅を広げて見やすく) -->
+              <div class="info-grid-spacious">
+                <div class="info-cell-view"><div class="lbl">色の系統</div><div class="val">${escapeHtml(bo.preferredColor || '未指定')}</div></div>
+                <div class="info-cell-view"><div class="lbl">避けてほしい絵柄</div><div class="val">${escapeHtml(bo.avoidPattern || 'なし')}</div></div>
+              </div>
+
               <div class="info-grid-spacious">
                 <div class="info-cell-view"><div class="lbl">首周り</div><div class="val">${escapeHtml(bo.neck || '—')} cm</div></div>
                 <div class="info-cell-view"><div class="lbl">胴回り</div><div class="val">${escapeHtml(bo.chest || '—')} cm</div></div>
@@ -1093,47 +1425,70 @@ function renderOrderScreen(w) {
         </div>
       </div>
 
-      <!-- 📷 顧客送付写真 -->
       <div class="order-sec-card">
         <div class="order-sec-title">
-          <span>📷 顧客送付写真</span>
-          ${isOrderAdminEditMode ? `<button class="btn-sec" style="font-size:11px; padding:4px 8px;" onclick="triggerAddClientPhoto()">＋ 写真を追加</button>` : ''}
+          <span>📷 顧客送付写真 (タップして拡大・メモ編集)</span>
         </div>
         
         <div class="photo-3col-grid">
-          ${clientPhotos.map(src => `
-            <div class="photo-thumb" style="height:120px;"><img src="${escapeHtml(src)}" alt="顧客送付写真"></div>
-          `).join("")}
-          ${clientPhotos.length === 0 ? `<p style="font-size:12px; color:var(--muted); grid-column:span 3;">登録されている顧客写真はありません。</p>` : ''}
+          ${clientPhotos.map((cp) => {
+            const memoTrim = String(cp.memo || "").trim();
+            return `
+              <div class="photo-item-card">
+                <div class="photo-thumb" onclick="openImageModal(works.find(x => x.id === '${w.id}').clientPhotos.find(item => item.id === '${cp.id}'))">
+                  ${isOrderAdminEditMode ? `<button class="photo-del-btn" title="削除" onclick="deleteClientPhoto(event, '${cp.id}')">✕</button>` : ''}
+                  <img src="${escapeHtml(cp.src)}" alt="顧客送付写真">
+                </div>
+                <div class="photo-memo-preview-box ${memoTrim ? '' : 'empty'}" onclick="openImageModal(works.find(x => x.id === '${w.id}').clientPhotos.find(item => item.id === '${cp.id}'))" title="タップしてメモを編集">
+                  ${memoTrim ? escapeHtml(memoTrim) : (isOrderAdminEditMode ? '写真メモを追加...' : 'メモなし')}
+                </div>
+              </div>
+            `;
+          }).join("")}
+          
+          ${isOrderAdminEditMode ? `
+            <button class="add-photo-btn-square" onclick="triggerAddClientPhoto()">
+              <span style="font-size:16px;">＋</span>
+              <span>写真追加</span>
+            </button>
+          ` : ''}
         </div>
       </div>
 
-      <!-- B. 詳細オーダー情報 -->
       <div class="order-sec-card">
         <div class="order-sec-title">
           <span>B. 詳細オーダー情報</span>
         </div>
 
         ${isOrderAdminEditMode ? `
-          <p style="font-size:11px; color:var(--muted); margin:0 0 6px;">TSV・コピペで一括更新が可能です。</p>
+          <p style="font-size:11px; color:var(--muted); margin:0 0 6px;">TSV・コピペで一括更新、または下の各項目を直接編集できます。</p>
           <textarea class="tsv-textarea" id="tsvInput" placeholder="例:&#10;使用する生地	正絹 雲取り花菱文様&#10;帯仕様	金襴織 扇面重ね"></textarea>
-          <button class="btn-pri" style="margin-top:6px; width:100%;" onclick="applyTsvImport()">📋 テキストから表を一括更新</button>
-        ` : ''}
+          <button class="btn-pri" style="margin-top:6px; margin-bottom:16px; width:100%;" onclick="applyTsvImport()">📋 テキストから表を一括更新</button>
 
-        <table class="detail-order-table" style="margin-top:10px;">
-          <tbody>
-            ${(w.detailOrder || []).map((item) => `
-              <tr>
-                <th>${escapeHtml(item.key)}</th>
-                <td>${escapeHtml(item.val)}</td>
-              </tr>
-            `).join("")}
-            ${(w.detailOrder || []).length === 0 ? `<tr><td colspan="2" style="color:var(--muted);">詳細オーダー情報は登録されていません。</td></tr>` : ''}
-          </tbody>
-        </table>
+          <div style="font-weight:700; font-size:13px; color:var(--navy); margin-bottom:8px;">個別項目の編集・追加:</div>
+          ${(w.detailOrder || []).map((item, idx) => `
+            <div class="detail-edit-row">
+              <input type="text" class="detail-edit-key" value="${escapeHtml(item.key)}" onchange="updateDetailOrderKey(${idx}, this.value)" placeholder="項目名">
+              <input type="text" class="detail-edit-val" value="${escapeHtml(item.val)}" onchange="updateDetailOrderVal(${idx}, this.value)" placeholder="内容">
+              <button style="border:none; background:transparent; color:var(--red); font-weight:bold; padding:4px;" onclick="removeDetailOrderItem(${idx})">削除</button>
+            </div>
+          `).join("")}
+          <button class="btn-sec" style="width:100%; margin-top:8px; border-style:dashed; font-size:12px;" onclick="addDetailOrderItem()">＋ 項目を追加</button>
+        ` : `
+          <table class="detail-order-table" style="margin-top:10px;">
+            <tbody>
+              ${(w.detailOrder || []).map((item) => `
+                <tr>
+                  <th>${escapeHtml(item.key)}</th>
+                  <td>${escapeHtml(item.val)}</td>
+                </tr>
+              `).join("")}
+              ${(w.detailOrder || []).length === 0 ? `<tr><td colspan="2" style="color:var(--muted);">詳細オーダー情報は登録されていません。</td></tr>` : ''}
+            </tbody>
+          </table>
+        `}
       </div>
 
-      <!-- 管理者編集モード切替ボタン (最下部) -->
       <div style="margin-top:40px; padding-top:16px; border-top:1px solid var(--line); text-align:center;">
         <button class="${isOrderAdminEditMode ? 'btn-danger' : 'btn-sec'}" style="font-size:11px; padding:6px 12px;" onclick="requestAdminModeToggle()">
           ${isOrderAdminEditMode ? '🔒 管理者編集モードを終了する (閲覧専用へ)' : '⚙ 管理者編集モードに切り替える'}
@@ -1174,6 +1529,56 @@ function updateBasicOrder(key, val) {
   }
 }
 
+function updateDetailOrderKey(idx, val) {
+  const w = getWork();
+  if (w && w.detailOrder && w.detailOrder[idx]) {
+    w.detailOrder[idx].key = val;
+  }
+}
+
+function updateDetailOrderVal(idx, val) {
+  const w = getWork();
+  if (w && w.detailOrder && w.detailOrder[idx]) {
+    w.detailOrder[idx].val = val;
+  }
+}
+
+function removeDetailOrderItem(idx) {
+  const w = getWork();
+  if (w && w.detailOrder && w.detailOrder[idx]) {
+    const keyName = w.detailOrder[idx].key || "この";
+    if (confirm(`詳細オーダー項目「${keyName}」を削除しますか？`)) {
+      w.detailOrder.splice(idx, 1);
+      renderOrderScreen(w);
+    }
+  }
+}
+
+function addDetailOrderItem() {
+  const w = getWork();
+  if (w) {
+    if (!w.detailOrder) w.detailOrder = [];
+    w.detailOrder.push({ key: "新しい項目", val: "" });
+    renderOrderScreen(w);
+  }
+}
+
+function triggerChangeDogAvatar() {
+  dogAvatarPicker.value = "";
+  dogAvatarPicker.click();
+}
+
+dogAvatarPicker.addEventListener("change", (e) => {
+  const w = getWork();
+  if (!w) return;
+  const file = e.target.files[0];
+  if (file) {
+    if (!w.basicOrder) w.basicOrder = {};
+    w.basicOrder.photo = URL.createObjectURL(file);
+    renderOrderScreen(w);
+  }
+});
+
 function triggerAddClientPhoto() {
   clientPicker.value = "";
   clientPicker.click();
@@ -1184,7 +1589,11 @@ clientPicker.addEventListener("change", (e) => {
   if (!w) return;
   if (!w.clientPhotos) w.clientPhotos = [];
   [...e.target.files].forEach(file => {
-    w.clientPhotos.push(URL.createObjectURL(file));
+    w.clientPhotos.push({
+      id: "cp_" + Date.now() + "_" + Math.random().toString(36).substring(2, 5),
+      src: URL.createObjectURL(file),
+      memo: ""
+    });
   });
   renderOrderScreen(w);
 });
@@ -1208,7 +1617,7 @@ function applyTsvImport() {
 
   w.detailOrder = newDetails;
   renderOrderScreen(w);
-  alert("詳細オーダー表を更新しました。");
+  alert("詳細オーダー表を一括更新しました。");
 }
 
 // ---- 4. 工程編集モーダル ----
@@ -1228,8 +1637,8 @@ function closeStepEditModal() {
 function renderStepEditModalList() {
   const container = document.getElementById("editStepList");
   container.innerHTML = editingStepsTemp.map((s, idx) => `
-    <div class="edit-step-item" draggable="true" data-index="${idx}">
-      <span class="drag-handle">☷</span>
+    <div class="edit-step-item" data-index="${idx}">
+      <span class="drag-handle" draggable="true">☷</span>
       <input type="text" value="${escapeHtml(s.name)}" onchange="editingStepsTemp[${idx}].name = this.value">
       <button style="border:none; background:transparent; color:var(--red); font-weight:700;" onclick="removeModalStep(${idx})">削除</button>
     </div>
@@ -1239,10 +1648,13 @@ function renderStepEditModalList() {
   let dragSrcIndex = null;
 
   items.forEach(item => {
-    item.addEventListener('dragstart', (e) => {
+    const handle = item.querySelector('.drag-handle');
+
+    handle.addEventListener('dragstart', (e) => {
       dragSrcIndex = Number(item.getAttribute('data-index'));
       item.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragSrcIndex);
     });
 
     item.addEventListener('dragover', (e) => {
@@ -1252,7 +1664,7 @@ function renderStepEditModalList() {
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
       
-      items.forEach(i => { i.classList.remove('drop-above', 'drop-below'); });
+      items.forEach(i => i.classList.remove('drop-above', 'drop-below'));
 
       if (e.clientY < midY) {
         item.classList.add('drop-above');
@@ -1272,7 +1684,7 @@ function renderStepEditModalList() {
       const midY = rect.top + rect.height / 2;
       const isBelow = e.clientY >= midY;
 
-      items.forEach(i => { i.classList.remove('drop-above', 'drop-below'); });
+      items.forEach(i => i.classList.remove('drop-above', 'drop-below'));
 
       if (dragSrcIndex !== null) {
         let targetIndex = isBelow ? dropIndex + 1 : dropIndex;
@@ -1284,8 +1696,8 @@ function renderStepEditModalList() {
       }
     });
 
-    item.addEventListener('dragend', () => {
-      items.forEach(i => { i.classList.remove('dragging', 'drop-above', 'drop-below'); });
+    handle.addEventListener('dragend', () => {
+      items.forEach(i => i.classList.remove('dragging', 'drop-above', 'drop-below'));
     });
   });
 }
@@ -1360,14 +1772,14 @@ function saveNewWork() {
     weight: "未設定",
     due: due,
     deliveredAt: null,
-    basicOrder: { photo: "", neck: "", chest: "", length: "", neckToHip: "" },
+    basicOrder: { photo: "", neck: "", chest: "", length: "", neckToHip: "", preferredColor: "", avoidPattern: "" },
     clientPhotos: [],
     detailOrder: [],
     steps: DEFAULT_STEPS.map(s => ({ ...s })),
-    photos: [], openPhotosStepId: null, workMemo: ""
+    photos: [], manualOpenStepIds: [], workMemo: ""
   };
 
-  works.push(newWork);
+  works.unshift(newWork);
   closeAddWorkModal();
   renderList();
 }
