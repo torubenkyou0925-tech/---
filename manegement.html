@@ -404,7 +404,7 @@ button { cursor: pointer; }
       <div class="brand-mark">Atelier Katsura</div>
       <div class="brand-sub">制作管理</div>
     </div>
-    <a href="javascript:void(0)" onclick="goToMainPage()" class="ext-link-btn">メインページへ ↗</a>
+    <a href="https://torubenkyou0925-tech.github.io/---/" onclick="goToMainPage()" class="ext-link-btn">メインページへ </a>
   </header>
 
   <main id="app"></main>
@@ -542,15 +542,6 @@ button { cursor: pointer; }
 </div>
 
 <script>
-const MAIN_PAGE_URL = "https://atelier-katsura.example.com"; 
-
-function goToMainPage() {
-  if (MAIN_PAGE_URL && !MAIN_PAGE_URL.includes("example.com")) {
-    window.location.href = MAIN_PAGE_URL;
-  } else {
-    alert("「メインページへ」のリンク先URLは未設定です。");
-  }
-}
 
 function cleanDogName(rawName) {
   return String(rawName || "").replace(/(ちゃん|くん)$/, "").trim();
@@ -731,6 +722,29 @@ function renderList() {
   if (!existingFilterBar) {
     app.innerHTML = `
       <section class="screen">
+        <!-- 納期カレンダー & 1ヶ月以内一覧セクション -->
+        <div class="order-sec-card" style="margin-bottom: 24px;">
+          <div class="order-sec-title">
+            <span>📅 納期スケジュール</span>
+          </div>
+          <!-- カレンダー本体 (簡易月別グリッド) -->
+          <div id="deliveryCalendarWidget" style="margin-bottom: 20px;"></div>
+
+          <div style="font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; border-top: 1px dashed var(--line); padding-top: 14px;">
+            📌 1ヶ月以内の納期一覧
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: var(--bordeaux); margin-bottom: 6px;">👘 着物</div>
+              <div id="nearDueKimonoList" style="display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 6px;">☕ カフェマット</div>
+              <div id="nearDueCafematList" style="display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="page-header-flex">
           <h1 class="page-title">制作中の作品一覧 (${works.length}件)</h1>
           <button class="btn-pri" onclick="openAddWorkModal()">＋ 手動で作品を追加</button>
@@ -743,6 +757,8 @@ function renderList() {
     renderFilterBar();
   }
 
+  // カレンダーと納期一覧を描画する関数を呼び出し
+  renderDeliveryCalendarAndNearDueLists();
   renderGroupsContent();
 }
 
@@ -1293,7 +1309,14 @@ function renderOrderScreen(w) {
       <div class="order-sec-card">
         <div class="order-sec-title">
           <span>A. 基本情報 (Webフォーム・予約データ)</span>
-          ${isOrderAdminEditMode ? '<span style="color:var(--red); font-size:11px; font-weight:bold;">[管理者編集中]</span>' : '<span style="color:var(--muted); font-size:11px;">[閲覧専用]</span>'}
+          <div style="display:flex; align-items:center; gap:8px;">
+            ${isOrderAdminEditMode ? `
+              <button class="btn-sec" style="padding:4px 10px; font-size:11px;" onclick="duplicateWork('${w.id}')" title="同じワンちゃんで新規オーダーをコピー作成">
+                📋 この注文をコピー
+              </button>
+              <span style="color:var(--red); font-size:11px; font-weight:bold;">[管理者編集中]</span>
+            ` : '<span style="color:var(--muted); font-size:11px;">[閲覧専用]</span>'}
+          </div>
         </div>
 
         <div class="dog-profile-row-lg">
@@ -1782,6 +1805,134 @@ function saveNewWork() {
   works.unshift(newWork);
   closeAddWorkModal();
   renderList();
+}
+
+function duplicateWork(sourceId) {
+  const source = works.find(w => w.id === sourceId);
+  if (!source) return;
+
+  if (!confirm(`「${getFormattedDogName(source.dogBaseName, source.dogSex)}（${source.owner}様）」の注文データをコピーして、新しい「未着手」オーダーを作成しますか？`)) {
+    return;
+  }
+
+  const now = new Date();
+  const dateStr = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+  const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const newConsultCode = `S_${dateStr}_${randomCode}`;
+
+  // 既存データをディープコピー
+  const duplicated = JSON.parse(JSON.stringify(source));
+  duplicated.id = "w_" + Date.now();
+  duplicated.consultCode = newConsultCode;
+  duplicated.workStatus = "todo"; // 新規なので「未着手」
+  duplicated.deliveredAt = null;
+  
+  // 工程ステータス・メモ・写真はリセット（採寸や詳細オーダー情報は保持）
+  duplicated.steps = DEFAULT_STEPS.map(s => ({ ...s }));
+  duplicated.photos = [];
+  duplicated.manualOpenStepIds = [];
+  duplicated.workMemo = "";
+
+  works.unshift(duplicated);
+  alert(`新しいオーダー（相談コード: ${newConsultCode}）としてコピー作成しました！`);
+  openWork(duplicated.id, 'order');
+}
+
+function renderDeliveryCalendarAndNearDueLists() {
+  const calWidget = document.getElementById("deliveryCalendarWidget");
+  const kimonoContainer = document.getElementById("nearDueKimonoList");
+  const cafematContainer = document.getElementById("nearDueCafematList");
+  if (!calWidget || !kimonoContainer || !cafematContainer) return;
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-indexed
+
+  // 今月のカレンダーの日数と初日の曜日を取得
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // 納期のマッピングを作成 (YYYY-MM-DD => [作品オブジェクトたち])
+  const dueMap = {};
+  works.forEach(w => {
+    if (w.due) {
+      if (!dueMap[w.due]) dueMap[w.due] = [];
+      dueMap[w.due].push(w);
+    }
+  });
+
+  // カレンダーHTML生成
+  let calHtml = `
+    <div style="font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-align: center;">
+      ${year}年 ${month + 1}月
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 11px;">
+      <div style="color: var(--red); font-weight: 700;">日</div>
+      <div>月</div><div>火</div><div>水</div><div>木</div><div>金</div>
+      <div style="color: var(--blue); font-weight: 700;">土</div>
+  `;
+
+  for (let i = 0; i < firstDayIndex; i++) {
+    calHtml += `<div></div>`;
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const mm = String(month + 1).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    const dateStr = `${year}-${mm}-${dd}`;
+    const hasDue = dueMap[dateStr] && dueMap[dateStr].length > 0;
+    const isToday = (day === now.getDate());
+
+    calHtml += `
+      <div style="
+        height: 36px; border-radius: 4px; border: 1px solid ${isToday ? 'var(--bordeaux)' : 'var(--line)'};
+        background: ${hasDue ? '#FFF4DD' : '#fff'}; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 1px; position: relative;
+      ">
+        <span style="font-size: 10px; font-weight: ${isToday ? '700' : 'normal'}; color: ${isToday ? 'var(--bordeaux)' : 'var(--ink)'};">${day}</span>
+        ${hasDue ? `<span style="font-size: 8px; font-weight: 700; color: var(--amber); background: #FFE8A3; border-radius: 3px; padding: 0 2px; line-height: 1;">${dueMap[dateStr].length}件</span>` : ''}
+      </div>
+    `;
+  }
+  calHtml += `</div>`;
+  calWidget.innerHTML = calHtml;
+
+  // 1ヶ月以内（今日から30日以内）のものを抽出
+  const todayTime = now.getTime();
+  const oneMonthLaterTime = todayTime + (30 * 24 * 60 * 60 * 1000);
+
+  const nearDueWorks = works.filter(w => {
+    if (!w.due || w.workStatus === 'delivered' || w.workStatus === 'canceled') return false;
+    const dueTime = new Date(w.due).getTime();
+    return dueTime >= todayTime && dueTime <= oneMonthLaterTime;
+  });
+
+  const kimonoList = nearDueWorks.filter(w => w.productType === '着物');
+  const cafematList = nearDueWorks.filter(w => w.productType === 'カフェマット');
+
+  function renderListRows(list, container) {
+    if (list.length === 0) {
+      container.innerHTML = `<div style="font-size: 11px; color: var(--muted); padding: 4px 0;">該当なし</div>`;
+      return;
+    }
+    container.innerHTML = list.map(w => {
+      const dogName = getFormattedDogName(w.dogBaseName, w.dogSex);
+      // 日付のハイフンをスラッシュに変換（2026-11-11 → 2026/11/11）
+      const formattedDue = (w.due || "").replace(/-/g, "/");
+      return `
+        <div onclick="openWork('${w.id}', 'production')" style="
+          display: flex; flex-direction: column; gap: 2px; background: var(--soft);
+          padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid var(--line);
+        ">
+          <div style="font-weight: 700; color: var(--navy);">${escapeHtml(dogName)}</div>
+          <div style="font-size: 11px; color: var(--muted);">${escapeHtml(w.owner)}様 ${escapeHtml(formattedDue)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  renderListRows(kimonoList, kimonoContainer);
+  renderListRows(cafematList, cafematContainer);
 }
 
 renderList();
