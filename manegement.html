@@ -964,14 +964,14 @@ function renderProductionScreen(w) {
         <div style="background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
           <div>
             <span style="font-size:13px; font-weight:700; color:var(--navy);">作品全体のステータス操作:</span>
-            ${!isCompleted && w.workStatus !== 'delivered' ? `<div style="font-size:10px; color:var(--muted); margin-top:2px;">※「完成」にすると「納品済み」ボタンが押せるようになります。</div>` : ''}
+            <div style="font-size:10px; color:var(--muted); margin-top:2px;">現在の状態: <strong>${w.workStatus}</strong></div>
           </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn-success" onclick="promptWorkStatusChange('completed')">✨ 作品を完成にする</button>
-            <button class="btn-blue ${!isCompleted ? 'disabled' : ''}" ${!isCompleted ? 'disabled' : ''} onclick="promptWorkStatusChange('delivered')">
-              📦 納品済みにする
-            </button>
-            <button class="btn-danger" onclick="promptWorkStatusChange('canceled')">キャンセル</button>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn-sec" onclick="promptWorkStatusChange('todo')" style="font-size:11px; padding:6px 10px;">未着手にする</button>
+            <button class="btn-sec" onclick="promptWorkStatusChange('active')" style="font-size:11px; padding:6px 10px; color:var(--amber); border-color:var(--amber);">進行中にする</button>
+            <button class="btn-success" onclick="promptWorkStatusChange('completed')" style="font-size:11px; padding:6px 10px;">✨ 完成にする</button>
+            <button class="btn-blue ${!isCompleted && w.workStatus !== 'completed' && w.workStatus !== 'delivered' ? 'disabled' : ''}" onclick="promptWorkStatusChange('delivered')" style="font-size:11px; padding:6px 10px;">📦 納品済み</button>
+            <button class="btn-danger" onclick="promptWorkStatusChange('canceled')" style="font-size:11px; padding:6px 10px;">キャンセル</button>
           </div>
         </div>
       </section>
@@ -1169,7 +1169,20 @@ function promptWorkStatusChange(targetStatus) {
   warnEl.style.display = "none";
   warnEl.innerHTML = "";
 
-  if (targetStatus === "completed") {
+  if (targetStatus === "todo") {
+    titleEl.innerText = "📌 未着手への変更確認";
+    msgEl.innerText = `「${dogFormatted}」の作品を『未着手』に戻しますか？`;
+    subEl.innerText = "変更後、ホーム画面の未着手グループに移動します。";
+    confirmBtn.className = "btn-sec";
+    confirmBtn.innerText = "未着手にする";
+  } else if (targetStatus === "active") {
+    titleEl.innerText = "▶ 進行中への変更確認";
+    msgEl.innerText = `「${dogFormatted}」の作品を『進行中』にしますか？`;
+    subEl.innerText = "変更後、ホーム画面の進行中グループに移動します。";
+    confirmBtn.className = "btn-sec";
+    confirmBtn.innerText = "進行中にする";
+    confirmBtn.style.color = "var(--amber)";
+  } else if (targetStatus === "completed") {
     titleEl.innerText = "✨ 作品の完成確認";
     msgEl.innerText = `「${dogFormatted}」の作品を『完成』にしますか？`;
     subEl.innerText = "完成に変更後、自動的に作品一覧（ホーム）に戻ります。";
