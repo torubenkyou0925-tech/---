@@ -1299,6 +1299,8 @@ if (dogWeightSelect) {
 
     return {
 
+        productType: '着物',
+
         name: yourname,
 
         dogName: dogname,
@@ -1340,6 +1342,7 @@ if (dogWeightSelect) {
 
     const params = new URLSearchParams();
 
+    params.append('productType', data.productType);
     params.append('name', data.name);
     params.append('dogName', data.dogName);
     params.append('email', data.email);
