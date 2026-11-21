@@ -731,17 +731,23 @@
                             <label class="block text-xs font-semibold tracking-wider text-stone-700">愛犬のお名前 <span class="text-bordeaux">*</span></label>
                             <input type="text" id="sim-dogname" required placeholder="例：モモ" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-semibold tracking-wider text-stone-700">性別 <span class="text-bordeaux">*</span></label>
+                                <select id="sim-dogsex" required class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                                    <option value="">選択してください</option>
+                                    <option value="男の子">男の子</option>
+                                    <option value="女の子">女の子</option>
+                                </select>
+                            </div>
                             <div class="space-y-2">
                                 <label class="block text-xs font-semibold tracking-wider text-stone-700">犬種 <span class="text-bordeaux">*</span></label>
                                 <input type="text" id="sim-dogtype" required placeholder="例：柴犬" class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
                             </div>
                             <div class="space-y-2">
                                 <label class="block text-xs font-semibold tracking-wider text-stone-700">体重 (kg) <span class="text-bordeaux">*</span></label>
-                                <select id="sim-dogweight"
-                                         required
-                                           class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
-                                     <option value="">選択してください</option>
+                                <select id="sim-dogweight" required class="w-full text-xs p-3.5 border border-stone-300 focus:border-bordeaux focus:outline-none bg-stone-50">
+                                    <option value="">選択してください</option>
                                 </select>
                             </div>
                         </div>
@@ -787,7 +793,11 @@
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[11px] text-stone-600">背丈・体長 (cm)</label>
-                                <input type="text" id="measure-length" placeholder="例：35" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
+                                <input type="text" id="measure-length" inputmode="decimal" placeholder="例：35" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-stone-600">首〜腰丈（首からお尻まで）(cm)</label>
+                                <input type="text" id="measure-neck-to-hip" inputmode="decimal" placeholder="例：32" class="w-full text-xs p-2.5 border border-stone-300 bg-white">
                             </div>
                         </div>
                     </div>
@@ -872,7 +882,7 @@
         <!-- メール選択時のボタン -->
         <button type="submit" id="sim-email-action-btn"
                 class="hidden flex items-center justify-center gap-3 w-full py-4 px-6 bg-navy hover:bg-bordeaux text-white transition-colors shadow-md text-sm font-medium tracking-widest">
-            ✉️ メールでこの内容を送信する
+            ✉️ メールアプリを開いて相談する
         </button>
 
     </div>
@@ -881,10 +891,6 @@
         ※ご送信後、24時間以内にアトリエ専任担当よりご連絡を差し上げます[cite: 4]。無理な勧誘は一切ございません[cite: 4]。
     </p>
 </div>
-                    <p class="text-[11px] text-stone-500 tracking-wider">
-                        ※ご送信後、24時間以内にアトリエ専任担当よりご連絡を差し上げます[cite: 4]。無理な勧誘は一切ございません[cite: 4]。
-                    </p>
-                </div>
 
             </form>
             <!-- LINE連携前の受付完了エリア -->
@@ -911,6 +917,23 @@
     </button>
 
 </div>
+
+<div id="emailNoticeArea" class="hidden text-center py-10 px-6 bg-[#F9F7F2] border border-stone-200 mt-4">
+    <div class="inline-block px-5 py-2 mb-6 bg-[#E8F5EC] text-[#137333] text-xs tracking-widest font-medium">
+        ✓ ご相談内容の受付登録が完了しました
+    </div>
+    <h3 class="font-serif-jp text-xl md:text-2xl text-navy tracking-widest mb-5">
+        メールアプリから送信してください
+    </h3>
+    <p class="font-serif-jp text-xs md:text-sm text-stone-600 leading-loose tracking-wider mb-5">
+        受付内容はアトリエにも登録されています。メールアプリが開いたら、内容をご確認のうえ送信してください。
+    </p>
+    <p class="text-xs text-stone-500 mb-4">受付コード：<strong id="emailConsultCode" class="text-navy"></strong></p>
+    <a id="emailFallbackLink" href="#" class="inline-flex items-center justify-center w-full py-4 px-6 bg-navy hover:bg-bordeaux text-white transition-colors shadow-md text-sm font-medium tracking-widest">
+        ✉️ メールアプリを開く
+    </a>
+    <p class="text-[11px] text-stone-500 mt-4">宛先：info@atelier-katsura.com</p>
+</div>
         </div>
 
     </div>
@@ -919,7 +942,7 @@
 <!-- ==========================================
      よくあるご質問（FAQ）: 白背景（交互トーン調整）
      ========================================== -->
-<section id="flow" class="py-24 lg:py-36 bg-premiumGray px-6 lg:px-12">
+<section id="faq" class="py-24 lg:py-36 bg-premiumGray px-6 lg:px-12">
         <div class="max-w-5xl mx-auto">
             
 
@@ -1271,6 +1294,9 @@ if (dogWeightSelect) {
     const dogtype =
         document.getElementById('sim-dogtype').value.trim();
 
+    const dogSex =
+        document.getElementById('sim-dogsex').value;
+
     const dogweight =
         document.getElementById('sim-dogweight').value.trim();
 
@@ -1287,6 +1313,14 @@ if (dogWeightSelect) {
 
     const length =
         document.getElementById('measure-length')?.value || '';
+
+    const neckToHip =
+        document.getElementById('measure-neck-to-hip')?.value || '';
+
+    const contactTool =
+        document.querySelector('input[name="contact_tool"]:checked')?.value === 'email'
+            ? 'メール'
+            : 'LINE';
 
     const eventDate =
         document.getElementById('sim-event-date').value || '';
@@ -1309,7 +1343,11 @@ if (dogWeightSelect) {
 
         dogType: dogtype,
 
+        dogSex: dogSex,
+
         dogWeight: dogweight,
+
+        contactTool: contactTool,
 
         color: selectedColor,
 
@@ -1324,6 +1362,8 @@ if (dogWeightSelect) {
 
         length: length,
 
+        neckToHip: neckToHip,
+
         eventDate: eventDate || '未定',
 
         eventPurpose: eventPurpose,
@@ -1336,57 +1376,71 @@ if (dogWeightSelect) {
     // ==========================================
     // ⑤ GASへ送信
     // ==========================================
-    async function submitToGAS() {
-
-    const data = buildFormMessage();
-
-    const params = new URLSearchParams();
-
-    params.append('productType', data.productType);
-    params.append('name', data.name);
-    params.append('dogName', data.dogName);
-    params.append('email', data.email);
-
-    params.append('dogType', data.dogType);
-    params.append('dogWeight', data.dogWeight);
-    params.append('color', data.color);
-
-    params.append('sizingMethod', data.sizingMethod);
-    params.append('neck', data.neck);
-    params.append('chest', data.chest);
-    params.append('length', data.length);
-
-    params.append('eventDate', data.eventDate);
-    params.append('eventPurpose', data.eventPurpose);
-
-    params.append('message', data.message);
-
-    const response = await fetch(
-        GAS_WEB_APP_URL,
-        {
-            method: 'POST',
-
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded'
-            },
-
-            body: params
-        }
-    );
-
-    const result = await response.json();
-
-    if (result.status !== 'success') {
-
-        throw new Error(
-            result.message ||
-            'GASへの送信に失敗しました'
-        );
+    function createConsultationCode() {
+        const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric', month: '2-digit', day: '2-digit'
+        }).formatToParts(new Date());
+        const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
+        const date = `${dateParts.year}${dateParts.month}${dateParts.day}`;
+        const random = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID().replace(/-/g, '').slice(0, 8).toUpperCase()
+            : Math.random().toString(36).slice(2, 10).toUpperCase();
+        return `S_${date}_${random}`;
     }
 
-    return result.sessionId;
-}
+    async function submitToGAS() {
+        const data = buildFormMessage();
+
+        if (!currentSessionId) {
+            currentSessionId = createConsultationCode();
+        }
+
+        const params = new URLSearchParams();
+        params.append('sessionId', currentSessionId);
+        params.append('productType', data.productType);
+        params.append('name', data.name);
+        params.append('dogName', data.dogName);
+        params.append('email', data.email);
+        params.append('dogType', data.dogType);
+        params.append('dogSex', data.dogSex);
+        params.append('dogWeight', data.dogWeight);
+        params.append('contactTool', data.contactTool);
+        params.append('color', data.color);
+        params.append('sizingMethod', data.sizingMethod);
+        params.append('neck', data.neck);
+        params.append('chest', data.chest);
+        params.append('length', data.length);
+        params.append('neckToHip', data.neckToHip);
+        params.append('eventDate', data.eventDate);
+        params.append('eventPurpose', data.eventPurpose);
+        params.append('message', data.message);
+
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params
+        });
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'フォーム内容の登録に失敗しました');
+        }
+
+        currentSessionId = result.sessionId || currentSessionId;
+
+        if (result.cloudflareStatus !== '連携完了') {
+            throw new Error(
+                `スプレッドシートには受付内容を保存しましたが、管理システムへの同期に失敗しました。\n受付コード：${currentSessionId}\n時間を置いて同じボタンから再試行してください。`
+            );
+        }
+
+        return currentSessionId;
+    }
+
 
 
     // ==========================================
@@ -1435,8 +1489,7 @@ if (dogWeightSelect) {
             console.error(error);
 
             alert(
-                '通信エラーが発生しました。\n' +
-                '時間を置いて再度お試しください。'
+                error.message || '通信エラーが発生しました。時間を置いて再度お試しください。'
             );
 
             lineActionBtn.disabled = false;
@@ -1449,52 +1502,92 @@ if (dogWeightSelect) {
 
 
     // ==========================================
-    // ⑦ メール送信
+    // ⑦ メール問い合わせ（受付登録後にメールアプリを開く）
     // ==========================================
     const form = document.querySelector('#order-form form');
+    const emailNoticeArea = document.getElementById('emailNoticeArea');
+    const emailConsultCode = document.getElementById('emailConsultCode');
+    const emailFallbackLink = document.getElementById('emailFallbackLink');
+
+    function createInquiryEmailUrl(data, sessionId) {
+        const honorific = data.dogSex === '男の子' ? 'くん' : 'ちゃん';
+        const subject = `【お誂え相談】${data.dogName}${honorific}のお見積り依頼`;
+        const body = [
+            'アトリエ桂 ご担当者様',
+            '',
+            'Webフォームより、お誂えの相談・お見積りをお願いいたします。',
+            '',
+            `受付コード：${sessionId}`,
+            `飼い主様：${data.name}`,
+            `メールアドレス：${data.email}`,
+            '',
+            '【愛犬の情報】',
+            `お名前：${data.dogName}`,
+            `性別：${data.dogSex}`,
+            `犬種：${data.dogType}`,
+            `体重：${data.dogWeight} kg`,
+            '',
+            '【ご希望内容】',
+            `商品：${data.productType}`,
+            `希望連絡方法：${data.contactTool}`,
+            `色柄：${data.color}`,
+            `採寸方法：${data.sizingMethod}`,
+            '',
+            '【採寸（cm）】',
+            `首周り：${data.neck || '未入力'}`,
+            `胴回り：${data.chest || '未入力'}`,
+            `背丈・体長：${data.length || '未入力'}`,
+            `首〜腰丈：${data.neckToHip || '未入力'}`,
+            '',
+            `着用予定日：${data.eventDate}`,
+            `イベント用途：${data.eventPurpose || '未指定'}`,
+            '',
+            '【ご質問・ご要望】',
+            data.message || 'なし',
+            '',
+            'どうぞよろしくお願いいたします。'
+        ].join('\n');
+
+        return `mailto:${MAIL_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
 
     if (form) {
-
-        form.addEventListener('submit', function(e) {
-
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // LINEボタンではなくメールボタンの場合のみ処理
-            const selectedTool =
-                document.querySelector(
-                    'input[name="contact_tool"]:checked'
-                ).value;
-
-            if (selectedTool !== 'email') {
-                return;
-            }
-
+            const selectedTool = document.querySelector('input[name="contact_tool"]:checked')?.value;
+            if (selectedTool !== 'email') return;
 
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
 
-
             const data = buildFormMessage();
+            emailActionBtn.disabled = true;
+            emailActionBtn.textContent = '受付登録中…';
 
+            try {
+                const sessionId = await submitToGAS();
+                const mailUrl = createInquiryEmailUrl(data, sessionId);
 
-            const subject =
-                encodeURIComponent(
-                    '【お誂え相談】' +
-                    data.dogName +
-                    'ちゃんのお見積り依頼'
-                );
+                emailConsultCode.textContent = sessionId;
+                emailFallbackLink.href = mailUrl;
+                form.classList.add('hidden');
+                emailNoticeArea.classList.remove('hidden');
+                emailNoticeArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-
-            window.location.href =
-                `mailto:${MAIL_TO}` +
-                `?subject=${subject}` +
-                `&body=${encodeURIComponent(data.message)}`;
-
+                // 同一タブでメールアプリを起動。画面内にも再起動用リンクを残す。
+                window.location.href = mailUrl;
+            } catch (error) {
+                console.error(error);
+                alert(error.message || '受付登録に失敗しました。時間を置いて再度お試しください。');
+                emailActionBtn.disabled = false;
+                emailActionBtn.innerHTML = '✉️ メールアプリを開いて相談する';
+            }
         });
-
     }
+
 
 
     // ==========================================
