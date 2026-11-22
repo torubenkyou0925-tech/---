@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -914,19 +920,33 @@
         下記ボタンから公式LINEを開き、セットされているメッセージを送信してください。
     </p>
 
-    <div class="max-w-xl mx-auto mb-6 p-5 md:p-6 bg-white border border-[#D8D0C3]">
-        <p class="font-serif-jp text-[11px] tracking-[0.2em] text-stone-500 mb-3">YOUR CONSULTATION CODE</p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <code id="lineConsultCode" class="text-xl md:text-2xl font-semibold tracking-wider text-navy break-all" aria-live="polite"></code>
-            <button type="button" id="copyLineConsultCodeBtn" class="shrink-0 px-5 py-3 bg-white border border-navy text-navy text-xs tracking-wider hover:bg-navy hover:text-white transition-colors">
-                コードをコピー
-            </button>
+    <div class="max-w-xl mx-auto mb-6">
+        <!-- スマートフォンでは通常コードを閉じ、必要な方だけ表示する -->
+        <button
+            type="button"
+            id="lineCodeToggle"
+            class="md:hidden w-full flex items-center justify-between gap-3 px-5 py-4 bg-white border border-[#D8D0C3] text-navy text-xs tracking-wider text-left"
+            aria-expanded="false"
+            aria-controls="lineCodePanel">
+            <span data-toggle-label>LINEが開けない・インストールしていない方はこちら</span>
+            <span id="lineCodeToggleIcon" class="text-lg leading-none" aria-hidden="true">＋</span>
+        </button>
+
+        <!-- PC・タブレット相当の広い画面では自動表示。スマートフォンではボタン操作で表示 -->
+        <div id="lineCodePanel" class="hidden md:block mt-3 md:mt-0 p-5 md:p-6 bg-white border border-[#D8D0C3]">
+            <p class="font-serif-jp text-[11px] tracking-[0.2em] text-stone-500 mb-3">YOUR CONSULTATION CODE</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <code id="lineConsultCode" class="text-xl md:text-2xl font-semibold tracking-wider text-navy break-all" aria-live="polite"></code>
+                <button type="button" id="copyLineConsultCodeBtn" class="shrink-0 px-5 py-3 bg-white border border-navy text-navy text-xs tracking-wider hover:bg-navy hover:text-white transition-colors">
+                    コードをコピー
+                </button>
+            </div>
+            <p id="lineCodeCopyStatus" class="text-[11px] text-[#137333] mt-2 min-h-4" role="status" aria-live="polite"></p>
         </div>
-        <p id="lineCodeCopyStatus" class="text-[11px] text-[#137333] mt-2 min-h-4" role="status" aria-live="polite"></p>
     </div>
 
     <p class="font-serif-jp text-[11px] md:text-xs text-stone-500 leading-relaxed tracking-wide mb-7">
-        ※パソコンでご覧の方は、QRコード読み取り後に上記の相談コードをトークへ貼り付けてお送りください。
+        ※パソコンでご覧の方は、スマートフォンで公式LINEを開き、上記の相談コードをトークに貼り付けてお送りください。
     </p>
 
     <button type="button"
@@ -1614,6 +1634,30 @@ if (dogWeightSelect) {
     // ==========================================
     // ⑧ 相談コードのコピー
     // ==========================================
+    const lineCodeToggle = document.getElementById('lineCodeToggle');
+    const lineCodePanel = document.getElementById('lineCodePanel');
+
+    if (lineCodeToggle && lineCodePanel) {
+        const toggleLabel = lineCodeToggle.querySelector('[data-toggle-label]');
+        const toggleIcon = document.getElementById('lineCodeToggleIcon');
+        const closedLabel = 'LINEが開けない・インストールしていない方はこちら';
+
+        lineCodeToggle.addEventListener('click', function() {
+            const isExpanded = lineCodeToggle.getAttribute('aria-expanded') === 'true';
+            const shouldOpen = !isExpanded;
+
+            lineCodeToggle.setAttribute('aria-expanded', String(shouldOpen));
+            lineCodePanel.classList.toggle('hidden', !shouldOpen);
+
+            if (toggleLabel) {
+                toggleLabel.textContent = shouldOpen ? '相談コードを閉じる' : closedLabel;
+            }
+            if (toggleIcon) {
+                toggleIcon.textContent = shouldOpen ? '－' : '＋';
+            }
+        });
+    }
+
     const copyLineConsultCodeBtn = document.getElementById('copyLineConsultCodeBtn');
     const lineCodeCopyStatus = document.getElementById('lineCodeCopyStatus');
 
